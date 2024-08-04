@@ -3,25 +3,29 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
-import SignIn from './pages/Authentication/SignIn';
-import SignUp from './pages/Authentication/SignUp';
-import Calendar from './pages/Calendar';
 import Chart from './pages/Chart';
-import ECommerce from './pages/Dashboard/ECommerce';
-import FormElements from './pages/Form/FormElements';
-import FormLayout from './pages/Form/FormLayout';
-import Profile from './pages/Profile';
 import Settings from './pages/Settings';
-import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
-import Users from './pages/Users';
-import ManagementProduct from './pages/ManagementProduct';
-import Category from './pages/Castegory';
-import Product from './pages/Product';
-import Promo from './pages/Promo';
-import Transaction from './pages/Transaction';
-import Rating from './pages/Rating';
+
+// Auth
+import LoginPage from './pages/Authentication/login.jsx';
+import RegisterPage from './pages/Authentication/register.jsx';
+import ActivateAccountPage from './pages/Authentication/activate-accounts.jsx';
+import ChangePage from './pages/Authentication/change-password.jsx';
+import ForgotPage from './pages/Authentication/forgot-password.jsx';
+import ErrorPage from './pages/ErrorPage/ErrorPage404.jsx';
+
+// Admin
+import ECommerce from './pages/Admin/Dashboard/ECommerce';
+import Profile from './pages/Admin/Profile/Profile';
+import Users from './pages/Admin/Users/Users';
+import ManagementProduct from './pages/Admin/Management/ManagementProduct';
+import Category from './pages/Admin/Category/Castegory';
+import Product from './pages/Admin/Product/Product';
+import Promo from './pages/Admin/Promo/Promo';
+import Transaction from './pages/Admin/Transaction/Transaction';
+import Rating from './pages/Admin/Rating/Rating';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,7 +48,7 @@ function App() {
           path='/dashboard'
           element={
             <>
-              <PageTitle title=" Dashboard | Putra Komputer" />
+              <PageTitle title="Dashboard | Putra Komputer" />
               <ECommerce />
             </>
           }
@@ -117,7 +121,7 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | Putra Komputer" />
-              <Profile/>
+              <Profile />
             </>
           }
         />
@@ -157,24 +161,63 @@ function App() {
             </>
           }
         />
+
+        {/* Auth Route */}
         <Route
-          path="/auth/signin"
+          path="/login"
           element={
             <>
-              <PageTitle title="Signin | Putra Komputer" />
-              <SignIn />
+              <PageTitle title="Login | Putra Komputer" />
+              <LoginPage />
             </>
           }
         />
         <Route
-          path="/auth/signup"
+          path="/register"
           element={
             <>
-              <PageTitle title="Signup | Putra Komputer" />
-              <SignUp />
+              <PageTitle title="Register | Putra Komputer" />
+              <RegisterPage />
             </>
           }
         />
+        <Route
+          path="/verify-accounts"
+          element={
+            <>
+              <PageTitle title="Activate Accounts | Putra Komputer" />
+              <ActivateAccountPage />
+            </>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <>
+              <PageTitle title="Forgot Password | Putra Komputer" />
+              <ForgotPage />
+            </>
+          }
+        />
+        <Route
+          path="/change-password"
+          element={
+            <>
+              <PageTitle title="Change Password | Putra Komputer" />
+              <ChangePage />
+            </>
+          }
+        />
+        <Route
+          path="/logout"
+          element={
+            <>
+              <PageTitle title="Logout | Putra Komputer" />
+              <LoginPage />
+            </>
+          }
+        />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );
