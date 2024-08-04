@@ -64,6 +64,9 @@ const TableTwo = () => {
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Profit</p>
         </div>
+        <th className="py-4 px-4 font-medium text-black dark:text-white">
+                Actions
+              </th>
       </div>
 
       {productData.map((product, key) => (

@@ -21,7 +21,7 @@ import ECommerce from './pages/Admin/Dashboard/ECommerce';
 import Profile from './pages/Admin/Profile/Profile';
 import Users from './pages/Admin/Users/Users';
 import ManagementProduct from './pages/Admin/Management/ManagementProduct';
-import Category from './pages/Admin/Category/Castegory';
+import Category from './pages/Admin/Category/Category.js';
 import Product from './pages/Admin/Product/Product';
 import Promo from './pages/Admin/Promo/Promo';
 import Transaction from './pages/Admin/Transaction/Transaction';

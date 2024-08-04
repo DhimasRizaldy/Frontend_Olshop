@@ -1,12 +1,12 @@
-import Breadcrumb from '../../../components/Breadcrumbs/Breadcrumb';
-import DataProduct from '../../../components/Fragments/Admin/Product/DataProduct.jsx';
-import DefaultLayout from '../../../layout/DefaultLayout';
+import Breadcrumb from '../../../components/Breadcrumbs/Breadcrumb.js';
+import DataCategory from '../../../components/Fragments/Admin/Category/DataCategory.jsx';
+import DefaultLayout from '../../../layout/DefaultLayout.js';
 import Button from '../../../components/Elements/Button/Index.jsx';
 
-const Product = () => {
+const Category = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Product" />
+      <Breadcrumb pageName="Category" />
 
       <div className="mb-5">
         <Button
@@ -18,10 +18,10 @@ const Product = () => {
       </div>
 
       <div className="flex flex-col gap-10">
-        <DataProduct />
+        <DataCategory />
       </div>
     </DefaultLayout>
   );
 };
 
-export default Product;
+export default Category;

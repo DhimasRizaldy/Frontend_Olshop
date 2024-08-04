@@ -1,15 +1,10 @@
 import React from 'react';
 import CardDataStats from '../../../components/CardDataStats';
+import TableOne from '../../../components/Tables/TableOne';
 import DefaultLayout from '../../../layout/DefaultLayout';
-import {
-  faUsers,
-  faUser,
-  faBoxesStacked,
-  faCartShopping,
-} from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUser, faBoxesStacked, faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DataTransaction from '../../../components/Fragments/Admin/Transaction/DataTransaction.jsx';
-import DataRating from '../../../components/Fragments/Admin/Rating/DataRating.jsx';
+import DataTable from '../../../components/Tables/DataTable';
 
 const ECommerce: React.FC = () => {
   return (
@@ -19,7 +14,7 @@ const ECommerce: React.FC = () => {
           <FontAwesomeIcon icon={faUsers} />
         </CardDataStats>
         <CardDataStats title="Total Admin" total="2">
-          <FontAwesomeIcon icon={faUser} />
+          <FontAwesomeIcon icon={faUser}/>
         </CardDataStats>
         <CardDataStats title="Total Product" total="2.450">
           <FontAwesomeIcon icon={faBoxesStacked} />
@@ -28,12 +23,12 @@ const ECommerce: React.FC = () => {
           <FontAwesomeIcon icon={faCartShopping} />
         </CardDataStats>
       </div>
-      <div className="mt-4 flex flex-col gap-10">
-        <DataRating />
-      </div>
-      <div className="mt-4 flex flex-col gap-10">
-        <DataTransaction />
-      </div>
+        <div className="mt-4 flex flex-col gap-10">
+        <TableOne />
+        </div>
+        <div className="mt-4 flex flex-col gap-10">
+        <DataTable />
+        </div>
     </DefaultLayout>
   );
 };
