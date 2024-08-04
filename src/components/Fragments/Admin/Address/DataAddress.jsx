@@ -5,12 +5,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const DataManagement = () => {
+const DataAddress = () => {
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          Data Management Product
+          Data Address
         </h4>
       </div>
 
@@ -23,19 +23,22 @@ const DataManagement = () => {
                   No
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  MProductId
+                  AddressId
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  SupplierId
+                  Name Address
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
+                  Address
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  ProductId
+                  City
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  StockIn
+                  Country
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  DateStokIn
+                  PostalCode
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action
@@ -51,28 +54,25 @@ const DataManagement = () => {
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
                   >
-                    MPRD010203
+                    ADR001002
                   </p>
                 </td>
-                <td className="border-b border-[#eee] py-5 px-5 dark:border-strokedark xl:pl-9">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    SPL001
+                <td className="border-b border-[#eee] py-5 px-6 pl-6 dark:border-strokedark xl:pl-8">
+                  <p className="text-black dark:text-white">Rumah</p>
+                </td>
+                <td className="border-b border-[#eee] py-5 px-6 pl-6 dark:border-strokedark xl:pl-8">
+                  <p className="text-black dark:text-white">
+                    Jln.Marga Gg.Mushola No.128
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    PRD001
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-8 dark:border-strokedark">
-                  <p className="text-black dark:text-white">10</p>
+                  <p className="text-black dark:text-white">Bandar Lampung</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">10-08-2024</p>
+                  <p className="text-black dark:text-white">Indonesia</p>
+                </td>
+                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                  <p className="text-black dark:text-white">35158</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
@@ -96,4 +96,4 @@ const DataManagement = () => {
   );
 };
 
-export default DataManagement;
+export default DataAddress;

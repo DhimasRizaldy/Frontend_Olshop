@@ -23,6 +23,9 @@ const DataPromo = () => {
                   No
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
+                  PromoId
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
                   Code Promo
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
@@ -40,6 +43,13 @@ const DataPromo = () => {
               <tr>
                 <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
                   <p className="text-black dark:text-white">1</p>
+                </td>
+                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                  <p
+                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
+                  >
+                    PRM010203
+                  </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p

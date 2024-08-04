@@ -18,7 +18,7 @@ import ErrorPage from './pages/ErrorPage/ErrorPage404.jsx';
 
 // Admin
 import ECommerce from './pages/Admin/Dashboard/ECommerce';
-import Profile from './pages/Admin/Profile/Profile';
+import DataProfile from './components/Fragments/Admin/Profile/DataProfile.jsx';
 import Users from './pages/Admin/Users/Users';
 import ManagementProduct from './pages/Admin/Management/ManagementProduct';
 import Category from './pages/Admin/Category/Category.js';
@@ -45,7 +45,7 @@ function App() {
     <>
       <Routes>
         <Route
-          path='/dashboard'
+          path="/dashboard"
           element={
             <>
               <PageTitle title="Dashboard | Putra Komputer" />
@@ -121,7 +121,7 @@ function App() {
           element={
             <>
               <PageTitle title="Profile | Putra Komputer" />
-              <Profile />
+              <DataProfile />
             </>
           }
         />

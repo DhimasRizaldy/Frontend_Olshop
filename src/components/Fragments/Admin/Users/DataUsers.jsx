@@ -22,7 +22,10 @@ const DataUser = () => {
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
                   No
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
+                  UserId
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                   Username
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
@@ -44,7 +47,14 @@ const DataUser = () => {
                 <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
                   <p className="text-black dark:text-white">1</p>
                 </td>
-                <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                  <p
+                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
+                  >
+                    USR010203
+                  </p>
+                </td>
+                <td className="border-b border-[#eee] py-5 px-5 dark:border-strokedark xl:pl-6">
                   <p className="text-black dark:text-white">dimas02</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
