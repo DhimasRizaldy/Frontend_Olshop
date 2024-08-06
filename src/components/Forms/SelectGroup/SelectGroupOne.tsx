@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
 
-const SelectGroupOne: React.FC = () => {
-  const [selectedOption, setSelectedOption] = useState<string>('');
+interface SelectGroupProps {
+  label: string;
+  options: { value: string; label: string }[];
+  defaultOption?: string;
+  labelObject: string;
+}
+
+const SelectGroup: React.FC<SelectGroupProps> = ({
+  label,
+  options,
+  defaultOption = '',
+  labelObject,
+}) => {
+  const [selectedOption, setSelectedOption] = useState<string>(defaultOption);
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
 
   const changeTextColor = () => {
@@ -10,10 +22,7 @@ const SelectGroupOne: React.FC = () => {
 
   return (
     <div className="mb-4.5">
-      <label className="mb-2.5 block text-black dark:text-white">
-        {' '}
-        Subject{' '}
-      </label>
+      <label className="mb-2.5 block text-black dark:text-white">{label}</label>
 
       <div className="relative z-20 bg-transparent dark:bg-form-input">
         <select
@@ -27,17 +36,17 @@ const SelectGroupOne: React.FC = () => {
           }`}
         >
           <option value="" disabled className="text-body dark:text-bodydark">
-            Select your subject
+            {labelObject}
           </option>
-          <option value="USA" className="text-body dark:text-bodydark">
-            USA
-          </option>
-          <option value="UK" className="text-body dark:text-bodydark">
-            UK
-          </option>
-          <option value="Canada" className="text-body dark:text-bodydark">
-            Canada
-          </option>
+          {options.map((option) => (
+            <option
+              key={option.value}
+              value={option.value}
+              className="text-body dark:text-bodydark"
+            >
+              {option.label}
+            </option>
+          ))}
         </select>
 
         <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
@@ -64,4 +73,4 @@ const SelectGroupOne: React.FC = () => {
   );
 };
 
-export default SelectGroupOne;
+export default SelectGroup;

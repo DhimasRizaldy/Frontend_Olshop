@@ -19,13 +19,34 @@ import ErrorPage from './pages/ErrorPage/ErrorPage404.jsx';
 // Admin
 import ECommerce from './pages/Admin/Dashboard/ECommerce';
 import DataProfile from './components/Fragments/Admin/Profile/DataProfile.jsx';
-import Users from './pages/Admin/Users/Users';
-import ManagementProduct from './pages/Admin/Management/ManagementProduct';
-import Category from './pages/Admin/Category/Category.js';
-import Product from './pages/Admin/Product/Product';
-import Promo from './pages/Admin/Promo/Promo';
-import Transaction from './pages/Admin/Transaction/Transaction';
 import Rating from './pages/Admin/Rating/Rating';
+
+// CRUD Management Product
+import ManagementProduct from './pages/Admin/Management/ManagementProduct';
+import AddManagementProduct from './pages/Admin/Management/AddManagementProduct.jsx';
+import EditManagementProduct from './pages/Admin/Management/EditManagementProduct.jsx';
+import DetailManagementProduct from './pages/Admin/Management/DetailManagementProduct.jsx';
+
+// CRUD Users
+import Users from './pages/Admin/Users/Users';
+import AddUsers from './pages/Admin/Users/AddUsers.jsx';
+import EditUsers from './pages/Admin/Users/EditUsers.jsx';
+import DetailUsers from './pages/Admin/Users/DetailUsers.jsx';
+
+// CRUD Category
+import Category from './pages/Admin/Category/Category.jsx';
+import AddCategorys from './pages/Admin/Category/AddCategory.jsx';
+import EditCategorys from './pages/Admin/Category/EditCategory.jsx';
+import DetailCategorys from './pages/Admin/Category/DetailCategory.jsx';
+
+// CRUD Transaction
+import Transaction from './pages/Admin/Transaction/Transaction';
+
+// CRUD Promo
+import Promo from './pages/Admin/Promo/Promo';
+
+// CRUD Product
+import Product from './pages/Admin/Product/Product';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,6 +65,7 @@ function App() {
   ) : (
     <>
       <Routes>
+        {/* Admin Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -53,6 +75,8 @@ function App() {
             </>
           }
         />
+
+        {/* Admin Users */}
         <Route
           path="/users"
           element={
@@ -63,6 +87,35 @@ function App() {
           }
         />
         <Route
+          path="/add-users"
+          element={
+            <>
+              <PageTitle title="Add Users | Putra Komputer" />
+              <AddUsers />
+            </>
+          }
+        />
+        <Route
+          path="/edit-users"
+          element={
+            <>
+              <PageTitle title="Edit Users | Putra Komputer" />
+              <EditUsers />
+            </>
+          }
+        />
+        <Route
+          path="/detail-users"
+          element={
+            <>
+              <PageTitle title="Detail Users | Putra Komputer" />
+              <DetailUsers />
+            </>
+          }
+        />
+
+        {/* Admin Managemen Product */}
+        <Route
           path="/management"
           element={
             <>
@@ -71,6 +124,35 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/add-management"
+          element={
+            <>
+              <PageTitle title="Add Management Product | Putra Komputer" />
+              <AddManagementProduct />
+            </>
+          }
+        />
+        <Route
+          path="/edit-management"
+          element={
+            <>
+              <PageTitle title="Edit Management Product | Putra Komputer" />
+              <EditManagementProduct />
+            </>
+          }
+        />
+        <Route
+          path="/detail-management"
+          element={
+            <>
+              <PageTitle title="Detail Management Product | Putra Komputer" />
+              <DetailManagementProduct />
+            </>
+          }
+        />
+
+        {/* Admin Category */}
         <Route
           path="/category"
           element={
@@ -81,6 +163,35 @@ function App() {
           }
         />
         <Route
+          path="/add-category"
+          element={
+            <>
+              <PageTitle title="Add Category | Putra Komputer" />
+              <AddCategorys />
+            </>
+          }
+        />
+        <Route
+          path="/edit-category"
+          element={
+            <>
+              <PageTitle title="Edit Category | Putra Komputer" />
+              <EditCategorys />
+            </>
+          }
+        />
+        <Route
+          path="/detail-category"
+          element={
+            <>
+              <PageTitle title="Detail Category | Putra Komputer" />
+              <DetailCategorys />
+            </>
+          }
+        />
+
+        {/* Admin Product */}
+        <Route
           path="/product"
           element={
             <>
@@ -89,6 +200,8 @@ function App() {
             </>
           }
         />
+
+        {/* Admin Promo */}
         <Route
           path="/promo"
           element={
@@ -98,6 +211,8 @@ function App() {
             </>
           }
         />
+
+        {/* Admin Transaction */}
         <Route
           path="/transaction"
           element={
@@ -107,6 +222,8 @@ function App() {
             </>
           }
         />
+
+        {/* Admin Rating */}
         <Route
           path="/rating"
           element={
@@ -116,6 +233,8 @@ function App() {
             </>
           }
         />
+
+        {/* Admin Profile */}
         <Route
           path="/profile"
           element={
@@ -125,6 +244,8 @@ function App() {
             </>
           }
         />
+
+        {/* Admin Settings */}
         <Route
           path="/settings"
           element={

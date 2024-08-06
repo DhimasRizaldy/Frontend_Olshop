@@ -1,6 +1,6 @@
 import React from 'react';
 import SelectGroup from '../../../Forms/SelectGroup/SelectGroupOne';
-import DatePickerOne from '../../../../components/Forms/DatePicker/DatePickerOne';
+import DatePickerOne from '../../../Forms/DatePicker/DatePickerOne';
 import { Link } from 'react-router-dom';
 
 const options = [
@@ -9,7 +9,7 @@ const options = [
   { value: 'Canada', label: 'Canada' },
 ];
 
-const DetailManagement = () => {
+const DetailUser = () => {
   return (
     <form action="#">
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -57,7 +57,7 @@ const DetailManagement = () => {
       </div>
 
       <div className="flex justify-end gap-4.5">
-        <Link to="/management">
+        <Link to="/users">
           <button
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="submit"
@@ -70,4 +70,4 @@ const DetailManagement = () => {
   );
 };
 
-export default DetailManagement;
+export default DetailUser;
