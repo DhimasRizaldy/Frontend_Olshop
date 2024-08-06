@@ -244,6 +244,15 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/edit-profile"
+          element={
+            <>
+              <PageTitle title="Profile | Putra Komputer" />
+              <DataProfile />
+            </>
+          }
+        />
 
         {/* Admin Settings */}
         <Route
