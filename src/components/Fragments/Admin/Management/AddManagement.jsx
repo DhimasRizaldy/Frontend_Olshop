@@ -13,19 +13,35 @@ const AddManagement = () => {
   return (
     <form action="#">
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-        <div className="w-full sm:w-1/2">
-          <SelectGroup
-            label="SupplierId"
-            labelObject="Select Supplier"
-            options={options}
-          />
+      <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block text-sm font-medium text-black dark:text-white"
+          >
+            Supplier Id
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="supplierId"
+              id="supplierId"
+            />
+          </div>
         </div>
         <div className="w-full sm:w-1/2">
-          <SelectGroup
-            label="ProductId"
-            labelObject="Select Product"
-            options={options}
-          />
+          <label
+            className="mb-3 block text-sm font-medium text-black dark:text-white"
+          >
+            Product Id
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="ProductId"
+              id="ProductId"
+            />
+          </div>
         </div>
       </div>
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -34,22 +50,21 @@ const AddManagement = () => {
             className="mb-3 block text-sm font-medium text-black dark:text-white"
             htmlFor="stokIn"
           >
-            StokIn
+            StockIn
           </label>
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
               type="text"
-              name="stokIn"
-              id="stokIn"
-              placeholder="10"
-              defaultValue="10"
+              name="stockIn"
+              id="stockIn"
+              placeholder="0"
+              defaultValue="0"
             />
           </div>
         </div>
-
         <div className="w-full sm:w-1/2">
-          <DatePickerOne label="Tanggal Masuk" />
+          <DatePickerOne label="Date Stock In" />
         </div>
       </div>
 
