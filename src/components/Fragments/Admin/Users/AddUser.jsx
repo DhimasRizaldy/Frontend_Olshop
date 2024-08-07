@@ -13,7 +13,7 @@ const AddUser = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label
-            className="text-white"
+            className="mb-3 block font-medium text-black dark:text-white"
           >
             Full Name
           </label>
@@ -28,7 +28,7 @@ const AddUser = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label
-            className="text-white"
+            className="mb-3 block font-medium text-black dark:text-white"
           >
             Phone Number
           </label>

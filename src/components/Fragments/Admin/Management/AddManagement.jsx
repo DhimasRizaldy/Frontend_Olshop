@@ -15,7 +15,7 @@ const AddManagement = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
       <div className="w-full sm:w-1/2">
           <label
-            className="mb-3 block text-sm font-medium text-black dark:text-white"
+            className="mb-3 block font-medium text-black dark:text-white"
           >
             Supplier Id
           </label>
@@ -30,7 +30,7 @@ const AddManagement = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label
-            className="mb-3 block text-sm font-medium text-black dark:text-white"
+            className="mb-3 block font-medium text-black dark:text-white"
           >
             Product Id
           </label>
@@ -47,7 +47,7 @@ const AddManagement = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label
-            className="mb-3 block text-sm font-medium text-black dark:text-white"
+            className="mb-3 block font-medium text-black dark:text-white"
             htmlFor="stokIn"
           >
             StockIn
