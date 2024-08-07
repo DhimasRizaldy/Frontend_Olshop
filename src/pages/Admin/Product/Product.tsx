@@ -2,19 +2,21 @@ import Breadcrumb from '../../../components/Breadcrumbs/Breadcrumb';
 import DataProduct from '../../../components/Fragments/Admin/Product/DataProduct.jsx';
 import DefaultLayout from '../../../layout/DefaultLayout';
 import Button from '../../../components/Elements/Button/Index.jsx';
-
+import { Link } from 'react-router-dom';
 const Product = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Product" />
 
       <div className="mb-5">
-        <Button
-          type="submit"
-          classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
-        >
-          Add Data
-        </Button>
+        <Link to="/add-product">
+          <Button
+            type="submit"
+            classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
+          >
+            Add Data
+          </Button>
+        </Link>
       </div>
 
       <div className="flex flex-col gap-10">

@@ -4,6 +4,7 @@ import {
   faEye,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 
 const DataPromo = () => {
   return (
@@ -66,12 +67,16 @@ const DataPromo = () => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <button className="hover:text-primary">
-                      <FontAwesomeIcon icon={faEye} />
-                    </button>
-                    <button className="hover:text-primary">
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
+                    <Link to="/detail-promo">
+                      <button className="hover:text-primary">
+                        <FontAwesomeIcon icon={faEye} />
+                      </button>
+                    </Link>
+                    <Link to="/edit-promo">
+                      <button className="hover:text-primary">
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                      </button>
+                    </Link>
                     <button className="hover:text-primary">
                       <FontAwesomeIcon icon={faTrash} />
                     </button>

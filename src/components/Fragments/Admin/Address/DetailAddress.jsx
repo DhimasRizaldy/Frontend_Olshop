@@ -9,7 +9,7 @@ const options = [
   { value: 'Canada', label: 'Canada' },
 ];
 
-const AddRating = () => {
+const DetailAddress = () => {
   return (
     <form action="#">
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -18,6 +18,7 @@ const AddRating = () => {
             label="SupplierId"
             labelObject="Select Supplier"
             options={options}
+            disabled
           />
         </div>
         <div className="w-full sm:w-1/2">
@@ -25,6 +26,7 @@ const AddRating = () => {
             label="ProductId"
             labelObject="Select Product"
             options={options}
+            disabled
           />
         </div>
       </div>
@@ -44,33 +46,28 @@ const AddRating = () => {
               id="stokIn"
               placeholder="10"
               defaultValue="10"
+              disabled
             />
           </div>
         </div>
 
         <div className="w-full sm:w-1/2">
-          <DatePickerOne label="Tanggal Masuk" />
+          <DatePickerOne label="Tanggal Masuk" disabled />
         </div>
       </div>
 
       <div className="flex justify-end gap-4.5">
-        <Link to="/rating">
+        <Link to="/address">
           <button
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="submit"
           >
-            Cancel
+            Back
           </button>
         </Link>
-        <button
-          className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
-          type="submit"
-        >
-          Save
-        </button>
       </div>
     </form>
   );
 };
 
-export default AddRating;
+export default DetailAddress;

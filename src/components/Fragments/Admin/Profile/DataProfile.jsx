@@ -3,6 +3,7 @@ import DefaultLayout from '../../../../layout/DefaultLayout';
 import DataAddress from '../Address/DataAddress';
 import Button from '../../../Elements/Button/Index.jsx';
 import SelectGroup from '../../../../components/Forms/SelectGroup/SelectGroupOne';
+import { Link } from 'react-router-dom';
 
 const options = [
   { value: 'USA', label: 'USA' },
@@ -279,12 +280,14 @@ const DataProfile = () => {
                   </div>
 
                   <div className="flex justify-end gap-4.5">
-                    <button
-                      className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
-                    >
-                      Cancel
-                    </button>
+                    <Link to="/profile">
+                      <button
+                        className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+                        type="submit"
+                      >
+                        Cancel
+                      </button>
+                    </Link>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
                       type="submit"
@@ -373,12 +376,14 @@ const DataProfile = () => {
                   </div>
 
                   <div className="flex justify-end gap-4.5">
-                    <button
-                      className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
-                    >
-                      Cancel
-                    </button>
+                    <Link to="/profile">
+                      <button
+                        className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+                        type="submit"
+                      >
+                        Cancel
+                      </button>
+                    </Link>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
                       type="submit"
@@ -396,12 +401,14 @@ const DataProfile = () => {
 
       {/* Address */}
       <div className="mb-5 mt-10">
-        <Button
-          type="submit"
-          classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
-        >
-          Add Data
-        </Button>
+        <Link to="/address">
+          <Button
+            type="submit"
+            classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
+          >
+            Add Data
+          </Button>
+        </Link>
       </div>
 
       <div className="flex flex-col gap-10">

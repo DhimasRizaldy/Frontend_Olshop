@@ -9,7 +9,7 @@ const options = [
   { value: 'Canada', label: 'Canada' },
 ];
 
-const AddRating = () => {
+const EditAddress = () => {
   return (
     <form action="#">
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -54,7 +54,7 @@ const AddRating = () => {
       </div>
 
       <div className="flex justify-end gap-4.5">
-        <Link to="/rating">
+        <Link to="/address">
           <button
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="submit"
@@ -66,11 +66,11 @@ const AddRating = () => {
           className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
           type="submit"
         >
-          Save
+          Update
         </button>
       </div>
     </form>
   );
 };
 
-export default AddRating;
+export default EditAddress;

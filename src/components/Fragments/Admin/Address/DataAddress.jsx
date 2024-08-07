@@ -4,7 +4,7 @@ import {
   faEye,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { Link } from 'react-router-dom';
 const DataAddress = () => {
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -76,12 +76,16 @@ const DataAddress = () => {
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    <button className="hover:text-primary">
-                      <FontAwesomeIcon icon={faEye} />
-                    </button>
-                    <button className="hover:text-primary">
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
+                    <Link to="/detail-address">
+                      <button className="hover:text-primary">
+                        <FontAwesomeIcon icon={faEye} />
+                      </button>
+                    </Link>
+                    <Link to="/edit-address">
+                      <button className="hover:text-primary">
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                      </button>
+                    </Link>
                     <button className="hover:text-primary">
                       <FontAwesomeIcon icon={faTrash} />
                     </button>

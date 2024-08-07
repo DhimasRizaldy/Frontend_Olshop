@@ -19,7 +19,12 @@ import ErrorPage from './pages/ErrorPage/ErrorPage404.jsx';
 // Admin
 import ECommerce from './pages/Admin/Dashboard/ECommerce';
 import DataProfile from './components/Fragments/Admin/Profile/DataProfile.jsx';
+
+// CRUD Rating
 import Rating from './pages/Admin/Rating/Rating';
+import AddRatings from './pages/Admin/Rating/AddRating.jsx';
+import EditRatings from './pages/Admin/Rating/EditRating.jsx';
+import DetailRatings from './pages/Admin/Rating/DetailRating.jsx';
 
 // CRUD Management Product
 import ManagementProduct from './pages/Admin/Management/ManagementProduct';
@@ -41,12 +46,21 @@ import DetailCategorys from './pages/Admin/Category/DetailCategory.jsx';
 
 // CRUD Transaction
 import Transaction from './pages/Admin/Transaction/Transaction';
+import AddTransactions from './pages/Admin/Transaction/AddTransaction.jsx';
+import EditTransactions from './pages/Admin/Transaction/EditTransaction.jsx';
+import DetailTransactions from './pages/Admin/Transaction/DetailTransaction.jsx';
 
 // CRUD Promo
 import Promo from './pages/Admin/Promo/Promo';
+import AddPromos from './pages/Admin/Promo/AddPromo.jsx';
+import EditPromos from './pages/Admin/Promo/EditPromo.jsx';
+import DetailPromos from './pages/Admin/Promo/DetailPromo.jsx';
 
 // CRUD Product
 import Product from './pages/Admin/Product/Product';
+import AddProducts from './pages/Admin/Product/AddProduct.jsx';
+import EditProducts from './pages/Admin/Product/EditProduct.jsx';
+import DetailProducts from './pages/Admin/Product/DetailProduct.jsx';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -200,6 +214,33 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/add-product"
+          element={
+            <>
+              <PageTitle title="Add Product | Putra Komputer" />
+              <AddProducts />
+            </>
+          }
+        />
+        <Route
+          path="/edit-product"
+          element={
+            <>
+              <PageTitle title="Edit Product | Putra Komputer" />
+              <EditProducts />
+            </>
+          }
+        />
+        <Route
+          path="/detail-product"
+          element={
+            <>
+              <PageTitle title="Detail Product | Putra Komputer" />
+              <DetailProducts />
+            </>
+          }
+        />
 
         {/* Admin Promo */}
         <Route
@@ -208,6 +249,33 @@ function App() {
             <>
               <PageTitle title="Promo | Putra Komputer" />
               <Promo />
+            </>
+          }
+        />
+        <Route
+          path="/add-promo"
+          element={
+            <>
+              <PageTitle title="Add Promo | Putra Komputer" />
+              <AddPromos />
+            </>
+          }
+        />
+        <Route
+          path="/edit-promo"
+          element={
+            <>
+              <PageTitle title="Edit Promo | Putra Komputer" />
+              <EditPromos />
+            </>
+          }
+        />
+        <Route
+          path="/detail-promo"
+          element={
+            <>
+              <PageTitle title="Detail Promo | Putra Komputer" />
+              <DetailPromos />
             </>
           }
         />
@@ -222,6 +290,33 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/add-transaction"
+          element={
+            <>
+              <PageTitle title="Add Transaction | Putra Komputer" />
+              <AddTransactions />
+            </>
+          }
+        />
+        <Route
+          path="/edit-transaction"
+          element={
+            <>
+              <PageTitle title="Edit Transaction | Putra Komputer" />
+              <EditTransactions />
+            </>
+          }
+        />
+        <Route
+          path="/detail-transaction"
+          element={
+            <>
+              <PageTitle title="Detail Transaction | Putra Komputer" />
+              <DetailTransactions />
+            </>
+          } 
+        />
 
         {/* Admin Rating */}
         <Route
@@ -230,6 +325,33 @@ function App() {
             <>
               <PageTitle title="Rating | Putra Komputer" />
               <Rating />
+            </>
+          }
+        />
+        <Route
+          path="/add-rating"
+          element={
+            <>
+              <PageTitle title="Add Rating | Putra Komputer" />
+              <AddRatings />
+            </>
+          }
+        />
+        <Route
+          path="/edit-rating"
+          element={
+            <>
+              <PageTitle title="Edit Rating | Putra Komputer" />
+              <EditRatings />
+            </>
+          }
+        />
+        <Route
+          path="/detail-rating"
+          element={
+            <>
+              <PageTitle title="Detail Rating | Putra Komputer" />
+              <DetailRatings />
             </>
           }
         />
@@ -248,7 +370,7 @@ function App() {
           path="/edit-profile"
           element={
             <>
-              <PageTitle title="Profile | Putra Komputer" />
+              <PageTitle title="Edit Profile | Putra Komputer" />
               <DataProfile />
             </>
           }
