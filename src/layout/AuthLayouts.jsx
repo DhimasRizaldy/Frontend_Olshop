@@ -1,5 +1,5 @@
-import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 const AuthLayouts = (props) => {
   const { children, type } = props;
@@ -176,16 +176,16 @@ const AuthLayouts = (props) => {
 //
 const TitleBar = ({ type }) => {
   let displayText;
-  if (type === "login") {
-    displayText = "Login";
-  } else if (type === "register") {
-    displayText = "Register";
-  } else if (type === "forgot-password") {
-    displayText = "Forgot Password";
-  } else if (type === "change-password") {
-    displayText = "Change Password";
-  } else if (type === "verify-email") {
-    displayText = "Verify Activate Email";
+  if (type === 'login') {
+    displayText = 'Login';
+  } else if (type === 'register') {
+    displayText = 'Register';
+  } else if (type === 'forgot-password') {
+    displayText = 'Forgot Password';
+  } else if (type === 'change-password') {
+    displayText = 'Change Password';
+  } else if (type === 'verify-email') {
+    displayText = 'Verify Activate Email';
   }
 
   return (

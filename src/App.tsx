@@ -315,7 +315,7 @@ function App() {
               <PageTitle title="Detail Transaction | Putra Komputer" />
               <DetailTransactions />
             </>
-          } 
+          }
         />
 
         {/* Admin Rating */}
