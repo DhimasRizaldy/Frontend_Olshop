@@ -1,13 +1,6 @@
 import React from 'react';
-import SelectGroup from '../../../Forms/SelectGroup/SelectGroupOne';
 import DatePickerOne from '../../../../components/Forms/DatePicker/DatePickerOne';
 import { Link } from 'react-router-dom';
-
-const options = [
-  { value: 'USA', label: 'USA' },
-  { value: 'UK', label: 'UK' },
-  { value: 'Canada', label: 'Canada' },
-];
 
 const AddManagement = () => {
   return (
@@ -48,7 +41,7 @@ const AddManagement = () => {
         <div className="w-full sm:w-1/2">
           <label
             className="mb-3 block font-medium text-black dark:text-white"
-            htmlFor="stokIn"
+            htmlFor="stockIn"
           >
             StockIn
           </label>
@@ -59,7 +52,6 @@ const AddManagement = () => {
               name="stockIn"
               id="stockIn"
               placeholder="0"
-              defaultValue="0"
             />
           </div>
         </div>

@@ -1,55 +1,135 @@
 import React from 'react';
-import SelectGroup from '../../../Forms/SelectGroup/SelectGroupOne';
-import DatePickerOne from '../../../Forms/DatePicker/DatePickerOne';
 import { Link } from 'react-router-dom';
-
-const options = [
-  { value: 'USA', label: 'USA' },
-  { value: 'UK', label: 'UK' },
-  { value: 'Canada', label: 'Canada' },
-];
 
 const AddProduct = () => {
   return (
     <form action="#">
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-        <div className="w-full sm:w-1/2">
-          <SelectGroup
-            label="SupplierId"
-            labelObject="Select Supplier"
-            options={options}
-          />
-        </div>
-        <div className="w-full sm:w-1/2">
-          <SelectGroup
-            label="ProductId"
-            labelObject="Select Product"
-            options={options}
-          />
-        </div>
-      </div>
-      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-        <div className="w-full sm:w-1/2">
+      <div className="w-full sm:w-1/2">
           <label
-            className="mb-3 block text-sm font-medium text-black dark:text-white"
-            htmlFor="stokIn"
+            className="mb-3 block font-medium text-black dark:text-white"
           >
-            StokIn
+            Name
           </label>
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
               type="text"
-              name="stokIn"
-              id="stokIn"
-              placeholder="10"
-              defaultValue="10"
+              name="Name"
+              id="Name"
             />
           </div>
         </div>
-
         <div className="w-full sm:w-1/2">
-          <DatePickerOne label="Tanggal Masuk" />
+          <label
+            className="mb-3 block font-medium text-black dark:text-white"
+          >
+            Category Id
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="CategoryId"
+              id="CategoryId"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+      <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block font-medium text-black dark:text-white"
+          >
+            Price
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="Price"
+              id="Price"
+            />
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block font-medium text-black dark:text-white"
+          >
+            Promo Price
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="promoPrice"
+              id="promoPrice"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+      <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block font-medium text-black dark:text-white"
+          >
+            Weight
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="Weight"
+              id="Weight"
+            />
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block font-medium text-black dark:text-white"
+          >
+            Stock
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="Stock"
+              id="Stock"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+      <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block font-medium text-black dark:text-white"
+          >
+            description
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="description"
+              id="description"
+            />
+          </div>
+        </div>
+        <div className="w-full sm:w-1/2">
+          <label
+            className="mb-3 block font-medium text-black dark:text-white"
+          >
+            Image
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="Image"
+              id="Image"
+            />
+          </div>
         </div>
       </div>
 

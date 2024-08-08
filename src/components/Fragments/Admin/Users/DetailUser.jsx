@@ -22,7 +22,7 @@ const DetailUser = () => {
               type="text"
               name="fullName"
               id="fullName"
-              readonly
+              disabled
             />
           </div>
         </div>
@@ -38,7 +38,7 @@ const DetailUser = () => {
               type="text"
               name="phoneNumber"
               id="phoneNumber"
-              readonly
+              disabled
             />
           </div>
         </div>
@@ -49,6 +49,7 @@ const DetailUser = () => {
             label="Gender"
             labelObject="Select Gender"
             options={options}
+            disabled
           />
       </div>
       </div>
