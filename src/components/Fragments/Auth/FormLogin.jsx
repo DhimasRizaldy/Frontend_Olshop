@@ -1,47 +1,26 @@
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CookieKeys, CookieStorage } from '../../../utils/constants/cookies';
-import http from '../../../utils/constants/http';
-import { API_ENDPOINT } from '../../../utils/constants/endpoint';
 import Label from '../../Elements/Input/Labels';
 import Input from '../../Elements/Input/Inputs';
 import Button from '../../Elements/Button/Index';
-import React, { useState } from 'react';
+import { handleLogin } from '../../../services/auth/admin/services-login';
 
 const FormLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   // handle login
-  const handleLogin = async (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    if (!email || !password) {
-      console.error('Email and password are required');
-      return;
-    }
-    try {
-      const response = await http.post(API_ENDPOINT.USER_LOGIN, {
-        email,
-        password,
-      });
-      // Ambil token dari response
-      const token = response.data.data.token;
-      // Set token ke dalam cookies
-      CookieStorage.set(CookieKeys.AuthToken, token);
-      toast.success('Login successful!');
-      // Navigasi ke dashboard dan set state bahwa login berhasil
-      navigate('/dashboard', { state: { fromLogin: true } });
-    } catch (error) {
-      console.error('Login failed:', error.response?.data || error.message);
-      toast.error('Email and password do not match');
-      setLoginFailed('Login failed. Please check your email and password.');
-    }
+    await handleLogin(email, password, navigate, setIsLoading);
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={onSubmit}>
       {/* Toast Container for notifications */}
       <ToastContainer />
       {/* email */}
@@ -127,8 +106,9 @@ const FormLogin = () => {
         <Button
           type="submit"
           classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
+          disabled={isLoading}
         >
-          Login
+          {isLoading ? 'Loading...' : 'Login'}
         </Button>
       </div>
       {/* Button login google */}

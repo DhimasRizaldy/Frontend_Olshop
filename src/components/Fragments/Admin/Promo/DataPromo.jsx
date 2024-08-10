@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   faPenToSquare,
   faTrash,
@@ -5,8 +6,36 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
+import { getPromo } from '../../../../services/admin/promo/services-promo';
 
 const DataPromo = () => {
+  const [promo, setPromo] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // get promo
+  useEffect(() => {
+    const fetchPromo = async () => {
+      try {
+        const response = await getPromo();
+        // console.log('API Response:', response);
+        setPromo(response.data || []); // Simpan data promo dalam state
+      } catch (error) {
+        console.error('Fetch promo failed:', error.message);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPromo();
+  }, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
@@ -30,6 +59,9 @@ const DataPromo = () => {
                   Code Promo
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
+                  Discount
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
                   Active
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
@@ -41,48 +73,69 @@ const DataPromo = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
-                  <p className="text-black dark:text-white">1</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    PRM010203
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-success text-success`}
-                  >
-                    PROMOKEMERDEKAAN
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-6 pl-6 dark:border-strokedark xl:pl-8">
-                  <p className="text-black dark:text-white">2024-06-03</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-6 dark:border-strokedark">
-                  <p className="text-black dark:text-white">2024-08-20</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <div className="flex items-center space-x-3.5">
-                    <Link to="/detail-promo">
-                      <button className="hover:text-primary">
-                        <FontAwesomeIcon icon={faEye} />
-                      </button>
-                    </Link>
-                    <Link to="/edit-promo">
-                      <button className="hover:text-primary">
-                        <FontAwesomeIcon icon={faPenToSquare} />
-                      </button>
-                    </Link>
-                    <button className="hover:text-primary">
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {promo.length > 0 ? (
+                promo.map((promo, index) => (
+                  <tr key={promo.promoId}>
+                    <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
+                      <p className="text-black dark:text-white">{index + 1}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium`}
+                      >
+                        {promo.promoId}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-success text-success`}
+                      >
+                        {promo.codePromo}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
+                      >
+                        {promo.discount} %
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-6 pl-6 dark:border-strokedark xl:pl-8">
+                      <p className="text-black dark:text-white">
+                        {promo.activeAt}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-6 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {promo.expiresAt}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <div className="flex items-center space-x-3.5">
+                        <Link to="/detail-promo">
+                          <button className="hover:text-primary">
+                            <FontAwesomeIcon icon={faEye} />
+                          </button>
+                        </Link>
+                        <Link to="/edit-promo">
+                          <button className="hover:text-primary">
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
+                        </Link>
+                        <button className="hover:text-primary">
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center py-5">
+                    No promo available.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

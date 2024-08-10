@@ -11,11 +11,16 @@ const DatePickerOne: React.FC<DatePickerOneProps> = ({ label }) => {
       mode: 'single',
       static: true,
       monthSelectorType: 'static',
-      dateFormat: 'M j, Y',
+      dateFormat: 'Y-m-dTH:i:S.Z',
       prevArrow:
         '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
       nextArrow:
         '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M1.4 10.8L0 9.4l4-4-4-4L1.4 0l5.4 5.4z" /></svg>',
+      onChange: (selectedDates, dateStr, instance) => {
+        const isoDate = new Date(selectedDates[0]).toISOString();
+        console.log('Selected date in ISO format:', isoDate);
+        instance.input.value = isoDate;
+      },
     });
   }, []);
 
@@ -27,7 +32,7 @@ const DatePickerOne: React.FC<DatePickerOneProps> = ({ label }) => {
       <div className="relative">
         <input
           className="form-datepicker w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-          placeholder="mm/dd/yyyy"
+          placeholder="yyyy-mm-ddThh:mm:ss.sssZ"
           data-class="flatpickr-right"
         />
 

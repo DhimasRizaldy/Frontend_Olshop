@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   faPenToSquare,
   faTrash,
@@ -5,7 +6,37 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
+import { getUser } from '../../../../services/admin/user/services-user';
 const DataUser = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // get user
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await getUser();
+        // console.log('API Response:', response);
+        setUsers(response.data || []); // Simpan data kategori dalam state
+      } catch (error) {
+        console.error('Fetch user failed:', error.message);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
@@ -34,64 +65,72 @@ const DataUser = () => {
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                   Role
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Verified
-                </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
-                  <p className="text-black dark:text-white">1</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    USR010203
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-5 dark:border-strokedark xl:pl-6">
-                  <p className="text-black dark:text-white">dimas02</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">dimas@gmail.com</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-success text-success`}
-                  >
-                    Admin
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-success text-success`}
-                  >
-                    true
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <div className="flex items-center space-x-3.5">
-                    <Link to="/detail-users">
-                      <button className="hover:text-primary">
-                        <FontAwesomeIcon icon={faEye} />
-                      </button>
-                    </Link>
-                    <Link to="/edit-users">
-                      <button className="hover:text-primary">
-                        <FontAwesomeIcon icon={faPenToSquare} />
-                      </button>
-                    </Link>
-                    <button className="hover:text-primary">
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {users.length > 0 ? (
+                users.map((user, index) => (
+                  <tr key={user.userId}>
+                    <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
+                      <p className="text-black dark:text-white">{index + 1}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium`}
+                      >
+                        {user.userId}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-5 dark:border-strokedark xl:pl-6">
+                      <p className="text-black dark:text-white">
+                        {user.username}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">{user.email}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
+                          user.role === 'USER'
+                            ? 'bg-success text-success'
+                            : user.role === 'ADMIN'
+                              ? 'bg-primary text-primary'
+                              : 'bg-warning text-warning'
+                        }`}
+                      >
+                        {user.role}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <div className="flex items-center space-x-3.5">
+                        <Link to="/detail-users">
+                          <button className="hover:text-primary">
+                            <FontAwesomeIcon icon={faEye} />
+                          </button>
+                        </Link>
+                        <Link to="/edit-users">
+                          <button className="hover:text-primary">
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
+                        </Link>
+                        <button className="hover:text-primary">
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center py-5">
+                    No users available.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

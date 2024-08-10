@@ -62,6 +62,12 @@ import AddProducts from './pages/Admin/Product/AddProduct.jsx';
 import EditProducts from './pages/Admin/Product/EditProduct.jsx';
 import DetailProducts from './pages/Admin/Product/DetailProduct.jsx';
 
+// CRUD Supplier
+import Supplier from './pages/Admin/Supplier/Supplier';
+import AddSuppliers from './pages/Admin/Supplier/AddSupplier.jsx';
+import EditSuppliers from './pages/Admin/Supplier/EditSupplier.jsx';
+import DetailSuppliers from './pages/Admin/Supplier/DetailSupplier.jsx';
+
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
@@ -162,6 +168,44 @@ function App() {
             <>
               <PageTitle title="Detail Management Product | Putra Komputer" />
               <DetailManagementProduct />
+            </>
+          }
+        />
+
+        {/* Admin Supplier */}
+        <Route
+          path="/supplier"
+          element={
+            <>
+              <PageTitle title="Supplier | Putra Komputer" />
+              <Supplier />
+            </>
+          }
+        />
+        <Route
+          path="/add-supplier"
+          element={
+            <>
+              <PageTitle title="Add Supplier | Putra Komputer" />
+              <AddSuppliers />
+            </>
+          }
+        />
+        <Route
+          path="/edit-supplier"
+          element={
+            <>
+              <PageTitle title="Edit Supplier | Putra Komputer" />
+              <EditSuppliers />
+            </>
+          }
+        />
+        <Route
+          path="/detail-supplier"
+          element={
+            <>
+              <PageTitle title="Detail Supplier | Putra Komputer" />
+              <DetailSuppliers />
             </>
           }
         />

@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   faPenToSquare,
   faTrash,
@@ -5,8 +6,38 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
+import { getRating } from '../../../../services/admin/ratings/services-rating';
 
 const DataRating = () => {
+  const [ratings, setRating] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // get rating
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const response = await getRating();
+        // console.log('API Response:', response);
+        setRating(response.data || []); // Simpan data kategori dalam state
+      } catch (error) {
+        console.error('Fetch rating failed:', error.message);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRating();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
@@ -47,64 +78,80 @@ const DataRating = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
-                  <p className="text-black dark:text-white">1</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    RTNG0102
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark xl:pl-6">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    USR001
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-8">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    PRD001
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-8 dark:border-strokedark xl:pl-8">
-                  <p className="text-black dark:text-white">5</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                    Product nya original
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <img
-                    src="/images/product/product-01.png"
-                    width={50}
-                    alt="Product"
-                  />
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <div className="flex items-center space-x-3.5">
-                    <Link to="/detail-rating">
-                      <button className="hover:text-primary">
-                        <FontAwesomeIcon icon={faEye} />
-                      </button>
-                    </Link>
-                    <Link to="/edit-rating">
-                      <button className="hover:text-primary">
-                        <FontAwesomeIcon icon={faPenToSquare} />
-                      </button>
-                    </Link>
-                    <button className="hover:text-primary">
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {ratings.length > 0 ? (
+                ratings.map((rating, index) => (
+                  <tr key={rating.ratingId}>
+                    <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
+                      <p className="text-black dark:text-white">{index + 1}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
+                      >
+                        {rating.ratingId}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark xl:pl-6">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
+                      >
+                        {rating.userId}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-8">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
+                      >
+                        {rating.productId}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-8 dark:border-strokedark xl:pl-8">
+                      <p className="text-black dark:text-white">
+                        {rating.rating}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {rating.review}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      {rating.image ? (
+                        <img
+                          src={rating.image}
+                          alt="image"
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <p className="text-black dark:text-white">No image</p>
+                      )}
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <div className="flex items-center space-x-3.5">
+                        <Link to="/detail-rating">
+                          <button className="hover:text-primary">
+                            <FontAwesomeIcon icon={faEye} />
+                          </button>
+                        </Link>
+                        <Link to="/edit-rating">
+                          <button className="hover:text-primary">
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
+                        </Link>
+                        <button className="hover:text-primary">
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center py-5">
+                    No ratings available.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

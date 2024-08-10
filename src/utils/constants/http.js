@@ -9,7 +9,7 @@ const http = axios.create({
     'Content-Type': 'application/json',
   },
 });
-console.log('Base URL:', import.meta.env.VITE_API_SERVER);
+// console.log('Base URL:', import.meta.env.VITE_API_SERVER);
 
 http.interceptors.request.use((config) => {
   const token = CookieStorage.get(CookieKeys.AuthToken);

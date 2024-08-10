@@ -1,14 +1,18 @@
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ children }) => {
-  const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
+  const data = useSelector((state) => state.authUser);
 
-  if (!token) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (!data.token) {
+      navigate('/login');
+    }
+  }, [data, navigate]);
 
-  return children;
+  return data.token ? children : null;
 };
 
 export default ProtectedRoute;

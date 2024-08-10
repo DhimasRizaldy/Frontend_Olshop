@@ -2,16 +2,28 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CookieKeys, CookieStorage } from '../../utils/constants/cookies';
 import UserOne from '../../images/user/user-01.png';
+import {
+  useUserGetData,
+  getUserData,
+} from '../../services/auth/admin/getDataUser';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const trigger = useRef<any>(null);
-  const dropdown = useRef<any>(null);
+  const trigger = useRef(null);
+  const dropdown = useRef(null);
   const navigate = useNavigate();
 
-  // Close on click outside
+  // Ambil token dari cookies atau localStorage
+  const token =
+    CookieStorage.get(CookieKeys.AuthToken) ||
+    localStorage.getItem(CookieKeys.AuthToken);
+
+  // Ambil data pengguna menggunakan useUserGetData
+  const { data, error, isLoading } = useUserGetData();
+
+  // Tutup dropdown saat klik di luar
   useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
+    const clickHandler = ({ target }) => {
       if (!dropdown.current) return;
       if (
         !dropdownOpen ||
@@ -23,23 +35,34 @@ const DropdownUser = () => {
     };
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
-  });
+  }, [dropdownOpen]);
 
-  // Close if the esc key is pressed
+  // Tutup dropdown jika tombol esc ditekan
   useEffect(() => {
-    const keyHandler = ({ keyCode }: KeyboardEvent) => {
+    const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen || keyCode !== 27) return;
       setDropdownOpen(false);
     };
     document.addEventListener('keydown', keyHandler);
     return () => document.removeEventListener('keydown', keyHandler);
-  });
+  }, [dropdownOpen]);
 
-  // Handle logout
+  // Fungsi untuk logout
   const handleLogout = () => {
-    CookieStorage.remove(CookieKeys.AuthToken); // Remove the token from cookies
-    navigate('/login'); // Redirect to the login page
+    CookieStorage.remove(CookieKeys.AuthToken); // Hapus token dari cookies
+    navigate('/login'); // Arahkan ke halaman login
   };
+
+  // Menampilkan konten berdasarkan status loading dan error
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>{error.toString()}</p>;
+
+  // Ambil username, email, dan imageProfile dari data yang diterima
+  const userData = token ? getUserData(token) : data?.data?.user || {};
+  const username = userData.username || 'Username tidak tersedia';
+  const email = userData.email || 'email tidak tersedia';
+  const role = userData.role || 'role tidak tersedia';
+  const imageProfile = userData.profiles?.imageProfile || UserOne;
 
   return (
     <div className="relative">
@@ -51,13 +74,15 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {email}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">
+            {role}
+          </span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+          <img src={imageProfile} alt="User" />
         </span>
 
         <svg
@@ -77,13 +102,13 @@ const DropdownUser = () => {
         </svg>
       </Link>
 
-      {/* <!-- Dropdown Start --> */}
+      {/* Dropdown */}
       <div
         ref={dropdown}
         onFocus={() => setDropdownOpen(true)}
         onBlur={() => setDropdownOpen(false)}
         className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${
-          dropdownOpen === true ? 'block' : 'hidden'
+          dropdownOpen ? 'block' : 'hidden'
         }`}
       >
         <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
@@ -92,7 +117,6 @@ const DropdownUser = () => {
               to="/profile"
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
             >
-              {/* Profile Icon and Text */}
               My Profile
             </Link>
           </li>
@@ -101,11 +125,9 @@ const DropdownUser = () => {
           onClick={handleLogout}
           className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
         >
-          {/* Log Out Icon */}
           Log Out
         </button>
       </div>
-      {/* <!-- Dropdown End --> */}
     </div>
   );
 };

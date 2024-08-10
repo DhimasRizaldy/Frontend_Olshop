@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   faPenToSquare,
   faTrash,
@@ -5,8 +6,37 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
+import { getManageStok } from '../../../../services/admin/manageStok/services-manageStok';
 
 const DataManagement = () => {
+  const [manageStoks, setManageStok] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // get manage stok
+  useEffect(() => {
+    const fetchManageStok = async () => {
+      try {
+        const response = await getManageStok();
+        // console.log('API Response:', response);
+        setManageStok(response.data || []); // Simpan data kategori dalam state
+      } catch (error) {
+        console.error('Fetch manage stok failed:', error.message);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchManageStok();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
@@ -44,55 +74,69 @@ const DataManagement = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
-                  <p className="text-black dark:text-white">1</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    MPRD010203
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-5 dark:border-strokedark xl:pl-9">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    SPL001
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p
-                    className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium bg-primary text-primary`}
-                  >
-                    PRD001
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-8 dark:border-strokedark">
-                  <p className="text-black dark:text-white">10</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <p className="text-black dark:text-white">10-08-2024</p>
-                </td>
-                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                  <div className="flex items-center space-x-3.5">
-                    <Link to="/detail-management">
-                      <button className="hover:text-primary">
-                        <FontAwesomeIcon icon={faEye} />
-                      </button>
-                    </Link>
-                    <Link to="/edit-management">
-                      <button className="hover:text-primary">
-                        <FontAwesomeIcon icon={faPenToSquare} />
-                      </button>
-                    </Link>
-                    <button className="hover:text-primary">
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {manageStoks.length > 0 ? (
+                manageStoks.map((manageStok, index) => (
+                  <tr key={manageStok.manageStockId}>
+                    <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
+                      <p className="text-black dark:text-white">{index + 1}</p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium`}
+                      >
+                        {manageStok.manageStockId}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-5 dark:border-strokedark xl:pl-9">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium`}
+                      >
+                        {manageStok.supplier.name}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p
+                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium`}
+                      >
+                        {manageStok.product.name}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-8 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {manageStok.stockIn}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        {manageStok.dateStockIn}
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                      <div className="flex items-center space-x-3.5">
+                        <Link to="/detail-management">
+                          <button className="hover:text-primary">
+                            <FontAwesomeIcon icon={faEye} />
+                          </button>
+                        </Link>
+                        <Link to="/edit-management">
+                          <button className="hover:text-primary">
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
+                        </Link>
+                        <button className="hover:text-primary">
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center py-5">
+                    No manage stok available.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

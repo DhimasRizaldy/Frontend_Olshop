@@ -2,7 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../../../public/images/logo-putkom.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBox, faList, faGauge, faTag, faCartShopping, faComment, faUser, faBoxesStacked} from '@fortawesome/free-solid-svg-icons';
+import {
+  faBox,
+  faList,
+  faGauge,
+  faTag,
+  faCartShopping,
+  faComment,
+  faUser,
+  faBoxesStacked,
+  faTruckField,
+} from '@fortawesome/free-solid-svg-icons';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -103,7 +113,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-
               {/* <!-- Menu Item Dashbaord --> */}
               <li>
                 <NavLink
@@ -124,8 +133,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to="/users"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('users') &&
-                    'bg-graydark dark:bg-meta-4'
+                    pathname.includes('users') && 'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <FontAwesomeIcon icon={faUser} />
@@ -134,12 +142,28 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </li>
               {/* <!-- Menu Item Users --> */}
 
+              {/* <!-- Menu Item Supplier --> */}
+              <li>
+                <NavLink
+                  to="/supplier"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('supplier') &&
+                    'bg-graydark dark:bg-meta-4'
+                  }`}
+                >
+                  <FontAwesomeIcon icon={faTruckField} />
+                  Supplier
+                </NavLink>
+              </li>
+              {/* <!-- Menu Item Supplier --> */}
+
               {/* <!-- Menu Item Category Product --> */}
               <li>
                 <NavLink
                   to="/management"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('management') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('management') &&
+                    'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <FontAwesomeIcon icon={faBox} />
@@ -153,7 +177,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to="/category"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('category') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('category') &&
+                    'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <FontAwesomeIcon icon={faList} />
@@ -171,7 +196,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }`}
                 >
                   <FontAwesomeIcon icon={faBoxesStacked} />
-                   Product
+                  Product
                 </NavLink>
               </li>
               {/* <!-- Menu Item Product --> */}
@@ -185,7 +210,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }`}
                 >
                   <FontAwesomeIcon icon={faTag} />
-                   Promo
+                  Promo
                 </NavLink>
               </li>
               {/* <!-- Menu Item Product --> */}
@@ -195,11 +220,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to="/transaction"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('transaction') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('transaction') &&
+                    'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <FontAwesomeIcon icon={faCartShopping} />
-                   Transaction
+                  Transaction
                 </NavLink>
               </li>
               {/* <!-- Menu Item Transaction --> */}
@@ -213,15 +239,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   }`}
                 >
                   <FontAwesomeIcon icon={faComment} />
-                   Rating
+                  Rating
                 </NavLink>
               </li>
               {/* <!-- Menu Item rating --> */}
-
-              
             </ul>
           </div>
-
         </nav>
         {/* <!-- Sidebar Menu --> */}
       </div>

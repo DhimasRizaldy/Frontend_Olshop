@@ -6,28 +6,28 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { getAddress } from '../../../../services/admin/address/services-address';
+import { getSupplier } from '../../../../services/admin/supplier/services-supplier';
 
-const DataAddress = () => {
-  const [address, setAddress] = useState([]);
+const DataSupplier = () => {
+  const [suppliers, setSupplier] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // get address
+  // get supplier
   useEffect(() => {
-    const fetchAddress = async () => {
+    const fetchSupplier = async () => {
       try {
-        const response = await getAddress();
+        const response = await getSupplier();
         // console.log('API Response:', response);
-        setAddress(response.data || []); // Simpan data kategori dalam state
+        setSupplier(response.data || []); // Simpan data kategori dalam state
       } catch (error) {
-        console.error('Fetch address failed:', error.message);
+        console.error('Fetch supplier failed:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchAddress();
+    fetchSupplier();
   }, []);
 
   if (loading) {
@@ -42,7 +42,7 @@ const DataAddress = () => {
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          Data Address
+          Data Supplier
         </h4>
       </div>
 
@@ -55,22 +55,19 @@ const DataAddress = () => {
                   No
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  AddressId
+                  SupplierId
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  Name Address
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  Name
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  Email
+                </th>
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                   Address
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  City
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Country
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  PostalCode
+                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  PhoneNumber
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Action
@@ -78,52 +75,47 @@ const DataAddress = () => {
               </tr>
             </thead>
             <tbody>
-              {address.length > 0 ? (
-                address.map((address, index) => (
-                  <tr key={address.addressId}>
+              {suppliers.length > 0 ? (
+                suppliers.map((supplier, index) => (
+                  <tr key={supplier.supplierId}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
                       <p className="text-black dark:text-white">{index + 1}</p>
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-7">
                       <p
                         className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium`}
                       >
-                        {address.addressId}
+                        {supplier.supplierId}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-6 pl-6 dark:border-strokedark xl:pl-8">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {address.nameAddress}
+                        {supplier.name}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-6 pl-6 dark:border-strokedark xl:pl-8">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {address.address}
+                        {supplier.email}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {address.city}
+                        {supplier.address}
                       </p>
                     </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {address.country}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {address.postalCode}
+                        {supplier.phoneNumber}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <Link to="/detail-address">
+                        <Link to={`/detail-supplier/${supplier.supplierId}`}>
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faEye} />
                           </button>
                         </Link>
-                        <Link to="/edit-address">
+                        <Link to={`/edit-supplier/${supplier.supplierId}`}>
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
@@ -138,7 +130,7 @@ const DataAddress = () => {
               ) : (
                 <tr>
                   <td colSpan="4" className="text-center py-5">
-                    No address available.
+                    No supplier available.
                   </td>
                 </tr>
               )}
@@ -150,4 +142,4 @@ const DataAddress = () => {
   );
 };
 
-export default DataAddress;
+export default DataSupplier;
