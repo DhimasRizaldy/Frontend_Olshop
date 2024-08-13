@@ -144,7 +144,9 @@ const DataProduct = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {product.description}
+                        {product.description.length > 15
+                          ? `${product.description.slice(0, 15)}...`
+                          : product.description}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">

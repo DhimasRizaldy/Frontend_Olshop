@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import {
   faPenToSquare,
   faTrash,
@@ -6,7 +7,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { getUser } from '../../../../services/admin/user/services-user';
+import {
+  getUser,
+  deleteUser,
+} from '../../../../services/admin/user/services-user';
+
 const DataUser = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,8 +22,7 @@ const DataUser = () => {
     const fetchUser = async () => {
       try {
         const response = await getUser();
-        // console.log('API Response:', response);
-        setUsers(response.data || []); // Simpan data kategori dalam state
+        setUsers(response.data || []); // Simpan data user dalam state
       } catch (error) {
         console.error('Fetch user failed:', error.message);
         setError(error.message);
@@ -28,6 +32,39 @@ const DataUser = () => {
     };
     fetchUser();
   }, []);
+
+  // handle delete
+  const handleDelete = async (userId, username) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete the user "${username}". You won't be able to revert this!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await deleteUser(userId);
+          if (response.success) {
+            Swal.fire(
+              'Deleted!',
+              `Users "${username}" has been deleted.`,
+              'success',
+            );
+            // Update state to remove the deleted user
+            setUsers(users.filter((user) => user.userId !== userId));
+          } else {
+            Swal.fire('Error', response.message, 'error');
+          }
+        } catch (error) {
+          console.error('Error deleting user:', error.message);
+          Swal.fire('Error', error.message, 'error');
+        }
+      }
+    });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -107,17 +144,22 @@ const DataUser = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <Link to="/detail-users">
+                        {/* <Link to={`/detail-users/${user.userId}`}>
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faEye} />
                           </button>
                         </Link>
-                        <Link to="/edit-users">
+                        <Link to={`/edit-users/${user.userId}`}>
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
-                        </Link>
-                        <button className="hover:text-primary">
+                        </Link> */}
+                        <button
+                          className="hover:text-primary"
+                          onClick={() =>
+                            handleDelete(user.userId, user.username)
+                          }
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </div>

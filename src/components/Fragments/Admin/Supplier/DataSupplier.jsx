@@ -6,7 +6,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { getSupplier } from '../../../../services/admin/supplier/services-supplier';
+import Swal from 'sweetalert2';
+import {
+  getSupplier,
+  deleteSupplier,
+} from '../../../../services/admin/supplier/services-supplier';
 
 const DataSupplier = () => {
   const [suppliers, setSupplier] = useState([]);
@@ -29,6 +33,41 @@ const DataSupplier = () => {
     };
     fetchSupplier();
   }, []);
+
+  // handle delete
+  const handleDelete = async (supplierId, supplierName) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete the supplier "${supplierName}". You won't be able to revert this!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await deleteSupplier(supplierId);
+          if (response.success) {
+            Swal.fire(
+              'Deleted!',
+              `Supplier "${supplierName}" has been deleted.`,
+              'success',
+            );
+            // Update state to remove the deleted supplier
+            setSupplier(
+              suppliers.filter(
+                (supplier) => supplier.supplierId !== supplierId,
+              ),
+            );
+          }
+        } catch (error) {
+          console.error('Error deleting supplier:', error.message);
+          Swal.fire('Error!', error.message, 'error');
+        }
+      }
+    });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -100,7 +139,9 @@ const DataSupplier = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                       <p className="text-black dark:text-white">
-                        {supplier.address}
+                        {supplier.address.length > 15
+                          ? `${supplier.address.slice(0, 15)}...`
+                          : supplier.address}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
@@ -120,7 +161,12 @@ const DataSupplier = () => {
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
                         </Link>
-                        <button className="hover:text-primary">
+                        <button
+                          className="hover:text-primary"
+                          onClick={() =>
+                            handleDelete(supplier.supplierId, supplier.name)
+                          }
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </div>

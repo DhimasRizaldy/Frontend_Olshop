@@ -197,7 +197,7 @@ const DataTransaction = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="text-center py-5">
+                  <td colSpan="10" className="text-center py-5">
                     No transactions available.
                   </td>
                 </tr>

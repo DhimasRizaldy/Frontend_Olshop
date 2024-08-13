@@ -158,9 +158,7 @@ const AuthLayouts = (props) => {
                 </div>
                 <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
                   <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-                    <h2 className="text-2xl font-bold text-primary mb-9 dark:text-white sm:text-title-xl2">
-                      {TitleBar({ type })}
-                    </h2>
+                    {TitleBar({ type })}
                     {children}
                   </div>
                 </div>

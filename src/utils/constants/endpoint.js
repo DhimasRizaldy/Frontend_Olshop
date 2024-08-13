@@ -10,8 +10,17 @@ export const API_ENDPOINT = {
     return `/auth/verifyOTP?otp=${otp}&token=${token}`;
   },
   // User Auth (Admin)
-  USER_REGISTER_ADMIN: '/auth/register-admin',
+  REGISTER_ADMIN: '/auth/register-admin',
   GET_ALL_USER: '/auth/users',
+  DELETE_ADMIN: (userId) => {
+    return `/auth/users/${userId}`;
+  },
+  UPDATE_ADMIN: (userId) => {
+    return `/auth/users/${userId}`;
+  },
+  GET_ADMIN_BY_ID: (userId) => {
+    return `/auth/users/${userId}`;
+  },
 
   // User Auth (Manage Users)
   USER_FORGOT_PASSWORD: '/auth/forgot-password',
@@ -48,13 +57,16 @@ export const API_ENDPOINT = {
   UPDATE_CATEGORY: (categoryId) => {
     return `/category/${categoryId}`;
   },
+  GET_CATEGORY_BY_ID: (categoryId) => {
+    return `/category/${categoryId}`;
+  },
   DELETE_CATEGORY: (categoryId) => {
     return `/category/${categoryId}`;
   },
 
   // Supplier
   GET_SUPPLIER: '/supplier',
-  GET_DETAIL_SUPPLIER: (supplierId) => {
+  GET_SUPPLIER_BY_ID: (supplierId) => {
     return `/supplier/${supplierId}`;
   },
   POST_SUPPLIER: '/supplier/',
@@ -67,7 +79,7 @@ export const API_ENDPOINT = {
 
   // Promo
   GET_PROMO: '/promo',
-  GET_DETAIL_PROMO: (promoId) => {
+  GET_PROMO_BY_ID: (promoId) => {
     return `/promo/${promoId}`;
   },
   POST_PROMO: '/promo/',
@@ -80,7 +92,7 @@ export const API_ENDPOINT = {
 
   // Address
   GET_ADDRESS: '/address/',
-  GET_DETAIL_ADDRESS: (addressId) => {
+  GET_ADDRESS_BY_ID: (addressId) => {
     return `/address/${addressId}`;
   },
   POST_ADDRESS: '/address/',
@@ -108,15 +120,15 @@ export const API_ENDPOINT = {
 
   // ManageStok
   GET_MANAGE_STOK: '/manageStok/',
-  GET_DETAIL_MANAGE_STOK: (manageStokId) => {
-    return `/manageStok/${manageStokId}`;
+  GET_MANAGE_STOK_BY_ID: (manageStockId) => {
+    return `/manageStok/${manageStockId}`;
   },
-  POST_MANAGE_STOK: '/manageStok/',
-  UPDATE_MANAGE_STOK: (manageStokId) => {
-    return `/manageStok/${manageStokId}`;
+  POST_MANAGE_STOK: '/manageStok',
+  UPDATE_MANAGE_STOK: (manageStockId) => {
+    return `/manageStok/${manageStockId}`;
   },
-  DELETE_MANAGE_STOK: (manageStokId) => {
-    return `/manageStok/${manageStokId}`;
+  DELETE_MANAGE_STOK: (manageStockId) => {
+    return `/manageStok/${manageStockId}`;
   },
 
   // Transaction

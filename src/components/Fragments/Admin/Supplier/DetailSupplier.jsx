@@ -1,15 +1,32 @@
-import React from 'react';
-import SelectGroup from '../../../Forms/SelectGroup/SelectGroupOne';
-import DatePickerOne from '../../../Forms/DatePicker/DatePickerOne';
-import { Link } from 'react-router-dom';
-
-const options = [
-  { value: 'USA', label: 'USA' },
-  { value: 'UK', label: 'UK' },
-  { value: 'Canada', label: 'Canada' },
-];
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { getSupplierById } from '../../../../services/admin/supplier/services-supplier';
 
 const DetailSupplier = () => {
+  const { supplierId } = useParams();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchSupplierData = async () => {
+      try {
+        const response = await getSupplierById(supplierId);
+        setName(response.data.name);
+        setEmail(response.data.email);
+        setAddress(response.data.address);
+        setPhoneNumber(response.data.phoneNumber);
+      } catch (error) {
+        toast.error('Failed to fetch supplier data');
+        console.error('Error:', error);
+      }
+    };
+
+    fetchSupplierData();
+  }, [supplierId]);
+
   return (
     <form action="#">
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -18,42 +35,69 @@ const DetailSupplier = () => {
             className="mb-3 block text-sm font-medium text-black dark:text-white"
             htmlFor="codePromo"
           >
-            Code Promo
+            Name Toko
           </label>
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
               type="text"
-              name="codePromo"
-              id="codePromo"
-              placeholder="Code Promo"
+              name="name"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled
             />
           </div>
         </div>
         <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block text-sm font-medium text-black dark:text-white"
-            htmlFor="codePromo"
-          >
-            Discount
+          <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+            Email
           </label>
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="discount"
-              id="discount"
-              placeholder="Discount %"
+              type="email"
+              name="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled
             />
           </div>
         </div>
       </div>
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
-          <DatePickerOne label="Tanggal Active" />
+          <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+            Address
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="address"
+              id="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              disabled
+            />
+          </div>
         </div>
         <div className="w-full sm:w-1/2">
-          <DatePickerOne label="Tanggal Expires" />
+          <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+            Phone Number
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="phoneNumber"
+              id="phoneNumber"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              disabled
+            />
+          </div>
         </div>
       </div>
 

@@ -5,6 +5,7 @@ interface SelectGroupProps {
   options: { value: string; label: string }[];
   defaultOption?: string;
   labelObject: string;
+  onChange: (value: string) => void; // Tambahkan props onChange
 }
 
 const SelectGroup: React.FC<SelectGroupProps> = ({
@@ -12,25 +13,25 @@ const SelectGroup: React.FC<SelectGroupProps> = ({
   options,
   defaultOption = '',
   labelObject,
+  onChange, // Terima props onChange
 }) => {
   const [selectedOption, setSelectedOption] = useState<string>(defaultOption);
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
 
-  const changeTextColor = () => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedOption(value);
     setIsOptionSelected(true);
+    onChange(value); // Panggil fungsi onChange dari props
   };
 
   return (
     <div className="mb-4.5">
       <label className="mb-2.5 block text-black dark:text-white">{label}</label>
-
       <div className="relative z-20 bg-transparent dark:bg-form-input">
         <select
           value={selectedOption}
-          onChange={(e) => {
-            setSelectedOption(e.target.value);
-            changeTextColor();
-          }}
+          onChange={handleChange} // Gunakan handleChange sebagai event handler
           className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
             isOptionSelected ? 'text-black dark:text-white' : ''
           }`}
@@ -48,7 +49,6 @@ const SelectGroup: React.FC<SelectGroupProps> = ({
             </option>
           ))}
         </select>
-
         <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
           <svg
             className="fill-current"

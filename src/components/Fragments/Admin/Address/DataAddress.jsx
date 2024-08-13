@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import {
   faPenToSquare,
   faTrash,
@@ -6,7 +7,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { getAddress } from '../../../../services/admin/address/services-address';
+import {
+  getAddress,
+  deleteAddress,
+} from '../../../../services/admin/address/services-address';
 
 const DataAddress = () => {
   const [address, setAddress] = useState([]);
@@ -29,6 +33,39 @@ const DataAddress = () => {
     };
     fetchAddress();
   }, []);
+
+  // handle delete
+  const handleDelete = async (addressId, addressName) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete the address "${addressName}". You won't be able to revert this!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await deleteAddress(addressId);
+          if (response.success) {
+            Swal.fire(
+              'Deleted!',
+              `Address "${addressName}" has been deleted.`,
+              'success',
+            );
+            // Update state to remove the deleted address
+            setAddress(
+              address.filter((address) => address.addressId !== addressId),
+            );
+          }
+        } catch (error) {
+          console.error('Error deleting address:', error.message);
+          Swal.fire('Error!', error.message, 'error');
+        }
+      }
+    });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -98,7 +135,9 @@ const DataAddress = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-6 pl-6 dark:border-strokedark xl:pl-8">
                       <p className="text-black dark:text-white">
-                        {address.address}
+                        {address.address.length > 15
+                          ? `${address.address.slice(0, 15)}...`
+                          : address.address}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -118,17 +157,22 @@ const DataAddress = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <Link to="/detail-address">
+                        <Link to={`/detail-address/${address.addressId}`}>
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faEye} />
                           </button>
                         </Link>
-                        <Link to="/edit-address">
+                        <Link to={`/edit-address/${address.addressId}`}>
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
                         </Link>
-                        <button className="hover:text-primary">
+                        <button
+                          className="hover:text-primary"
+                          onClick={() =>
+                            handleDelete(address.addressId, address.nameAddress)
+                          }
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </div>

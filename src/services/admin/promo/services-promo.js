@@ -44,47 +44,56 @@ export const addPromos = async (promoData, setIsLoading) => {
   }
 };
 // update promo
-export const updatePromo = async (data) => {
+export const editPromo = async (promoId, promoData) => {
   try {
-    const response = await http.patch(API_ENDPOINT.UPDATE_PROMO, data);
+    const response = await http.put(
+      API_ENDPOINT.UPDATE_PROMO(promoId),
+      promoData,
+    );
     // console.log('API Update Promo Response:', response.data);
     return response.data;
   } catch (error) {
     console.error(
       'Error updating Promo:',
-      error.response?.data?.message || 'Unknown error',
+      error.response?.data || error.message,
     );
-    throw new Error(error.response?.data?.message || 'Error updating Promo');
-  }
-};
-// delete promo
-export const deletePromo = async (data) => {
-  try {
-    const response = await http.delete(API_ENDPOINT.DELETE_PROMO, { data });
-    // console.log('API Delete Promo Response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error(
-      'Error deleting Promo:',
-      error.response?.data?.message || 'Unknown error',
-    );
-    throw new Error(error.response?.data?.message || 'Error deleting Promo');
+    throw error; // Propagate the error to be handled by the caller
   }
 };
 
-// get promo by id
-export const getPromoById = async (id) => {
+// get a promo by id
+export const getPromoById = async (promoId) => {
   try {
-    const response = await http.get(`${API_ENDPOINT.GET_PROMO_BY_ID}/${id}`);
-    // console.log('API Get Promo By ID Response:', response.data);
+    const response = await http.get(API_ENDPOINT.GET_PROMO_BY_ID(promoId));
+    // console.log('API Get Promo Response:', response.data);
     return response.data;
   } catch (error) {
     console.error(
-      'Error fetching Promo by ID:',
+      'Error fetching Promo:',
       error.response?.data?.message || 'Unknown error',
     );
-    throw new Error(
-      error.response?.data?.message || 'Error fetching Promo by ID',
+    throw new Error(error.response?.data?.message || 'Error fetching Promo');
+  }
+};
+
+// delete promo
+export const deletePromo = async (promoId) => {
+  try {
+    const response = await http.delete(API_ENDPOINT.DELETE_PROMO(promoId));
+
+    // Check if the API response indicates success
+    if (response.data.success) {
+      return response.data;
+    } else {
+      throw new Error(response.data.message || 'Failed to delete promo');
+    }
+  } catch (error) {
+    console.error(
+      'Error deleting promo:',
+      error.response?.data?.message || 'Unknown error',
     );
+
+    // Throwing a specific error message to be caught in the component
+    throw new Error(error.response?.data?.message || 'Error deleting promo');
   }
 };

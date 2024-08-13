@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import {
   faPenToSquare,
   faTrash,
@@ -6,7 +7,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { getManageStok } from '../../../../services/admin/manageStok/services-manageStok';
+import {
+  getManageStok,
+  deleteManageStok,
+} from '../../../../services/admin/manageStok/services-manageStok';
 
 const DataManagement = () => {
   const [manageStoks, setManageStok] = useState([]);
@@ -29,6 +33,41 @@ const DataManagement = () => {
     };
     fetchManageStok();
   }, []);
+
+  // handle delete
+  const handleDelete = async (manageStockId, manageStokName) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete the manage stok "${manageStokName}". You won't be able to revert this!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await deleteManageStok(manageStockId);
+          if (response.success) {
+            Swal.fire(
+              'Deleted!',
+              `Manage stok "${manageStokName}" has been deleted.`,
+              'success',
+            );
+            // Update state to remove the deleted manage stok
+            setManageStok(
+              manageStoks.filter(
+                (manageStok) => manageStok.manageStockId !== manageStockId,
+              ),
+            );
+          }
+        } catch (error) {
+          console.error('Error deleting manage stok:', error.message);
+          Swal.fire('Error', error.message, 'error');
+        }
+      }
+    });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -113,17 +152,29 @@ const DataManagement = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <Link to="/detail-management">
+                        <Link
+                          to={`/detail-management/${manageStok.manageStockId}`}
+                        >
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faEye} />
                           </button>
                         </Link>
-                        <Link to="/edit-management">
+                        <Link
+                          to={`/edit-management/${manageStok.manageStockId}`}
+                        >
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
                         </Link>
-                        <button className="hover:text-primary">
+                        <button
+                          className="hover:text-primary"
+                          onClick={() =>
+                            handleDelete(
+                              manageStok.manageStockId,
+                              manageStok.product.name,
+                            )
+                          }
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import {
   faPenToSquare,
   faTrash,
@@ -6,20 +7,21 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { getCategories } from '../../../../services/admin/category/services-category';
+import {
+  getCategories,
+  deleteCategory,
+} from '../../../../services/admin/category/services-category';
 
 const DataCategory = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // get category
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await getCategories();
-        // console.log('API Response:', response);
-        setCategories(response.data || []); // Simpan data kategori dalam state
+        setCategories(response.data || []);
       } catch (error) {
         console.error('Fetch categories failed:', error.message);
         setError(error.message);
@@ -29,6 +31,43 @@ const DataCategory = () => {
     };
     fetchCategories();
   }, []);
+
+  const handleDelete = async (categoryId, categoryName) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete the category "${categoryName}". You won't be able to revert this!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await deleteCategory(categoryId);
+          if (response.success) {
+            Swal.fire(
+              'Deleted!',
+              `Category "${categoryName}" has been deleted.`,
+              'success',
+            );
+            // Update state to remove the deleted category
+            setCategories(
+              categories.filter(
+                (category) => category.categoryId !== categoryId,
+              ),
+            );
+          }
+        } catch (error) {
+          Swal.fire(
+            'Error!',
+            `There was an error deleting the category "${categoryName}".`,
+            'error',
+          );
+        }
+      }
+    });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -96,7 +135,12 @@ const DataCategory = () => {
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
                         </Link>
-                        <button className="hover:text-primary">
+                        <button
+                          className="hover:text-primary"
+                          onClick={() =>
+                            handleDelete(category.categoryId, category.name)
+                          }
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </div>

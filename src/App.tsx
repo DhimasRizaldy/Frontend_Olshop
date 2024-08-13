@@ -68,6 +68,12 @@ import AddSuppliers from './pages/Admin/Supplier/AddSupplier.jsx';
 import EditSuppliers from './pages/Admin/Supplier/EditSupplier.jsx';
 import DetailSuppliers from './pages/Admin/Supplier/DetailSupplier.jsx';
 
+// CRUD Address
+import Address from './pages/Admin/Address/Address';
+import AddAddress from './pages/Admin/Address/AddAddress.jsx';
+import EditAddress from './pages/Admin/Address/EditAddress.jsx';
+import DataAddress from './pages/Admin/Address/DataAddress.jsx';
+import DetailAddress from './pages/Admin/Address/DetailAddress.jsx';
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
@@ -116,7 +122,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-users"
+          path="/edit-users/:userId"
           element={
             <>
               <PageTitle title="Edit Users | Putra Komputer" />
@@ -125,7 +131,7 @@ function App() {
           }
         />
         <Route
-          path="/detail-users"
+          path="/detail-users/:userId"
           element={
             <>
               <PageTitle title="Detail Users | Putra Komputer" />
@@ -154,7 +160,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-management"
+          path="/edit-management/:manageStockId"
           element={
             <>
               <PageTitle title="Edit Management Product | Putra Komputer" />
@@ -163,7 +169,7 @@ function App() {
           }
         />
         <Route
-          path="/detail-management"
+          path="/detail-management/:manageStockId"
           element={
             <>
               <PageTitle title="Detail Management Product | Putra Komputer" />
@@ -192,7 +198,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-supplier"
+          path="/edit-supplier/:supplierId"
           element={
             <>
               <PageTitle title="Edit Supplier | Putra Komputer" />
@@ -201,7 +207,7 @@ function App() {
           }
         />
         <Route
-          path="/detail-supplier"
+          path="/detail-supplier/:supplierId"
           element={
             <>
               <PageTitle title="Detail Supplier | Putra Komputer" />
@@ -230,7 +236,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-category"
+          path="/edit-category/:categoryId"
           element={
             <>
               <PageTitle title="Edit Category | Putra Komputer" />
@@ -239,7 +245,7 @@ function App() {
           }
         />
         <Route
-          path="/detail-category"
+          path="/detail-category/:categoryId"
           element={
             <>
               <PageTitle title="Detail Category | Putra Komputer" />
@@ -306,7 +312,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-promo"
+          path="/edit-promo/:promoId"
           element={
             <>
               <PageTitle title="Edit Promo | Putra Komputer" />
@@ -315,7 +321,7 @@ function App() {
           }
         />
         <Route
-          path="/detail-promo"
+          path="/detail-promo/:promoId"
           element={
             <>
               <PageTitle title="Detail Promo | Putra Komputer" />
@@ -416,6 +422,44 @@ function App() {
             <>
               <PageTitle title="Edit Profile | Putra Komputer" />
               <DataProfile />
+            </>
+          }
+        />
+
+        {/* address */}
+        <Route
+          path="/address"
+          element={
+            <>
+              <PageTitle title="Address | Putra Komputer" />
+              <Address />
+            </>
+          }
+        />
+        <Route
+          path="/add-address"
+          element={
+            <>
+              <PageTitle title="Add Address | Putra Komputer" />
+              <AddAddress />
+            </>
+          }
+        />
+        <Route
+          path="/edit-address/:addressId"
+          element={
+            <>
+              <PageTitle title="Edit Address | Putra Komputer" />
+              <EditAddress />
+            </>
+          }
+        />
+        <Route
+          path="/detail-address/:addressId"
+          element={
+            <>
+              <PageTitle title="Detail Address | Putra Komputer" />
+              <DetailAddress />
             </>
           }
         />
