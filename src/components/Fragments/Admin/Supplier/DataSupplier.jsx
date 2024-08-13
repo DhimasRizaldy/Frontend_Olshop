@@ -175,7 +175,7 @@ const DataSupplier = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="text-center py-5">
+                  <td colSpan="8" className="text-center py-5">
                     No supplier available.
                   </td>
                 </tr>

@@ -25,7 +25,7 @@ const AddCategory = () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       await addCategory(categoryData, setIsLoading);
-      toast.success('Category added successfully!');
+      // toast.success('Category added successfully!');
       // Optionally clear the input field after success
       setName('');
     } catch (error) {

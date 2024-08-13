@@ -172,7 +172,7 @@ const DataPromo = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="text-center py-5">
+                  <td colSpan="8" className="text-center py-5">
                     No promo available.
                   </td>
                 </tr>
