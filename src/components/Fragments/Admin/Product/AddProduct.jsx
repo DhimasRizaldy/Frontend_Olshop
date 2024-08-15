@@ -1,7 +1,75 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { addProduct } from '../../../../services/admin/category/services-product';
 
 const AddProduct = () => {
+  const [name, setName] = useState('');
+  const [categoryId, setCategoryId] = useState('');
+  const [price, setPrice] = useState('');
+  const [promoPrice, setPromoPrice] = useState('');
+  const [weight, setWeight] = useState(false);
+  const [stock, setStock] = useState([]);
+  const [description, setDescription] = useState([]);
+
+  useEffect(() => {
+    // Fetch category when the component mounts
+    const fetchcategory = async () => {
+      try {
+        const categoryResponse = await getCategory();
+        // console.log(categoryResponse.data);
+
+        const categoryOptions = categoryResponse.data.map((category) => ({
+          value: category.categoryId,
+          label: category.name, // assuming categoryName is the name field
+        }));
+
+        setCategoryOptions(categoryOptions);
+      } catch (error) {
+        toast.error('Failed to fetch categories');
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchcategory();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // console.log('categoryId:');
+
+    if (!categoryId) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    const manageStokData = {
+      supplierId,
+      productId,
+      stockIn: parseInt(stockIn, 10),
+      dateStockIn: new Date(dateStockIn).toISOString(),
+    };
+
+    setIsLoading(true);
+
+    try {
+      await addManageStok(manageStokData);
+      toast.success('Manage Stock added successfully!');
+      setSupplierId('');
+      setProductId('');
+      setStockIn('');
+      setDateStockIn('');
+    } catch (error) {
+      toast.error('Failed to add manage Stock');
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   return (
     <form action="#">
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">

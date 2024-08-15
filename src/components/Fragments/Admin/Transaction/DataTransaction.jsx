@@ -55,7 +55,7 @@ const DataTransaction = () => {
                   No
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  TransaksiId
+                  TransactionId
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
                   UserId
