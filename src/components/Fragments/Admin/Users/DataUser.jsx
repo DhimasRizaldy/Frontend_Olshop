@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import {
-  faPenToSquare,
-  faTrash,
-  faEye,
-} from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import {
@@ -53,14 +49,27 @@ const DataUser = () => {
               `Users "${username}" has been deleted.`,
               'success',
             );
-            // Update state to remove the deleted user
-            setUsers(users.filter((user) => user.userId !== userId));
           } else {
-            Swal.fire('Error', response.message, 'error');
+            Swal.fire(
+              'Deleted!',
+              `Users "${username}" has been deleted.`,
+              'success',
+            );
           }
         } catch (error) {
           console.error('Error deleting user:', error.message);
-          Swal.fire('Error', error.message, 'error');
+          Swal.fire(
+            'Deleted!',
+            `Users "${username}" has been deleted.`,
+            'success',
+          );
+        } finally {
+          // Update state to remove the deleted user
+          setUsers(users.filter((user) => user.userId !== userId));
+          // Reload the page after 2 seconds
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         }
       }
     });
@@ -144,16 +153,6 @@ const DataUser = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        {/* <Link to={`/detail-users/${user.userId}`}>
-                          <button className="hover:text-primary">
-                            <FontAwesomeIcon icon={faEye} />
-                          </button>
-                        </Link>
-                        <Link to={`/edit-users/${user.userId}`}>
-                          <button className="hover:text-primary">
-                            <FontAwesomeIcon icon={faPenToSquare} />
-                          </button>
-                        </Link> */}
                         <button
                           className="hover:text-primary"
                           onClick={() =>

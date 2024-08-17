@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import {
   faPenToSquare,
   faTrash,
@@ -6,7 +7,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { getProduct } from '../../../../services/admin/product/services-product';
+import {
+  getProduct,
+  deleteProduct,
+} from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
 
 const DataProduct = () => {
@@ -30,6 +34,41 @@ const DataProduct = () => {
     };
     fetchProduct();
   }, []);
+
+  // handle delete
+  const handleDelete = async (productId, productName) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete the product "${productName}". You won't be able to revert this!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await deleteProduct(productId);
+          if (response.success) {
+            Swal.fire(
+              'Deleted!',
+              `Product "${productName}" has been deleted.`,
+              'success',
+            );
+            // Update state to remove the deleted product
+            setProduct(
+              products.filter((product) => product.productId !== productId),
+            );
+          } else {
+            Swal.fire('Error!', response.message, 'error');
+          }
+        } catch (error) {
+          console.error('Delete product failed:', error.message);
+          Swal.fire('Error!', error.message, 'error');
+        }
+      }
+    });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -151,17 +190,22 @@ const DataProduct = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        <Link to="/detail-product">
+                        <Link to={`/detail-product/${product.productId}`}>
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faEye} />
                           </button>
                         </Link>
-                        <Link to="/edit-product">
+                        <Link to={`/edit-product/${product.productId}`}>
                           <button className="hover:text-primary">
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
                         </Link>
-                        <button className="hover:text-primary">
+                        <button
+                          className="hover:text-primary"
+                          onClick={() =>
+                            handleDelete(product.productId, product.name)
+                          }
+                        >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </div>

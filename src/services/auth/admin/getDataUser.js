@@ -49,7 +49,6 @@ const getUserData = (token) => {
       username: decoded.username,
       email: decoded.email,
       role: decoded.role,
-      imageProfile: decoded.imageProfile,
     };
   } catch (error) {
     console.error('Error decoding token:', error);

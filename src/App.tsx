@@ -274,7 +274,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-product"
+          path="/edit-product/:productId"
           element={
             <>
               <PageTitle title="Edit Product | Putra Komputer" />
@@ -283,7 +283,7 @@ function App() {
           }
         />
         <Route
-          path="/detail-product"
+          path="/detail-product/:productId"
           element={
             <>
               <PageTitle title="Detail Product | Putra Komputer" />

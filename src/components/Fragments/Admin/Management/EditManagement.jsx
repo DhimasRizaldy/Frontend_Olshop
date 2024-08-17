@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import SelectGroup from '../../../../components/Forms/SelectGroup/SelectGroupOne';
 import {
   editManageStok,
   getManageStokById,
@@ -99,22 +98,48 @@ const EditManagement = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
-            <SelectGroup
-              label="Supplier"
-              options={supplierOptions}
-              value={supplierId}
-              onChange={setSupplierId}
-              disabled={isLoading}
-            />
+            <label className="mb-3 block font-medium text-black dark:text-white">
+              Supplier
+            </label>
+            <div className="relative">
+              <select
+                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                value={supplierId}
+                onChange={(e) => setSupplierId(e.target.value)}
+                disabled={isLoading}
+              >
+                <option value="" disabled>
+                  Select a supplier
+                </option>
+                {supplierOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="w-full sm:w-1/2">
-            <SelectGroup
-              label="Product"
-              options={productOptions}
-              value={productId}
-              onChange={setProductId}
-              disabled={isLoading}
-            />
+            <label className="mb-3 block font-medium text-black dark:text-white">
+              Product
+            </label>
+            <div className="relative">
+              <select
+                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                value={productId}
+                onChange={(e) => setProductId(e.target.value)}
+                disabled={isLoading}
+              >
+                <option value="" disabled>
+                  Select a product
+                </option>
+                {productOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">

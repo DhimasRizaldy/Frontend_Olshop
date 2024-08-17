@@ -1,17 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CookieKeys, CookieStorage } from '../../utils/constants/cookies';
-import UserOne from '../../images/user/user-01.png';
+import defaultUser from '../../images/user/default-user.png';
 import {
   useUserGetData,
   getUserData,
 } from '../../services/auth/admin/getDataUser';
+import { getProfile } from '../../services/admin/profile/services-profile';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const trigger = useRef(null);
   const dropdown = useRef(null);
   const navigate = useNavigate();
+  const [imageProfile, setImageProfile] = useState(null);
+
+  // get profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        setImageProfile(response.data.imageProfile || null);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   // Ambil token dari cookies atau localStorage
   const token =
@@ -57,12 +72,10 @@ const DropdownUser = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error.toString()}</p>;
 
-  // Ambil username, email, dan imageProfile dari data yang diterima
-  const userData = token ? getUserData(token) : data?.data?.user || {};
-  const username = userData.username || 'Username tidak tersedia';
-  const email = userData.email || 'email tidak tersedia';
-  const role = userData.role || 'role tidak tersedia';
-  const imageProfile = userData.profiles?.imageProfile || UserOne;
+  // Ambil username, email, dan role dari token
+  const userDataFromToken = token ? getUserData(token) : {};
+  const email = userDataFromToken.email || 'email tidak tersedia';
+  const role = userDataFromToken.role || 'role tidak tersedia';
 
   return (
     <div className="relative">
@@ -76,13 +89,16 @@ const DropdownUser = () => {
           <span className="block text-sm font-medium text-black dark:text-white">
             {email}
           </span>
-          <span className="block text-xs">
-            {role}
-          </span>
+          <span className="block text-xs">{role}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={imageProfile} alt="User" />
+          <img
+            src={imageProfile || defaultUser}
+            alt="User"
+            className="rounded-full"
+            width={50}
+          />
         </span>
 
         <svg

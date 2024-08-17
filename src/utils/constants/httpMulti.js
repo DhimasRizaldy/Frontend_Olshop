@@ -2,11 +2,11 @@ import axios from "axios";
 import { CookieKeys, CookieStorage } from "./cookies";
 
 const httpMulti = axios.create({
-  baseURL: process.env.VITE_API_SERVER,
+  baseURL: import.meta.env.VITE_API_SERVER,
   timeout: 30000,
   headers: {
-    Accept: "application/json",
-    "Content-Type": "multipart/form-data",
+    Accept: 'application/json',
+    'Content-Type': 'multipart/form-data',
   },
 });
 

@@ -100,17 +100,3 @@ export const getUserById = async (userId) => {
     throw new Error(error.response?.data?.message || 'Error fetching User');
   }
 };
-
-// user register
-// export const userRegister = async (data) => {
-//   try {
-//     const response = await http.post(API_ENDPOINT.USER_REGISTER, data);
-//     return response.data;
-//   } catch (error) {
-//     console.error(
-//       'Error registering user:',
-//       error.response?.data || error.message,
-//     );
-//     throw error;
-//   }
-// };

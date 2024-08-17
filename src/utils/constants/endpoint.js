@@ -39,7 +39,6 @@ export const API_ENDPOINT = {
   GET_DETAIL_PRODUCT: (productId) => {
     return `/product/${productId}`;
   },
-
   // Product (Admin)
   POST_PRODUCT: '/product/',
   UPDATE_PRODUCT: (productId) => {
