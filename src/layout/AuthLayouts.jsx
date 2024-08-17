@@ -12,7 +12,7 @@ const AuthLayouts = (props) => {
               <div className="flex flex-wrap items-center">
                 <div className="hidden w-full xl:block xl:w-1/2">
                   <div className="py-17.5 px-26 text-center">
-                    <Link className="mb-5.5 inline-block" to="/dashboard">
+                    <Link className="mb-5.5 inline-block" to="#">
                       <img
                         className="hidden dark:block"
                         src="./images/logo-putkom.png"
