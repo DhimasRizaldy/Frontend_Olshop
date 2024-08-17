@@ -15,7 +15,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@tanstack/react-query": "^5.51.23",
     "apexcharts": "^3.41.0",
-    "axios": "^1.7.3",
+    "axios": "^1.3.1",
     "flatpickr": "^4.6.13",
     "headlessui": "^0.0.0",
     "jsvectormap": "^1.6.0",
@@ -33,7 +33,7 @@
     "react-toastify": "^9.1.3",
     "redux": "^5.0.1",
     "sort-by": "^0.0.2",
-    "sweetalert2": "^11.12.4",
+    "sweetalert2": "^11.6.13",
     "universal-cookie": "^7.2.0"
   },
   "devDependencies": {
