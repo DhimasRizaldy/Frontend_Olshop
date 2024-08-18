@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import 'react-toastify/dist/ReactToastify.css';
-
 import Button from '../../Elements/Button/Index';
 import { userOTP } from '../../../services/auth/user/userAuthServices';
+
 
 const FormVerifyOtp = () => {
   const [otp, setOtp] = useState('');
