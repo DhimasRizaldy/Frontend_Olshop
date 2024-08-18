@@ -68,7 +68,6 @@ const FormLogin = () => {
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
           />
           <span className="absolute right-4 top-4">
             <svg

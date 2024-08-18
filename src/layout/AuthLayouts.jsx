@@ -186,6 +186,8 @@ const TitleBar = ({ type }) => {
     displayText = 'Verify Activate Email';
   } else if (type === 'verify-accounts') {
     displayText = 'Verify Accounts';
+  } else if (type == 'reset-password') {
+    displayText = 'Reset Password';
   }
 
   return (

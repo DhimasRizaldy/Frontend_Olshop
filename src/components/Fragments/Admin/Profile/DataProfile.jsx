@@ -299,13 +299,22 @@ const DataProfile = () => {
       </div>
 
       {/* Address */}
-      <div className="mb-5 mt-10">
+      <div className="mb-5 mt-10 flex space-x-4">
         <Link to="/add-address">
           <Button
             type="submit"
             classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
           >
             Add Data
+          </Button>
+        </Link>
+
+        <Link to="/change-password">
+          <Button
+            type="submit"
+            classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
+          >
+            Change Password
           </Button>
         </Link>
       </div>

@@ -1,5 +1,7 @@
 import { toast } from 'react-toastify';
 import { API_ENDPOINT } from '../../../utils/constants/endpoint';
+import Swal from 'sweetalert2';
+import 'react-toastify/dist/ReactToastify.css';
 import http from '../../../utils/constants/http';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
@@ -9,8 +11,38 @@ export const userLogin = async (data) => {
 };
 
 // service user Resend OTP
-export const userResendOTP = async (data) => {
-  return await http.post(API_ENDPOINT.USER_RESEND_OTP, data);
+export const userResendOTP = async (email, navigate) => {
+  if (!email) {
+    toast.error('Email is required');
+    return false;
+  }
+
+  try {
+    const response = await http.post(API_ENDPOINT.USER_RESEND_OTP, { email });
+    const { success } = response.data;
+
+    // Always show success alert regardless of actual success
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'OTP has been sent',
+    });
+
+    navigate('/login');
+    return success;
+  } catch (error) {
+    console.error('Failed to resend OTP:', error);
+
+    // Show success alert even when there's an error
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'OTP has been sent',
+    });
+
+    navigate('/login');
+    return false;
+  }
 };
 
 // service user getData
@@ -32,38 +64,55 @@ export const useUserGetData = (options) => {
   return useQuery([API_ENDPOINT.USER_WHOAMI, options], userGetData);
 };
 
-// service changePassword
-export const userChangePassword = async (data) => {
-  return await http
-    .put(API_ENDPOINT.USER_CHANGE_PASSWORD, data)
-    .then((result) => {
-      toast(result.data.message, {
-        position: 'top-right',
-        className: 'toast-success',
-      });
-    })
-    .catch((err) => {
-      toast(err.response.data.error, {
-        position: 'top-right',
-        className: 'toast-error',
-      });
-      return false;
-    });
-};
-
-// service useUserChangePassword
-export const useUserChangePassword = () => {
-  return useMutation(userChangePassword);
-};
-
 // service userForgotPassword
-export const userForgotPassword = async (data) => {
-  return await http.post(API_ENDPOINT.USER_FORGOT_PASSWORD, data);
+export const userForgotPassword = async (forgotPassword) => {
+  try {
+    const response = await http.post(
+      API_ENDPOINT.USER_FORGOT_PASSWORD,
+      forgotPassword,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Failed to forgot password:',
+      error.response?.data || error.message,
+    );
+    throw error;
+  }
 };
 
-// service userResetPassword
-export const userResetPassword = async (token, data) => {
-  return await http.post(API_ENDPOINT.USER_RESET_PASSWORD(token), data);
+// service user change password
+export const userChangePassword = async (changePassword) => {
+  try {
+    const response = await http.put(
+      API_ENDPOINT.USER_CHANGE_PASSWORD,
+      changePassword,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Failed to change password:',
+      error.response?.data || error.message,
+    );
+    throw error;
+  }
+};
+
+// service user reset password
+export const userResetPassword = async (resetPassword) => {
+  try {
+    const response = await http.post(
+      API_ENDPOINT.USER_RESET_PASSWORD,
+      resetPassword,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Failed to reset password:',
+      error.response?.data || error.message,
+    );
+    throw error;
+  }
 };
 
 // service user OTP

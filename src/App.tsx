@@ -15,6 +15,7 @@ import ActivateAccountPage from './pages/Authentication/activate-accounts.jsx';
 import ChangePage from './pages/Authentication/change-password.jsx';
 import ForgotPage from './pages/Authentication/forgot-password.jsx';
 import VerifyAccountsPage from './pages/Authentication/verify-accounts.jsx';
+import ResetPage from './pages/Authentication/reset-password.jsx';
 // import ErrorPage from './pages/ErrorPage/ErrorPage404.jsx';
 
 // Admin
@@ -522,7 +523,7 @@ function App() {
           }
         />
         <Route
-          path="/activate-account"
+          path="/verify-accounts"
           element={
             <>
               <PageTitle title="Activate Accounts | Putra Komputer" />
@@ -554,6 +555,15 @@ function App() {
             <>
               <PageTitle title="Verify Accounts | Putra Komputer" />
               <VerifyAccountsPage />
+            </>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <>
+              <PageTitle title="Reset Password | Putra Komputer" />
+              <ResetPage />
             </>
           }
         />

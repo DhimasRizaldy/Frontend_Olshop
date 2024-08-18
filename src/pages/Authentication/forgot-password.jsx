@@ -1,10 +1,10 @@
-import FormReset from "../../components/Fragments/Auth/FormReset";
-import AuthLayouts from "../../layout/AuthLayouts";
+import FormForgot from '../../components/Fragments/Auth/FormForgot';
+import AuthLayouts from '../../layout/AuthLayouts';
 
 const ForgotPage = () => {
   return (
     <AuthLayouts type="forgot-password">
-      <FormReset />
+      <FormForgot />
     </AuthLayouts>
   );
 };

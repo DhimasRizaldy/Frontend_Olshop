@@ -9,6 +9,10 @@ export const API_ENDPOINT = {
   USER_OTP: (otp, token) => {
     return `/auth/verifyOTP?otp=${otp}&token=${token}`;
   },
+  USER_CHANGE_PASSWORD: '/auth/change-password',
+  USER_FORGOT_PASSWORD: '/auth/forgot-password',
+  USER_RESET_PASSWORD: '/auth/reset-password',
+
   // User Auth (Admin)
   REGISTER_ADMIN: '/auth/register-admin',
   GET_ALL_USER: '/auth/users',
