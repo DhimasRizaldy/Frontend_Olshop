@@ -9,11 +9,6 @@ module.exports = {
     return await http.post(API_ENDPOINT.USER_LOGIN, data);
   },
 
-  // service user register
-  userRegister: async (data) => {
-    return await http.post(API_ENDPOINT.USER_REGISTER, data);
-  },
-
   // service user OTP
   userOTP: async (otp, token) => {
     return await http.post(API_ENDPOINT.USER_OTP(otp, token));
@@ -49,14 +44,14 @@ module.exports = {
       .put(API_ENDPOINT.USER_CHANGE_PASSWORD, data)
       .then((result) => {
         toast(result.data.message, {
-          position: "top-right",
-          className: "toast-success",
+          position: 'top-right',
+          className: 'toast-success',
         });
       })
       .catch((err) => {
         toast(err.response.data.error, {
-          position: "top-right",
-          className: "toast-error",
+          position: 'top-right',
+          className: 'toast-error',
         });
         return false;
       });
