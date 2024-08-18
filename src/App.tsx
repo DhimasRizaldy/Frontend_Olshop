@@ -15,7 +15,7 @@ import ActivateAccountPage from './pages/Authentication/activate-accounts.jsx';
 import ChangePage from './pages/Authentication/change-password.jsx';
 import ForgotPage from './pages/Authentication/forgot-password.jsx';
 import VerifyAccountsPage from './pages/Authentication/verify-accounts.jsx';
-import ErrorPage from './pages/ErrorPage/ErrorPage404.jsx';
+// import ErrorPage from './pages/ErrorPage/ErrorPage404.jsx';
 
 // Admin
 import ECommerce from './pages/Admin/Dashboard/ECommerce';
@@ -73,7 +73,6 @@ import DetailSuppliers from './pages/Admin/Supplier/DetailSupplier.jsx';
 import Address from './pages/Admin/Address/Address';
 import AddAddress from './pages/Admin/Address/AddAddress.jsx';
 import EditAddress from './pages/Admin/Address/EditAddress.jsx';
-import DataAddress from './pages/Admin/Address/DataAddress.jsx';
 import DetailAddress from './pages/Admin/Address/DetailAddress.jsx';
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -567,7 +566,7 @@ function App() {
             </>
           }
         />
-        <Route path="*" element={<ErrorPage />} />
+        {/* <Route path="*" element={<ErrorPage />} /> */}
       </Routes>
     </>
   );
