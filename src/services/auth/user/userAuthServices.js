@@ -99,11 +99,11 @@ export const userChangePassword = async (changePassword) => {
 };
 
 // service user reset password
-export const userResetPassword = async (resetPassword) => {
+export const userResetPassword = async (token, resetPasswordData) => {
   try {
     const response = await http.post(
-      API_ENDPOINT.USER_RESET_PASSWORD,
-      resetPassword,
+      API_ENDPOINT.USER_RESET_PASSWORD(token),
+      resetPasswordData,
     );
     return response.data;
   } catch (error) {

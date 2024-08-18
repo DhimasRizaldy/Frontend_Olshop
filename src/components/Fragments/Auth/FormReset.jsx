@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Label from '../../Elements/Input/Labels';
@@ -12,7 +12,18 @@ const FormReset = () => {
   const [password, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get token from URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const tokenValue = urlParams.get('token');
+    if (tokenValue) {
+      setToken(tokenValue);
+    }
+  }, [location.search]);
 
   // Handle form submit
   const handleResetPassword = async (e) => {
@@ -33,7 +44,7 @@ const FormReset = () => {
         password,
         confirmPassword,
       };
-      await userResetPassword(resetPasswordData);
+      await userResetPassword(token, resetPasswordData);
 
       Swal.fire({
         icon: 'success',
@@ -43,7 +54,7 @@ const FormReset = () => {
         timer: 2000,
       });
 
-      navigate('/login'); // contoh redirect setelah sukses, sesuaikan dengan kebutuhan Anda
+      navigate('/login'); // Redirect after success
     } catch (error) {
       toast.error('Failed to reset password. Please try again.');
     } finally {
@@ -68,7 +79,6 @@ const FormReset = () => {
             onChange={(e) => setNewPassword(e.target.value)}
             autoComplete="new-password"
           />
-          <span className="absolute right-4 top-4">{/* Your SVG icon */}</span>
         </div>
       </div>
       {/* Confirm Password */}
@@ -85,7 +95,6 @@ const FormReset = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             autoComplete="new-password"
           />
-          <span className="absolute right-4 top-4">{/* Your SVG icon */}</span>
         </div>
       </div>
       {/* Change Password Button */}
