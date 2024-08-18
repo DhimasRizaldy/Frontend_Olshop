@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import http from '../../../utils/constants/http';
 import { API_ENDPOINT } from '../../../utils/constants/endpoint';
-
+import Swal from 'sweetalert2';
 // handle register
 export const register = async (userData, setIsLoading) => {
   if (
@@ -23,7 +23,11 @@ export const register = async (userData, setIsLoading) => {
 
   try {
     const response = await http.post(API_ENDPOINT.USER_REGISTER, userData);
-    toast.success('Registration successful!');
+    Swal.fire({
+      icon: 'success',
+      title: 'Registration successful!',
+      text: 'Please check your email for the verification link.',
+    });
     return response.data;
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'Error adding User';
