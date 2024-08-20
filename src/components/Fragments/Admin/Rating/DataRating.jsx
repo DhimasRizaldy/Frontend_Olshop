@@ -16,13 +16,16 @@ const DataRating = () => {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState(0);
 
-  // get rating
   useEffect(() => {
     const fetchRating = async () => {
       try {
         const response = await getRating();
-        setRatings(response.data || []); // Simpan data rating dalam state
-        setFilteredRatings(response.data || []); // Inisialisasi filteredRatings dengan data rating
+        if (response.success) {
+          setRatings(response.data || []);
+          setFilteredRatings(response.data || []);
+        } else {
+          setError(response.message || 'Failed to fetch ratings');
+        }
       } catch (error) {
         console.error('Fetch rating failed:', error.message);
         setError(error.message);
@@ -61,23 +64,37 @@ const DataRating = () => {
       sortable: true,
     },
     {
-      name: 'UserId',
-      selector: (row) => row.userId,
+      name: 'User',
+      selector: (row) => row.users?.username || 'N/A',
       sortable: true,
     },
     {
-      name: 'ProductId',
-      selector: (row) => row.productId,
+      name: 'Product',
+      selector: (row) => row.products?.name || 'N/A',
       sortable: true,
     },
     {
       name: 'Rating',
       selector: (row) => row.rating,
       sortable: true,
+      cell: (row) => (
+        <div>
+          {[...Array(row.rating)].map((_, i) => (
+            <span key={i} className="text-yellow-500">
+              ★
+            </span>
+          ))}
+          {[...Array(5 - row.rating)].map((_, i) => (
+            <span key={i} className="text-gray-300">
+              ★
+            </span>
+          ))}
+        </div>
+      ),
     },
     {
       name: 'Review',
-      selector: (row) => row.review,
+      selector: (row) => row.review || 'No review',
       sortable: true,
     },
     {
@@ -86,7 +103,7 @@ const DataRating = () => {
         row.image ? (
           <img
             src={row.image}
-            alt="image"
+            alt="rating"
             className="h-10 w-10 rounded-full object-cover"
           />
         ) : (
@@ -97,12 +114,12 @@ const DataRating = () => {
       name: 'Action',
       cell: (row) => (
         <div className="flex items-center space-x-3.5">
-          <Link to="/detail-rating">
+          <Link to={`/detail-rating/${row.ratingId}`}>
             <button className="hover:text-primary">
               <FontAwesomeIcon icon={faEye} />
             </button>
           </Link>
-          <Link to="/edit-rating">
+          <Link to={`/edit-rating/${row.ratingId}`}>
             <button className="hover:text-primary">
               <FontAwesomeIcon icon={faPenToSquare} />
             </button>

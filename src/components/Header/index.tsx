@@ -95,21 +95,12 @@ const Header = (props: {
             {/* <!-- Cart Menu Area --> */}
 
             {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
+            {isUserLoggedIn && !loading && <DropdownNotification />}
             {/* <!-- Notification Menu Area --> */}
           </ul>
 
           {!loading && !isUserLoggedIn && (
             <div className="flex items-center gap-2">
-              <Link to="/register">
-                <Button
-                  type="button"
-                  classname="px-4 py-2 font-medium text-white bg-primary border border-primary rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition"
-                >
-                  Register
-                </Button>
-              </Link>
-              <span className="text-gray-500">|</span>
               <Link to="/login">
                 <Button
                   type="button"

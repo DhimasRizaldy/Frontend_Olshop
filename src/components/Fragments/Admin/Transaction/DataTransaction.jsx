@@ -26,7 +26,6 @@ const DataTransaction = () => {
         const response = await getWHOAMI();
         setRole(response.data.user.role);
       } catch (error) {
-        // console.error('Fetch user role failed:', error.message);
         setError(error.message);
       }
     };
@@ -46,7 +45,6 @@ const DataTransaction = () => {
         }
         setTransactions(response.data || []);
       } catch (error) {
-        console.error('Fetch transactions failed:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -64,14 +62,26 @@ const DataTransaction = () => {
       selector: (row) => row.transactionId,
       sortable: true,
     },
-    { name: 'UserId', selector: (row) => row.user?.email, sortable: true },
-    { name: 'CartId', selector: (row) => row.cartId, sortable: true },
     {
-      name: 'PromoId',
-      selector: (row) => row.promo?.codePromo,
+      name: 'Username',
+      selector: (row) => row.users?.username || 'N/A', // Display username
       sortable: true,
     },
-    { name: 'AddressId', selector: (row) => row.address?.name, sortable: true },
+    {
+      name: 'CartId',
+      selector: (row) => row.cartId,
+      sortable: true,
+    },
+    {
+      name: 'PromoCode',
+      selector: (row) => row.promo?.codePromo || 'N/A', // Display codePromo
+      sortable: true,
+    },
+    {
+      name: 'Address',
+      selector: (row) => row.address?.nameAddress || 'N/A', // Display nameAddress
+      sortable: true,
+    },
     {
       name: 'Discount',
       selector: (row) => formatRupiah(row.discount),
