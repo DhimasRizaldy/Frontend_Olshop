@@ -3,35 +3,24 @@ import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getProductById } from '../../../../services/admin/product/services-product';
 import { getCategories } from '../../../../services/admin/category/services-category';
+import { formatRupiah } from '../../../../utils/constants/function';
 
 const DetailProduct = () => {
-  //
   const { productId } = useParams();
-  const [name, setName] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [price, setPrice] = useState(0);
-  const [promoPrice, setPromoPrice] = useState(0);
-  const [weight, setWeight] = useState(0);
-  const [stock, setStock] = useState(0);
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  const [product, setProduct] = useState({});
+  const [categoryName, setCategoryName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [categoryOptions, setCategoryOptions] = useState([]);
 
   useEffect(() => {
     const fetchProductData = async () => {
       try {
+        setIsLoading(true);
         const response = await getProductById(productId);
-        setName(response.data.name);
-        setCategoryId(response.data.categoryId);
-        setPrice(response.data.price);
-        setPromoPrice(response.data.promoPrice);
-        setWeight(response.data.weight);
-        setStock(response.data.stock);
-        setDescription(response.data.description);
-        setImage(response.data.image);
+        setProduct(response.data);
+        setIsLoading(false);
       } catch (error) {
         toast.error('Failed to fetch product data');
+        setIsLoading(false);
         console.error('Error fetching product data:', error.message);
       }
     };
@@ -40,177 +29,77 @@ const DetailProduct = () => {
   }, [productId]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchCategoryName = async () => {
       try {
         const response = await getCategories();
-        const categories = response.data;
-        const categoryOptions = categories.map((category) => ({
-          value: category.categoryId,
-          label: category.name,
-        }));
-        setCategoryOptions(categoryOptions);
+        const category = response.data.find(
+          (cat) => cat.categoryId === product.categoryId,
+        );
+        if (category) setCategoryName(category.name);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
-    fetchCategories();
-  }, []);
+
+    if (product.categoryId) fetchCategoryName();
+  }, [product.categoryId]);
 
   return (
-    <form action="#">
-      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block font-medium text-black dark:text-white">
-            Name
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="name"
-              id="name"
-              value={name || ''}
-              onChange={(e) => setName(e.target.value)}
-              disabled
-            />
-          </div>
+    <div className="container mx-auto p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <img
+            src={
+              product.image
+                ? typeof product.image === 'string'
+                  ? product.image
+                  : URL.createObjectURL(product.image)
+                : '/path/to/placeholder-image.jpg'
+            }
+            alt={product.name}
+            className="w-full h-auto rounded-lg shadow-lg"
+          />
         </div>
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block font-medium text-black dark:text-white">
-            Category
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="categoryId"
-              id="categoryId"
-              value={name || ''}
-              onChange={(e) => setCategoryId(e.target.value)}
-              disabled
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block font-medium text-black dark:text-white">
-            Price
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
-              name="price"
-              id="price"
-              value={price || ''}
-              onChange={(e) => setPrice(e.target.value)}
-              disabled
-            />
-          </div>
-        </div>
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block font-medium text-black dark:text-white">
-            Promo Price
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
-              name="promoPrice"
-              id="promoPrice"
-              value={promoPrice || ''}
-              onChange={(e) => setPromoPrice(e.target.value)}
-              disabled
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block font-medium text-black dark:text-white">
-            Weight
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
-              name="Weight"
-              id="Weight"
-              value={weight || ''}
-              onChange={(e) => setWeight(e.target.value)}
-              disabled
-            />
-          </div>
-        </div>
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block font-medium text-black dark:text-white">
-            Stock
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
-              name="stock"
-              id="stock"
-              value={stock || ''}
-              onChange={(e) => setStock(e.target.value)}
-              placeholder="0"
-              disabled
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block font-medium text-black dark:text-white">
-            description
-          </label>
-          <div className="relative">
-            <textarea
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              rows={6}
-              name="description"
-              id="description"
-              value={description || ''}
-              onChange={(e) => setDescription(e.target.value)}
-              disabled
-            />
-          </div>
-        </div>
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block font-medium text-black dark:text-white">
-            Image
-          </label>
-          <td className="relative">
-            {image ? (
-              <img
-                src={
-                  typeof image === 'string' ? image : URL.createObjectURL(image)
-                }
-                alt="image"
-                className="h-10 w-10 rounded-full object-cover"
-              />
-            ) : (
-              <p className="text-black dark:text-white">No image</p>
+        <div className="flex flex-col justify-between">
+          <div>
+            <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+            <p className="text-xl text-gray-700 mb-4">
+              <span className="font-semibold">Category:</span> {categoryName}
+            </p>
+            <p className="text-2xl text-red-500 font-bold mb-4">
+              {formatRupiah(product.promoPrice || product.price)}
+            </p>
+            {product.promoPrice > 0 && (
+              <p className="text-gray-500 line-through mb-4">
+                {formatRupiah(product.price)}
+              </p>
             )}
-          </td>
-          <div className="relative"></div>
+            <p className="mb-6">
+              <span className="font-semibold">Description:</span>{' '}
+              {product.description}
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div>
+              <p className="text-gray-700">
+                <span className="font-semibold">Weight:</span> {product.weight}{' '}
+                g
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-700">
+                <span className="font-semibold">Stock:</span> {product.stock}
+              </p>
+            </div>
+          </div>
+          <Link to="/product">
+            <button className="w-full md:w-auto inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors">
+              Back to Products
+            </button>
+          </Link>
         </div>
       </div>
-
-      <div className="flex justify-end gap-4.5">
-        <Link to="/product">
-          <button
-            className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-            type="submit"
-          >
-            Back
-          </button>
-        </Link>
-      </div>
-    </form>
+    </div>
   );
 };
 

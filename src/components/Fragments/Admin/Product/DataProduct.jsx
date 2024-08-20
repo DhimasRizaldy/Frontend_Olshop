@@ -7,6 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
+import DataTable from 'react-data-table-component';
 import {
   getProduct,
   deleteProduct,
@@ -17,14 +18,15 @@ const DataProduct = () => {
   const [products, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filterStock, setFilterStock] = useState('ALL');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // get product
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await getProduct();
-        // console.log('API Response:', response);
-        setProduct(response.data || []); // Simpan data kategori dalam state
+        setProduct(response.data || []); // Simpan data produk dalam state
       } catch (error) {
         console.error('Fetch product failed:', error.message);
         setError(error.message);
@@ -70,6 +72,106 @@ const DataProduct = () => {
     });
   };
 
+  const columns = [
+    {
+      name: 'No',
+      selector: (row, index) => index + 1,
+      sortable: true,
+      width: '80px',
+    },
+    {
+      name: 'ProductId',
+      selector: (row) => row.productId,
+      sortable: true,
+    },
+    {
+      name: 'Image',
+      selector: (row) => row.image,
+      cell: (row) =>
+        row.image ? (
+          <img
+            src={row.image}
+            alt="image"
+            className="h-10 w-10 rounded-full object-cover"
+          />
+        ) : (
+          <p className="text-black dark:text-white">No image</p>
+        ),
+    },
+    {
+      name: 'Name',
+      selector: (row) => row.name,
+      sortable: true,
+    },
+    {
+      name: 'CategoryId',
+      selector: (row) => row.category.name,
+      sortable: true,
+    },
+    {
+      name: 'Price',
+      selector: (row) => formatRupiah(row.price),
+      sortable: true,
+    },
+    {
+      name: 'Promo',
+      selector: (row) => formatRupiah(row.promoPrice),
+      sortable: true,
+    },
+    {
+      name: 'Weight',
+      selector: (row) => `${row.weight} Gr`,
+      sortable: true,
+    },
+    {
+      name: 'Stock',
+      selector: (row) => row.stock,
+      sortable: true,
+    },
+    {
+      name: 'Description',
+      selector: (row) =>
+        row.description.length > 15
+          ? `${row.description.slice(0, 15)}...`
+          : row.description,
+      sortable: true,
+    },
+    {
+      name: 'Action',
+      cell: (row) => (
+        <div className="flex items-center space-x-3.5">
+          <Link to={`/detail-product/${row.productId}`}>
+            <button className="hover:text-primary">
+              <FontAwesomeIcon icon={faEye} />
+            </button>
+          </Link>
+          <Link to={`/edit-product/${row.productId}`}>
+            <button className="hover:text-primary">
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </button>
+          </Link>
+          <button
+            className="hover:text-primary"
+            onClick={() => handleDelete(row.productId, row.name)}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  // Filter products based on stock and search term
+  const filteredProducts = products.filter((product) => {
+    const matchesStock =
+      filterStock === 'ALL' ||
+      (filterStock === 'ABOVE_10' ? product.stock > 10 : product.stock < 3);
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    return matchesStock && matchesSearch;
+  });
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -85,143 +187,58 @@ const DataProduct = () => {
           Data Product
         </h4>
       </div>
-
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="max-w-full overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  No
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  ProductId
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  Image
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  Name
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  CategoryId
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Price
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Promo
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Weight
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Stock
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Description
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.length > 0 ? (
-                products.map((product, index) => (
-                  <tr key={product.productId}>
-                    <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
-                      <p className="text-black dark:text-white">{index + 1}</p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p
-                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium`}
-                      >
-                        {product.productId}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-8">
-                      {product.image ? (
-                        <img
-                          src={product.image}
-                          alt="image"
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <p className="text-black dark:text-white">No image</p>
-                      )}
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-6 pl-6 dark:border-strokedark xl:pl-8">
-                      <p className="text-black dark:text-white">
-                        {product.name}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {product.category.name}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {formatRupiah(product.price)}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {formatRupiah(product.promoPrice)}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {product.weight} Gr
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-6 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {product.stock}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <p className="text-black dark:text-white">
-                        {product.description.length > 15
-                          ? `${product.description.slice(0, 15)}...`
-                          : product.description}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <div className="flex items-center space-x-3.5">
-                        <Link to={`/detail-product/${product.productId}`}>
-                          <button className="hover:text-primary">
-                            <FontAwesomeIcon icon={faEye} />
-                          </button>
-                        </Link>
-                        <Link to={`/edit-product/${product.productId}`}>
-                          <button className="hover:text-primary">
-                            <FontAwesomeIcon icon={faPenToSquare} />
-                          </button>
-                        </Link>
-                        <button
-                          className="hover:text-primary"
-                          onClick={() =>
-                            handleDelete(product.productId, product.name)
-                          }
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="10" className="text-center py-5">
-                    No product available.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <div className="flex justify-between pb-4">
+          <div>
+            <button
+              className={`mr-2 px-4 py-2 rounded-md ${
+                filterStock === 'ALL' ? 'bg-primary text-white' : 'bg-gray-300'
+              }`}
+              onClick={() => setFilterStock('ALL')}
+            >
+              All
+            </button>
+            <button
+              className={`mr-2 px-4 py-2 rounded-md ${
+                filterStock === 'ABOVE_10'
+                  ? 'bg-success text-white'
+                  : 'bg-gray-300'
+              }`}
+              onClick={() => setFilterStock('ABOVE_10')}
+            >
+              Stock diatas 10
+            </button>
+            <button
+              className={`px-4 py-2 rounded-md ${
+                filterStock === 'BELOW_3'
+                  ? 'bg-primary text-white'
+                  : 'bg-gray-300'
+              }`}
+              onClick={() => setFilterStock('BELOW_3')}
+            >
+              Stock dibawah 3
+            </button>
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Search by name"
+              className="px-4 py-2 border rounded-md"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
+        <DataTable
+          columns={columns}
+          data={filteredProducts}
+          pagination
+          highlightOnHover
+          pointerOnHover
+          responsive
+          striped
+          noDataComponent="No products available."
+        />
       </div>
     </div>
   );

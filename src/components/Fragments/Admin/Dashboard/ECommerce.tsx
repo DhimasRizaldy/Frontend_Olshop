@@ -27,25 +27,19 @@ const ECommerce: React.FC = () => {
       <ToastContainer /> {/* Move this to the top level */}
       <DefaultLayout>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-          <CardDataStats title="Total Users" total="3.500">
+          <CardDataStats title="Total Users" total="300">
             <FontAwesomeIcon icon={faUsers} />
           </CardDataStats>
-          <CardDataStats title="Total Admin" total="2">
+          <CardDataStats title="Total Admin" total="4">
             <FontAwesomeIcon icon={faUser} />
           </CardDataStats>
-          <CardDataStats title="Total Product" total="2.450">
+          <CardDataStats title="Total Product" total="100">
             <FontAwesomeIcon icon={faBoxesStacked} />
           </CardDataStats>
-          <CardDataStats title="Total Transaction" total="1.200">
+          <CardDataStats title="Total Transaction" total="10">
             <FontAwesomeIcon icon={faCartShopping} />
           </CardDataStats>
         </div>
-        {/* <div className="mt-4 flex flex-col gap-10">
-          <TableOne />
-        </div> */}
-        {/* <div className="mt-4 flex flex-col gap-10">
-          <DataTable />
-        </div> */}
       </DefaultLayout>
     </>
   );

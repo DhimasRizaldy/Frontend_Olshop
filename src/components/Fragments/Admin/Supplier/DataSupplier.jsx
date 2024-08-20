@@ -7,6 +7,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import DataTable from 'react-data-table-component';
 import {
   getSupplier,
   deleteSupplier,
@@ -16,13 +17,13 @@ const DataSupplier = () => {
   const [suppliers, setSupplier] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // get supplier
   useEffect(() => {
     const fetchSupplier = async () => {
       try {
         const response = await getSupplier();
-        // console.log('API Response:', response);
         setSupplier(response.data || []); // Simpan data kategori dalam state
       } catch (error) {
         console.error('Fetch supplier failed:', error.message);
@@ -69,6 +70,76 @@ const DataSupplier = () => {
     });
   };
 
+  const columns = [
+    {
+      name: 'No',
+      selector: (row, index) => index + 1,
+      sortable: true,
+      width: '80px',
+    },
+    {
+      name: 'SupplierId',
+      selector: (row) => row.supplierId,
+      sortable: true,
+    },
+    {
+      name: 'Name',
+      selector: (row) => row.name,
+      sortable: true,
+    },
+    {
+      name: 'Email',
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: 'Address',
+      selector: (row) => row.address,
+      sortable: true,
+    },
+    {
+      name: 'PhoneNumber',
+      selector: (row) => row.phoneNumber,
+      sortable: true,
+    },
+    {
+      name: 'Action',
+      cell: (row) => (
+        <div className="flex items-center space-x-3.5">
+          <Link to={`/detail-supplier/${row.supplierId}`}>
+            <button className="hover:text-primary">
+              <FontAwesomeIcon icon={faEye} />
+            </button>
+          </Link>
+          <Link to={`/edit-supplier/${row.supplierId}`}>
+            <button className="hover:text-primary">
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </button>
+          </Link>
+          <button
+            className="hover:text-primary"
+            onClick={() => handleDelete(row.supplierId, row.name)}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  // Filter suppliers based on search term
+  const filteredSuppliers = suppliers.filter(
+    (supplier) =>
+      supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      supplier.supplierId
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()),
+  );
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -84,105 +155,26 @@ const DataSupplier = () => {
           Data Supplier
         </h4>
       </div>
-
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="max-w-full overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  No
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-8">
-                  SupplierId
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  Name
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  Email
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  Address
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  PhoneNumber
-                </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {suppliers.length > 0 ? (
-                suppliers.map((supplier, index) => (
-                  <tr key={supplier.supplierId}>
-                    <td className="border-b border-[#eee] py-5 px-4 pl-6 dark:border-strokedark xl:pl-9">
-                      <p className="text-black dark:text-white">{index + 1}</p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-7">
-                      <p
-                        className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium`}
-                      >
-                        {supplier.supplierId}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">
-                        {supplier.name}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">
-                        {supplier.email}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">
-                        {supplier.address.length > 15
-                          ? `${supplier.address.slice(0, 15)}...`
-                          : supplier.address}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
-                      <p className="text-black dark:text-white">
-                        {supplier.phoneNumber}
-                      </p>
-                    </td>
-                    <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                      <div className="flex items-center space-x-3.5">
-                        <Link to={`/detail-supplier/${supplier.supplierId}`}>
-                          <button className="hover:text-primary">
-                            <FontAwesomeIcon icon={faEye} />
-                          </button>
-                        </Link>
-                        <Link to={`/edit-supplier/${supplier.supplierId}`}>
-                          <button className="hover:text-primary">
-                            <FontAwesomeIcon icon={faPenToSquare} />
-                          </button>
-                        </Link>
-                        <button
-                          className="hover:text-primary"
-                          onClick={() =>
-                            handleDelete(supplier.supplierId, supplier.name)
-                          }
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="8" className="text-center py-5">
-                    No supplier available.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <div className="flex justify-end pb-4">
+          <input
+            type="text"
+            placeholder="Search by name, email, address or phone number"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          />
         </div>
+        <DataTable
+          columns={columns}
+          data={filteredSuppliers}
+          pagination
+          highlightOnHover
+          pointerOnHover
+          responsive
+          striped
+          noDataComponent="No supplier available."
+        />
       </div>
     </div>
   );
