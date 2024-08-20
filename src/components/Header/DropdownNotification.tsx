@@ -3,13 +3,39 @@ import { Link } from 'react-router-dom';
 
 const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notifying, setNotifying] = useState(true);
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      message: 'Edit your information in a swipe',
+      date: '12 May, 2025',
+      isRead: false,
+    },
+    {
+      id: 2,
+      message: 'Your order has been shipped',
+      date: '15 May, 2025',
+      isRead: false,
+    },
+    {
+      id: 3,
+      message: 'New login from an unknown device',
+      date: '18 May, 2025',
+      isRead: false,
+    },
+    {
+      id: 4,
+      message: 'Your profile has been updated',
+      date: '20 May, 2025',
+      isRead: true,
+    },
+    // Add more notifications here if needed
+  ]);
 
-  const trigger = useRef<any>(null);
-  const dropdown = useRef<any>(null);
+  const trigger = useRef(null);
+  const dropdown = useRef(null);
 
   useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
+    const clickHandler = ({ target }) => {
       if (!dropdown.current) return;
       if (
         !dropdownOpen ||
@@ -21,37 +47,47 @@ const DropdownNotification = () => {
     };
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
-  });
+  }, [dropdownOpen]);
 
-  // close if the esc key is pressed
   useEffect(() => {
-    const keyHandler = ({ keyCode }: KeyboardEvent) => {
+    const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen || keyCode !== 27) return;
       setDropdownOpen(false);
     };
     document.addEventListener('keydown', keyHandler);
     return () => document.removeEventListener('keydown', keyHandler);
-  });
+  }, [dropdownOpen]);
+
+  useEffect(() => {
+    if (dropdownOpen) {
+      // Mark notifications as read when dropdown opens
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) =>
+          notification.isRead
+            ? notification
+            : { ...notification, isRead: true },
+        ),
+      );
+    }
+  }, [dropdownOpen]);
+
+  const unreadCount = notifications.filter(
+    (notification) => !notification.isRead,
+  ).length;
 
   return (
     <li className="relative">
-      <Link
+      <button
         ref={trigger}
-        onClick={() => {
-          setNotifying(false);
-          setDropdownOpen(!dropdownOpen);
-        }}
-        to="#"
+        onClick={() => setDropdownOpen(!dropdownOpen)}
         className="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white"
       >
-        <span
-          className={`absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1 ${
-            notifying === false ? 'hidden' : 'inline'
-          }`}
-        >
-          <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
-        </span>
-
+        {unreadCount > 0 && (
+          <span className="absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-meta-1">
+            <span className="absolute -z-1 inline-flex h-full w-full animate-ping rounded-full bg-meta-1 opacity-75"></span>
+            <span className="relative text-xs text-white">{unreadCount}</span>
+          </span>
+        )}
         <svg
           className="fill-current duration-300 ease-in-out"
           width="18"
@@ -65,85 +101,52 @@ const DropdownNotification = () => {
             fill=""
           />
         </svg>
-      </Link>
+      </button>
 
       <div
         ref={dropdown}
-        onFocus={() => setDropdownOpen(true)}
-        onBlur={() => setDropdownOpen(false)}
         className={`absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80 ${
-          dropdownOpen === true ? 'block' : 'hidden'
+          dropdownOpen ? 'block' : 'hidden'
         }`}
       >
         <div className="px-4.5 py-3">
-          <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
+          <h5 className="text-sm font-medium text-bodydark2">Notifications</h5>
         </div>
 
         <ul className="flex h-auto flex-col overflow-y-auto">
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  Edit your information in a swipe
-                </span>{' '}
-                Sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim.
-              </p>
-
-              <p className="text-xs">12 May, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  It is a long established fact
-                </span>{' '}
-                that a reader will be distracted by the readable.
-              </p>
-
-              <p className="text-xs">24 Feb, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  There are many variations
-                </span>{' '}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
-              </p>
-
-              <p className="text-xs">04 Jan, 2025</p>
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
-              to="#"
-            >
-              <p className="text-sm">
-                <span className="text-black dark:text-white">
-                  There are many variations
-                </span>{' '}
-                of passages of Lorem Ipsum available, but the majority have
-                suffered
-              </p>
-
-              <p className="text-xs">01 Dec, 2024</p>
-            </Link>
-          </li>
+          {notifications.length === 0 ? (
+            <li className="px-4.5 py-3 text-sm">No notifications.</li>
+          ) : (
+            notifications.slice(0, 3).map((notification) => (
+              <li
+                key={notification.id}
+                className={`flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 ${
+                  notification.isRead
+                    ? 'bg-gray-50 dark:bg-meta-4'
+                    : 'bg-gray-200 dark:bg-meta-3'
+                }`}
+              >
+                <p className="text-sm text-black dark:text-white">
+                  {notification.message}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-300">
+                  {notification.date}
+                </p>
+              </li>
+            ))
+          )}
         </ul>
+
+        {notifications.length > 3 && (
+          <div className="px-4.5 py-3 border-t border-stroke bg-gray-50 dark:border-strokedark dark:bg-meta-4">
+            <Link
+              to="/notifications"
+              className="block text-center text-primary hover:underline"
+            >
+              Show All
+            </Link>
+          </div>
+        )}
       </div>
     </li>
   );

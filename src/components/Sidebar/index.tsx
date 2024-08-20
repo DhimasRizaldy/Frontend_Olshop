@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../../../public/images/logo-putkom.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBox,
   faList,
@@ -13,27 +13,38 @@ import {
   faBoxesStacked,
   faTruckField,
 } from '@fortawesome/free-solid-svg-icons';
+import { getWHOAMI } from '../../services/auth/admin/getDataUser';
 
-interface SidebarProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (arg: boolean) => void;
-}
-
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const location = useLocation();
   const { pathname } = location;
-
-  const trigger = useRef<any>(null);
-  const sidebar = useRef<any>(null);
+  const trigger = useRef(null);
+  const sidebar = useRef(null);
 
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
   const [sidebarExpanded, setSidebarExpanded] = useState(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true',
   );
+  const [userRole, setUserRole] = useState(null);
 
-  // close on click outside
+  // Fetch user data
   useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getWHOAMI();
+        if (response?.data?.user?.role) {
+          setUserRole(response.data.user.role);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data', error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  // Close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }) => {
       if (!sidebar.current || !trigger.current) return;
       if (
         !sidebarOpen ||
@@ -47,9 +58,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     return () => document.removeEventListener('click', clickHandler);
   });
 
-  // close if the esc key is pressed
+  // Close if the esc key is pressed
   useEffect(() => {
-    const keyHandler = ({ keyCode }: KeyboardEvent) => {
+    const keyHandler = ({ keyCode }) => {
       if (!sidebarOpen || keyCode !== 27) return;
       setSidebarOpen(false);
     };
@@ -63,8 +74,25 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       document.querySelector('body')?.classList.add('sidebar-expanded');
     } else {
       document.querySelector('body')?.classList.remove('sidebar-expanded');
-    } 
+    }
   }, [sidebarExpanded]);
+
+  // Define menu items based on role
+  const menuItems = [
+    { to: '/dashboard', icon: faGauge, label: 'Dashboard' },
+    ...(userRole === 'ADMIN'
+      ? [
+          { to: '/users', icon: faUser, label: 'Users' },
+          { to: '/supplier', icon: faTruckField, label: 'Supplier' },
+          { to: '/management', icon: faBox, label: 'Management Product' },
+          { to: '/category', icon: faList, label: 'Category Product' },
+          { to: '/rating', icon: faComment, label: 'Rating' },
+        ]
+      : []),
+    { to: '/product', icon: faBoxesStacked, label: 'Product' },
+    { to: '/promo', icon: faTag, label: 'Promo' },
+    { to: '/transaction', icon: faCartShopping, label: 'Transaction' },
+  ];
 
   return (
     <aside
@@ -73,7 +101,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
-      {/* <!-- SIDEBAR HEADER --> */}
+      {/* SIDEBAR HEADER */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/dashboard">
           <img src={Logo} alt="Logo" />
@@ -101,152 +129,35 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           </svg>
         </button>
       </div>
-      {/* <!-- SIDEBAR HEADER --> */}
+      {/* SIDEBAR HEADER */}
 
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-        {/* <!-- Sidebar Menu --> */}
+        {/* Sidebar Menu */}
         <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
-          {/* <!-- Menu Group --> */}
           <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
               MENU
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-              {/* <!-- Menu Item Dashbaord --> */}
-              <li>
-                <NavLink
-                  to="/dashboard"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('dashboard') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faGauge} />
-                  Dashboard
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Dashborad --> */}
-
-              {/* <!-- Menu Item Users --> */}
-              <li>
-                <NavLink
-                  to="/users"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('users') && 'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faUser} />
-                  Users
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Users --> */}
-
-              {/* <!-- Menu Item Supplier --> */}
-              <li>
-                <NavLink
-                  to="/supplier"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('supplier') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faTruckField} />
-                  Supplier
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Supplier --> */}
-
-              {/* <!-- Menu Item Category Product --> */}
-              <li>
-                <NavLink
-                  to="/management"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('management') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faBox} />
-                  Management Product
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Category Product --> */}
-
-              {/* <!-- Menu Item Category Product --> */}
-              <li>
-                <NavLink
-                  to="/category"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('category') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faList} />
-                  Category Product
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Category Product --> */}
-
-              {/* <!-- Menu Item Product --> */}
-              <li>
-                <NavLink
-                  to="/product"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('product') && 'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faBoxesStacked} />
-                  Product
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Product --> */}
-
-              {/* <!-- Menu Item Promo --> */}
-              <li>
-                <NavLink
-                  to="/promo"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('promo') && 'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faTag} />
-                  Promo
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Product --> */}
-
-              {/* <!-- Menu Item Transaction --> */}
-              <li>
-                <NavLink
-                  to="/transaction"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('transaction') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faCartShopping} />
-                  Transaction
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Transaction --> */}
-
-              {/* <!-- Menu Item Transaction --> */}
-              <li>
-                <NavLink
-                  to="/rating"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('rating') && 'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faComment} />
-                  Rating
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item rating --> */}
+              {menuItems.map((item, index) => (
+                <li key={index}>
+                  <NavLink
+                    to={item.to}
+                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                      pathname.includes(item.to.slice(1)) &&
+                      'bg-graydark dark:bg-meta-4'
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={item.icon} />
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
             </ul>
           </div>
         </nav>
-        {/* <!-- Sidebar Menu --> */}
+        {/* Sidebar Menu */}
       </div>
     </aside>
   );

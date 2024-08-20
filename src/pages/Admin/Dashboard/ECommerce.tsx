@@ -11,7 +11,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DataTransaction from '../../../components/Fragments/Admin/Transaction/DataTransaction.jsx';
 import { getUser } from '../../../services/admin/user/services-user';
 import { getProduct } from '../../../services/admin/product/services-product';
-import { getTransaction } from '../../../services/admin/transaction/services-transaction';
+import {
+  getTransaction,
+  getTransactionMe,
+} from '../../../services/admin/transaction/services-transaction';
+import { getWHOAMI } from '../../../services/auth/admin/getDataUser';
 
 const ECommerce: React.FC = () => {
   const [users, setUsers] = useState([]);
@@ -19,6 +23,21 @@ const ECommerce: React.FC = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [role, setRole] = useState('');
+
+  // get user role
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await getWHOAMI();
+        setRole(response.data.user.role);
+      } catch (error) {
+        console.error('Fetch user role failed:', error.message);
+        setError(error.message);
+      }
+    };
+    fetchUserRole();
+  }, []);
 
   // get user
   useEffect(() => {
@@ -33,8 +52,10 @@ const ECommerce: React.FC = () => {
         setLoading(false);
       }
     };
-    fetchUser();
-  }, []);
+    if (role === 'ADMIN') {
+      fetchUser();
+    }
+  }, [role]);
 
   // get product
   useEffect(() => {
@@ -56,7 +77,12 @@ const ECommerce: React.FC = () => {
   useEffect(() => {
     const fetchTransaction = async () => {
       try {
-        const response = await getTransaction();
+        let response;
+        if (role === 'USER') {
+          response = await getTransactionMe();
+        } else if (role === 'ADMIN') {
+          response = await getTransaction();
+        }
         setTransactions(response.data || []); // Simpan data transaksi dalam state
       } catch (error) {
         console.error('Fetch transaction failed:', error.message);
@@ -65,8 +91,10 @@ const ECommerce: React.FC = () => {
         setLoading(false);
       }
     };
-    fetchTransaction();
-  }, []);
+    if (role) {
+      fetchTransaction();
+    }
+  }, [role]);
 
   // Calculate total users and total admins
   const totalUsers = users.filter((user) => user.role === 'USER').length;
@@ -77,15 +105,19 @@ const ECommerce: React.FC = () => {
   return (
     <DefaultLayout>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total Users" total={totalUsers}>
-          <FontAwesomeIcon icon={faUsers} />
-        </CardDataStats>
-        <CardDataStats title="Total Admin" total={totalAdmins}>
-          <FontAwesomeIcon icon={faUser} />
-        </CardDataStats>
-        <CardDataStats title="Total Product" total={totalProducts}>
-          <FontAwesomeIcon icon={faBoxesStacked} />
-        </CardDataStats>
+        {role === 'ADMIN' && (
+          <>
+            <CardDataStats title="Total Users" total={totalUsers}>
+              <FontAwesomeIcon icon={faUsers} />
+            </CardDataStats>
+            <CardDataStats title="Total Admin" total={totalAdmins}>
+              <FontAwesomeIcon icon={faUser} />
+            </CardDataStats>
+            <CardDataStats title="Total Product" total={totalProducts}>
+              <FontAwesomeIcon icon={faBoxesStacked} />
+            </CardDataStats>
+          </>
+        )}
         <CardDataStats title="Total Transaction" total={totalTransactions}>
           <FontAwesomeIcon icon={faCartShopping} />
         </CardDataStats>

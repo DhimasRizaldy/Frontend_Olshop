@@ -12,19 +12,21 @@ import {
   getPromo,
   deletePromo,
 } from '../../../../services/admin/promo/services-promo';
+import { getWHOAMI } from '../../../../services/auth/admin/getDataUser';
 
 const DataPromo = () => {
   const [promo, setPromo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterStatus, setFilterStatus] = useState('ALL');
+  const [role, setRole] = useState('USER'); // Default role or set as needed
 
-  // get promo
+  // Fetch promos
   useEffect(() => {
     const fetchPromo = async () => {
       try {
         const response = await getPromo();
-        setPromo(response.data || []); // Simpan data promo dalam state
+        setPromo(response.data || []);
       } catch (error) {
         console.error('Fetch promo failed:', error.message);
         setError(error.message);
@@ -35,7 +37,21 @@ const DataPromo = () => {
     fetchPromo();
   }, []);
 
-  // handle delete
+  // Fetch user role
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await getWHOAMI();
+        setRole(response.data.user.role);
+      } catch (error) {
+        console.error('Fetch user role failed:', error.message);
+        setError(error.message);
+      }
+    };
+    fetchUserRole();
+  }, []);
+
+  // Handle delete
   const handleDelete = async (promoId, promoName) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -55,7 +71,6 @@ const DataPromo = () => {
               `Promo "${promoName}" has been deleted.`,
               'success',
             );
-            // Update state to remove the deleted promo
             setPromo(promo.filter((promo) => promo.promoId !== promoId));
           }
         } catch (error) {
@@ -117,17 +132,21 @@ const DataPromo = () => {
               <FontAwesomeIcon icon={faEye} />
             </button>
           </Link>
-          <Link to={`/edit-promo/${row.promoId}`}>
-            <button className="hover:text-primary">
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </button>
-          </Link>
-          <button
-            className="hover:text-primary"
-            onClick={() => handleDelete(row.promoId, row.codePromo)}
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
+          {role === 'ADMIN' && (
+            <>
+              <Link to={`/edit-promo/${row.promoId}`}>
+                <button className="hover:text-primary">
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                </button>
+              </Link>
+              <button
+                className="hover:text-primary"
+                onClick={() => handleDelete(row.promoId, row.codePromo)}
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </>
+          )}
         </div>
       ),
     },

@@ -13,7 +13,7 @@ import {
   deleteProduct,
 } from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
-
+import { getWHOAMI } from '../../../../services/auth/admin/getDataUser';
 
 const DataProduct = () => {
   const [products, setProduct] = useState([]);
@@ -21,15 +21,16 @@ const DataProduct = () => {
   const [error, setError] = useState(null);
   const [filterStock, setFilterStock] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
+  const [role, setRole] = useState('USER'); // Default role or set as needed
 
-  // get product
+  // Get products
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await getProduct();
-        setProduct(response.data || []); // Simpan data produk dalam state
+        setProduct(response.data || []);
       } catch (error) {
-        console.error('Fetch product failed:', error.message);
+        // console.error('Fetch product failed:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -38,7 +39,21 @@ const DataProduct = () => {
     fetchProduct();
   }, []);
 
-  // handle delete
+  // Fetch user role
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await getWHOAMI();
+        setRole(response.data.user.role);
+      } catch (error) {
+        // console.error('Fetch user role failed:', error.message);
+        setError(error.message);
+      }
+    };
+    fetchUserRole();
+  }, []);
+
+  // Handle delete
   const handleDelete = async (productId, productName) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -58,7 +73,6 @@ const DataProduct = () => {
               `Product "${productName}" has been deleted.`,
               'success',
             );
-            // Update state to remove the deleted product
             setProduct(
               products.filter((product) => product.productId !== productId),
             );
@@ -66,7 +80,7 @@ const DataProduct = () => {
             Swal.fire('Error!', response.message, 'error');
           }
         } catch (error) {
-          console.error('Delete product failed:', error.message);
+          // console.error('Delete product failed:', error.message);
           Swal.fire('Error!', error.message, 'error');
         }
       }
@@ -146,17 +160,21 @@ const DataProduct = () => {
               <FontAwesomeIcon icon={faEye} />
             </button>
           </Link>
-          <Link to={`/edit-product/${row.productId}`}>
-            <button className="hover:text-primary">
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </button>
-          </Link>
-          <button
-            className="hover:text-primary"
-            onClick={() => handleDelete(row.productId, row.name)}
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
+          {role === 'ADMIN' && (
+            <>
+              <Link to={`/edit-product/${row.productId}`}>
+                <button className="hover:text-primary">
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                </button>
+              </Link>
+              <button
+                className="hover:text-primary"
+                onClick={() => handleDelete(row.productId, row.name)}
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </>
+          )}
         </div>
       ),
     },

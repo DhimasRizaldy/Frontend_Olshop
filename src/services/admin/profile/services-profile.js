@@ -1,6 +1,5 @@
 import httpMulti from '../../../utils/constants/httpMulti';
 import { API_ENDPOINT } from '../../../utils/constants/endpoint';
-import { toast } from 'react-toastify';
 
 export const getProfile = async () => {
   try {

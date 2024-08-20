@@ -26,7 +26,7 @@ const DataSupplier = () => {
         const response = await getSupplier();
         setSupplier(response.data || []); // Simpan data kategori dalam state
       } catch (error) {
-        console.error('Fetch supplier failed:', error.message);
+        // console.error('Fetch supplier failed:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
