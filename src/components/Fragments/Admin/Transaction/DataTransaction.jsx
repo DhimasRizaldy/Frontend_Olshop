@@ -14,9 +14,6 @@ const DataTransaction = () => {
   const [transactions, setTransaction] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatusPay, setFilterStatusPay] = useState('All');
-  const [filterStatusShip, setFilterStatusShip] = useState('All');
 
   // get transaction
   useEffect(() => {
@@ -34,20 +31,6 @@ const DataTransaction = () => {
     fetchTransaction();
   }, []);
 
-  // Filter transactions based on search term and selected filters
-  const filteredTransactions = transactions.filter((transaction) => {
-    const matchesSearchTerm = transaction.user.email
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesStatusPay =
-      filterStatusPay === 'All' ||
-      transaction.status_payment === filterStatusPay;
-    const matchesStatusShip =
-      filterStatusShip === 'All' ||
-      transaction.shippingStatus === filterStatusShip;
-    return matchesSearchTerm && matchesStatusPay && matchesStatusShip;
-  });
-
   const columns = [
     {
       name: 'No',
@@ -61,7 +44,7 @@ const DataTransaction = () => {
     },
     {
       name: 'UserId',
-      selector: (row) => row.user.email,
+      selector: (row) => row.user?.email,
       sortable: true,
     },
     {
@@ -71,12 +54,12 @@ const DataTransaction = () => {
     },
     {
       name: 'PromoId',
-      selector: (row) => row.promo.codePromo,
+      selector: (row) => row.promo?.codePromo,
       sortable: true,
     },
     {
       name: 'AddressId',
-      selector: (row) => row.address.name,
+      selector: (row) => row.address?.name,
       sortable: true,
     },
     {
@@ -161,83 +144,8 @@ const DataTransaction = () => {
       </div>
 
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="flex justify-between pb-4">
-          <div>
-            <input
-              type="text"
-              placeholder="Search by user email"
-              className="px-4 py-2 border rounded-md"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setFilterStatusPay('All')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              All
-            </button>
-            <button
-              onClick={() => setFilterStatusPay('Pending')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              Pending
-            </button>
-            <button
-              onClick={() => setFilterStatusPay('Paid')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              Paid
-            </button>
-            <button
-              onClick={() => setFilterStatusPay('Cancel')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              Cancel
-            </button>
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setFilterStatusShip('All')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              All
-            </button>
-            <button
-              onClick={() => setFilterStatusShip('On Process')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              On Process
-            </button>
-            <button
-              onClick={() => setFilterStatusShip('Dikemas')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              Dikemas
-            </button>
-            <button
-              onClick={() => setFilterStatusShip('Dikirim')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              Dikirim
-            </button>
-            <button
-              onClick={() => setFilterStatusShip('Di Perjalanan')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              Di Perjalanan
-            </button>
-            <button
-              onClick={() => setFilterStatusShip('Sudah Diterima')}
-              className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              Sudah Diterima
-            </button>
-          </div>
-        </div>
         <div className="max-w-full overflow-x-auto">
-          <DataTable columns={columns} data={filteredTransactions} pagination />
+          <DataTable columns={columns} data={transactions} pagination />
         </div>
       </div>
     </div>

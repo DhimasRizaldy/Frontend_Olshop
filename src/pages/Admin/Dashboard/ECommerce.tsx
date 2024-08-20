@@ -9,7 +9,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DataTransaction from '../../../components/Fragments/Admin/Transaction/DataTransaction.jsx';
-import DataRating from '../../../components/Fragments/Admin/Rating/DataRating.jsx';
 import { getUser } from '../../../services/admin/user/services-user';
 import { getProduct } from '../../../services/admin/product/services-product';
 import { getTransaction } from '../../../services/admin/transaction/services-transaction';
@@ -90,9 +89,6 @@ const ECommerce: React.FC = () => {
         <CardDataStats title="Total Transaction" total={totalTransactions}>
           <FontAwesomeIcon icon={faCartShopping} />
         </CardDataStats>
-      </div>
-      <div className="mt-4 flex flex-col gap-10">
-        <DataRating />
       </div>
       <div className="mt-4 flex flex-col gap-10">
         <DataTransaction />
