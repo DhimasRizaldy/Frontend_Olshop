@@ -135,6 +135,7 @@ export const API_ENDPOINT = {
   },
 
   // Transaction
+  GET_TRANSACTION_ME: '/transaction/me',
   GET_TRANSACTION: '/transaction/',
   GET_DETAIL_TRANSACTION: (transactionId) => {
     return `/transaction/${transactionId}`;

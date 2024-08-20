@@ -6,7 +6,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { getTransaction } from '../../../../services/admin/transaction/services-transaction';
+import {
+  getTransactionMe,
+  getTransaction,
+} from '../../../../services/admin/transaction/services-transaction';
+import { getUser } from '../../../../services/admin/user/services-user';
 import { formatRupiah } from '../../../../utils/constants/function';
 import DataTable from 'react-data-table-component';
 
@@ -14,9 +18,35 @@ const DataTransaction = () => {
   const [transactions, setTransaction] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [role, setRole] = useState(''); // State untuk menyimpan role pengguna
 
-  // get transaction
+  // get user
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await getUser();
+        setRole(response.data.role); // Simpan role pengguna dalam state
+      } catch (error) {
+        console.error('Fetch user failed:', error.message);
+        setError(error.message);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchTransactionMe = async () => {
+      try {
+        const response = await getTransactionMe();
+        setTransaction(response.data || []); // Simpan data transaksi dalam state
+      } catch (error) {
+        console.error('Fetch transaction failed:', error.message);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     const fetchTransaction = async () => {
       try {
         const response = await getTransaction();
@@ -28,8 +58,13 @@ const DataTransaction = () => {
         setLoading(false);
       }
     };
-    fetchTransaction();
-  }, []);
+
+    if (role === 'user') {
+      fetchTransactionMe();
+    } else if (role === 'admin') {
+      fetchTransaction();
+    }
+  }, [role]);
 
   const columns = [
     {
