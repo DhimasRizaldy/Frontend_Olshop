@@ -1,37 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-// Data produk yang bisa diambil dari API atau file data
-const products = [
-  {
-    id: 1,
-    imageUrl: 'https://via.placeholder.com/300',
-    name: 'Nama Produk 1',
-    originalPrice: 150000,
-    discountedPrice: 100000,
-    stock: 50,
-    sold: 10,
-  },
-  {
-    id: 2,
-    imageUrl: 'https://via.placeholder.com/300',
-    name: 'Nama Produk 2',
-    originalPrice: 250000,
-    discountedPrice: 200000,
-    stock: 20,
-    sold: 15,
-  },
-  // Tambahkan produk lainnya di sini...
-];
+import { getProduct } from '../../../../services/admin/product/services-product';
+import { formatRupiah } from '../../../../utils/constants/function';
 
 const ProductCard = ({ product }) => (
   <Link
-    to={`/products/${product.id}`}
+    to={`/detail-product/${product.productId}`}
     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
   >
     <div className="relative">
       <img
-        src={product.imageUrl}
+        src={product.image}
         alt={product.name}
         className="w-full h-48 object-cover"
       />
@@ -55,14 +34,12 @@ const ProductCard = ({ product }) => (
     <div className="p-4">
       <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
       <p className="text-gray-500 line-through">
-        Rp {product.originalPrice.toLocaleString('id-ID')}
+        Rp {formatRupiah(product.price)}
       </p>
       <p className="text-red-500 font-bold">
-        Rp {product.discountedPrice.toLocaleString('id-ID')}
+        Rp {formatRupiah(product.promoPrice)}
       </p>
-      <p className="text-sm text-gray-600 mt-1">
-        Stok: {product.stock} | Terjual: {product.sold}
-      </p>
+      <p className="text-sm text-gray-600 mt-1">Stok: {product.stock}</p>
       <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
         Beli Sekarang
       </button>
@@ -71,13 +48,28 @@ const ProductCard = ({ product }) => (
 );
 
 const ProductNew = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProduct(); // Asumsikan ini adalah fungsi yang mengambil data dari API
+        setProducts(response.data); // Menggunakan data produk dari response API
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <>
       <div className="max-w-6xl mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold mb-4">Produk Terbaru</h1>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.productId} product={product} />
           ))}
         </div>
       </div>

@@ -613,7 +613,7 @@ function App() {
           }
         />
         <Route
-          path="/products/:id"
+          path="/details-products/:productId"
           element={
             <>
               <PageTitle title="Products Detail | Putra Komputer" />
