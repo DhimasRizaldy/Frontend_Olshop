@@ -10,13 +10,13 @@ const Header = () => {
           {/* Logo */}
           <Link to={'/'}>
             <img
-              src="https://via.placeholder.com/40"
+              src="https://ik.imagekit.io/xnl4hkzkx/logo.png?updatedAt=1724600025658"
               alt="Logo"
               className="w-10 h-10"
             />
           </Link>
-          <span className="ml-2 text-xl font-bold hidden md:block">
-            Toko Online
+          <span className="ml-2 text-2xl font-extrabold hidden md:block text-black">
+            Putra Komputer
           </span>
         </div>
 
@@ -32,24 +32,24 @@ const Header = () => {
         {/* Icons (Desktop) */}
         <div className="hidden md:flex items-center space-x-4">
           {/* Home Link */}
-          <Link to={'/'} className="text-gray-700 hover:text-blue-500">
+          <Link to={'/'} className="text-black hover:text-blue-500">
             Home
           </Link>
           {/* Product Link */}
-          <Link to={'/products'} className="text-gray-700 hover:text-blue-500">
+          <Link to={'/products'} className="text-black hover:text-blue-500">
             Product
           </Link>
           {/* Promo Link */}
           <Link
             to={'/promo-voucher'}
-            className="text-gray-700 hover:text-blue-500"
+            className="text-black hover:text-blue-500"
           >
             Promo
           </Link>
           {/* Transaction Link */}
           <Link
             to={'/transaction-me'}
-            className="text-gray-700 hover:text-blue-500"
+            className="text-black hover:text-blue-500"
           >
             Transaksi
           </Link>
@@ -57,7 +57,7 @@ const Header = () => {
           {/* Notification Icon */}
           <Link
             to={'/notification-me'}
-            className="relative text-gray-700 hover:text-blue-500"
+            className="relative text-black hover:text-blue-500"
           >
             <svg
               className="w-6 h-6"
@@ -78,7 +78,7 @@ const Header = () => {
           {/* Cart Icon */}
           <Link
             to={'/carts'}
-            className="relative text-gray-700 hover:text-blue-500"
+            className="relative text-black hover:text-blue-500"
           >
             <svg
               className="w-6 h-6"
@@ -111,7 +111,7 @@ const Header = () => {
           {/* Carts Icon */}
           <Link
             to={'/carts'}
-            className="relative text-gray-700 hover:text-blue-500"
+            className="relative text-black hover:text-blue-500"
           >
             <svg
               className="w-6 h-6"
