@@ -49,6 +49,11 @@ const ProductCard = ({ product }) => (
           />
         </svg>
       </div>
+      <div className="absolute bottom-2 left-2">
+        <span className="bg-yellow-500 px-2 py-1 text-xs rounded-full text-white">
+          {product.averageRating}★
+        </span>
+      </div>
     </div>
     <div className="p-4">
       <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
@@ -80,7 +85,8 @@ const ProductNew = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProduct(); // Asumsikan ini adalah fungsi yang mengambil data dari API
-        setProducts(response.data); // Menggunakan data produk dari response API
+        const limitedProducts = response.data.slice(0, 8); // Batasi produk menjadi hanya 8 item
+        setProducts(limitedProducts); // Menggunakan data produk dari response API
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
@@ -107,12 +113,12 @@ const ProductNew = () => {
       </div>
       {/* button selengkapnya */}
       <div className="text-center mt-6">
-        <a
-          href="#"
+        <Link
+          to={'/products'}
           className="bg-primary text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300"
         >
           Lihat Produk Terbaru Selengkapnya
-        </a>
+        </Link>
       </div>
     </>
   );

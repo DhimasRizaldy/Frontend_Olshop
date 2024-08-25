@@ -4,9 +4,9 @@ const ImageSlider = () => {
   const [index, setIndex] = useState(0);
   const sliderRef = useRef(null);
   const images = [
-    'https://via.placeholder.com/1200x400',
-    'https://via.placeholder.com/1200x400',
-    'https://via.placeholder.com/1200x400',
+    'https://ik.imagekit.io/xnl4hkzkx/Biru%20Modern%20Spanduk%20Servis%20Laptop%20dan%20Komputer%20Banner%20(1).png?updatedAt=1724598177686',
+    'https://ik.imagekit.io/xnl4hkzkx/Blue%20and%20Purple%20Gradient%20Laptop%20Sale%20Banner%20(1).png?updatedAt=1724598929215',
+    'https://ik.imagekit.io/xnl4hkzkx/Biru%20Putih%20Ilustrasi%20Modern%20Promo%20Diskon%20Tahun%20Baru%20Banner%20(1).png?updatedAt=1724599258757',
   ];
 
   const showSlide = (i) => {

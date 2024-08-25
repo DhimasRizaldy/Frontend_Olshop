@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getProduct } from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
 
@@ -17,7 +18,8 @@ const ProductDiscount = () => {
           (product) => product.promoPrice > 0,
         );
 
-        setProducts(discountedProducts); // Set produk diskon ke state
+        // Membatasi hanya 4 produk saja yang ditampilkan
+        setProducts(discountedProducts.slice(0, 4));
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
@@ -56,8 +58,9 @@ const ProductDiscount = () => {
               ))
             : // Iterasi melalui produk diskon dan tampilkan
               products.map((product) => (
-                <div
-                  key={product.productId}
+                <Link
+                  key={product.productId} // Tambahkan key disini untuk menghindari warning pada console
+                  to={`/detail-product/${product.productId}`}
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
                 >
                   <div className="relative">
@@ -82,37 +85,50 @@ const ProductDiscount = () => {
                         />
                       </svg>
                     </div>
+                    <div className="absolute bottom-2 left-2">
+                      <span className="bg-yellow-500 px-2 py-1 text-xs rounded-full text-white">
+                        {product.averageRating}★
+                      </span>
+                    </div>
                   </div>
                   <div className="p-4">
                     <h2 className="text-lg font-semibold mb-2">
                       {product.name}
                     </h2>
-                    <p className="text-gray-500 line-through">
-                      {formatRupiah(product.price)}
-                    </p>
-                    <p className="text-red-500 font-bold">
-                      {formatRupiah(product.promoPrice)}
-                    </p>
+                    {product.promoPrice > 0 ? (
+                      <>
+                        <p className="text-gray-500 line-through">
+                          {formatRupiah(product.price)}
+                        </p>
+                        <p className="text-red-500 font-bold">
+                          {formatRupiah(product.promoPrice)}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-gray-500 font-bold">
+                        {formatRupiah(product.price)}
+                      </p>
+                    )}
                     <p className="text-sm text-gray-600 mt-1">
-                      Stok: {product.stock} | Terjual: {product.sold}
+                      Stok: {product.stock}
                     </p>
                     <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
                       Beli Sekarang
                     </button>
                   </div>
-                </div>
+                </Link>
               ))}
         </div>
       </div>
 
       {/* Button Lihat Produk Diskon Selengkapnya */}
       <div className="text-center mt-6">
-        <a
-          href="#"
+        <Link
+          to={'/products'}
           className="bg-primary text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300"
         >
           Lihat Produk Diskon Selengkapnya
-        </a>
+        </Link>
       </div>
     </div>
   );
