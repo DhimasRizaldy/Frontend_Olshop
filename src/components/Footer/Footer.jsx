@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -17,24 +18,24 @@ const Footer = () => {
           <h4 className="text-lg font-semibold mb-4">Useful Links</h4>
           <ul className="text-gray-400 space-y-2">
             <li>
-              <a href="/" className="hover:text-blue-400">
+              <Link to={'/about-us'} className="hover:text-blue-400">
                 About Us
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/" className="hover:text-blue-400">
+              <Link to={'/privacy-policy'} className="hover:text-blue-400">
                 Privacy Policy
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/" className="hover:text-blue-400">
+              <Link to={'/term-conditions'} className="hover:text-blue-400">
                 Terms & Conditions
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/" className="hover:text-blue-400">
+              <Link to={'/contact-us'} className="hover:text-blue-400">
                 Contact Us
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -42,25 +43,16 @@ const Footer = () => {
           <h4 className="text-lg font-semibold mb-4">Customer Service</h4>
           <ul className="text-gray-400 space-y-2">
             <li>
-              <a href="/" className="hover:text-blue-400">
+              <Link to={'/faqs'} className="hover:text-blue-400">
                 FAQs
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/" className="hover:text-blue-400">
-                Shipping & Returns
-              </a>
-            </li>
-            <li>
-              <a href="/" className="hover:text-blue-400">
+              <Link to={'/order-tracking'} className="hover:text-blue-400">
                 Order Tracking
-              </a>
+              </Link>
             </li>
-            <li>
-              <a href="/" className="hover:text-blue-400">
-                Support
-              </a>
-            </li>
+            
           </ul>
         </div>
         <div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // Data produk yang bisa diambil dari API atau file data
 const products = [
@@ -24,7 +25,10 @@ const products = [
 ];
 
 const ProductCard = ({ product }) => (
-  <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+  <Link
+    to={`/products/${product.id}`}
+    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+  >
     <div className="relative">
       <img
         src={product.imageUrl}
@@ -63,14 +67,14 @@ const ProductCard = ({ product }) => (
         Beli Sekarang
       </button>
     </div>
-  </div>
+  </Link>
 );
 
 const ProductNew = () => {
   return (
     <>
-      <div class="max-w-6xl mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4">Produk Terbaru</h1>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold mb-4">Produk Terbaru</h1>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />

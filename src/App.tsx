@@ -83,6 +83,15 @@ import VocPromo from './pages/Users/VcPromo/VocPromo.jsx';
 import Transactions from './pages/Users/Transaksi/Transactions.jsx';
 import Notifications from './pages/Users/Notifications/Notifications.jsx';
 import Carts from './pages/Users/Carts/Carts.jsx';
+import ProductsDetail from './pages/Users/Product/ProductDetail.jsx';
+
+// Service User
+import About from './pages/Users/Service/AboutUs.jsx';
+import PrivacyPolicy from './pages/Users/Service/PrivacyPolicy.jsx';
+import TermConditions from './pages/Users/Service/TermConditions.jsx';
+import ContactUs from './pages/Users/Service/ContactUs.jsx';
+import Faqs from './pages/Users/Service/Faqs.jsx';
+import OrderTracking from './pages/Users/Service/OrderTracking.jsx';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -604,6 +613,15 @@ function App() {
           }
         />
         <Route
+          path="/products/:id"
+          element={
+            <>
+              <PageTitle title="Products Detail | Putra Komputer" />
+              <ProductsDetail />
+            </>
+          }
+        />
+        <Route
           path="/promo-voucher"
           element={
             <>
@@ -636,6 +654,60 @@ function App() {
             <>
               <PageTitle title="Carts | Putra Komputer" />
               <Carts />
+            </>
+          }
+        />
+        <Route
+          path="/about-us"
+          element={
+            <>
+              <PageTitle title="About Us | Putra Komputer" />
+              <About />
+            </>
+          }
+        />
+        <Route
+          path="/privacy-policy"
+          element={
+            <>
+              <PageTitle title="Privacy Policy | Putra Komputer" />
+              <PrivacyPolicy />
+            </>
+          }
+        />
+        <Route
+          path="/term-conditions"
+          element={
+            <>
+              <PageTitle title="Term & Conditions | Putra Komputer" />
+              <TermConditions />
+            </>
+          }
+        />
+        <Route
+          path="/contact-us"
+          element={
+            <>
+              <PageTitle title="Contact Us | Putra Komputer" />
+              <ContactUs />
+            </>
+          }
+        />
+        <Route
+          path="/faqs"
+          element={
+            <>
+              <PageTitle title="FAQs | Putra Komputer" />
+              <Faqs />
+            </>
+          }
+        />
+        <Route
+          path="/order-tracking"
+          element={
+            <>
+              <PageTitle title="Order Tracking | Putra Komputer" />
+              <OrderTracking />
             </>
           }
         />
