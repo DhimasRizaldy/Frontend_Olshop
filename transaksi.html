@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Data</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md fixed w-full top-0 z-50">
+    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+      <!-- Logo and Search (Both Desktop and Mobile) -->
+      <div class="flex items-center">
+        <!-- Logo -->
+        <img src="https://via.placeholder.com/40" alt="Logo" class="w-10 h-10">
+        <span class="ml-2 text-xl font-bold hidden md:block">Toko Online</span>
+      </div>
+
+      <!-- Search Bar (Both Desktop and Mobile) -->
+      <div class="flex-1 mx-4">
+        <input type="text" placeholder="Search Product" class="w-full px-4 py-2 rounded-full border border-gray-300">
+      </div>
+
+      <!-- Icons (Mobile) -->
+      <div class="flex items-center space-x-4 md:hidden">
+        <!-- Notification Icon -->
+        <a href="#" class="relative">
+          <svg class="w-6 h-6 text-gray-700 hover:text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full ring-2 ring-white"></span>
+        </a>
+        <!-- Cart Icon -->
+        <a href="#" class="relative">
+          <svg class="w-6 h-6 text-gray-700 hover:text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m5-9v9m4-9v9m4-9l2 9M5 21h14" />
+          </svg>
+          <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full ring-2 ring-white"></span>
+        </a>
+      </div>
+
+      <!-- Navigation Links and Icons (Desktop) -->
+      <div class="hidden md:flex items-center space-x-4">
+        <!-- Home Link -->
+        <a href="#" class="text-gray-700 hover:text-blue-500">Home</a>
+        <!-- Product Link -->
+        <a href="#" class="text-gray-700 hover:text-blue-500">Product</a>
+        <!-- Transaction Link -->
+        <a href="#" class="text-gray-700 hover:text-blue-500">Transaksi</a>
+        <!-- Notification Icon -->
+        <a href="#" class="relative">
+          <svg class="w-6 h-6 text-gray-700 hover:text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full ring-2 ring-white"></span>
+        </a>
+        <!-- Cart Icon -->
+        <a href="#" class="relative">
+          <svg class="w-6 h-6 text-gray-700 hover:text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m5-9v9m4-9v9m4-9l2 9M5 21h14" />
+          </svg>
+          <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full ring-2 ring-white"></span>
+        </a>
+        <!-- Profile Icon -->
+        <a href="#">
+          <img src="https://via.placeholder.com/40" alt="Profile" class="w-10 h-10 rounded-full">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Bottom Navigation (Mobile) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-md md:hidden">
+    <div class="flex justify-around items-center py-2">
+      <!-- Home Icon -->
+      <a href="#" class="text-gray-700 hover:text-blue-500">
+        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4m-4 0H9" />
+        </svg>
+      </a>
+      <!-- Transaction Icon -->
+      <a href="#" class="text-gray-700 hover:text-blue-500">
+        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M11 12h9m-9 4h6m-6-8h4M4 6h16M4 10h7m-7 4h3m-3 4h6" />
+        </svg>
+      </a>
+      <!-- Notification Icon -->
+      <a href="#" class="text-gray-700 hover:text-blue-500">
+        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+      </a>
+      <!-- Profile Icon -->
+      <a href="#">
+        <img src="https://via.placeholder.com/40" alt="Profile" class="w-10 h-10 rounded-full">
+      </a>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-4 py-6 mt-14">
+    <h1 class="text-3xl font-bold text-center mb-8">Transaction Data</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Card 1 -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-2">Transaction ID: TX12345</h2>
+        <p class="text-gray-600 mb-1"><strong>Customer Name:</strong> John Doe</p>
+        <p class="text-gray-600 mb-1"><strong>Date:</strong> 2024-08-23</p>
+        <p class="text-gray-600 mb-1"><strong>Amount:</strong> $150.00</p>
+        <p class="text-gray-600 mb-4"><strong>Status:</strong>
+          <span class="bg-green-500 text-white py-1 px-2 rounded-full text-xs">Completed</span>
+        </p>
+        <div class="flex space-x-2">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-lg text-sm">View</button>
+          <button class="bg-red-500 text-white py-1 px-3 rounded-lg text-sm">Delete</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-2">Transaction ID: TX67890</h2>
+        <p class="text-gray-600 mb-1"><strong>Customer Name:</strong> Jane Smith</p>
+        <p class="text-gray-600 mb-1"><strong>Date:</strong> 2024-08-22</p>
+        <p class="text-gray-600 mb-1"><strong>Amount:</strong> $250.00</p>
+        <p class="text-gray-600 mb-4"><strong>Status:</strong>
+          <span class="bg-yellow-500 text-white py-1 px-2 rounded-full text-xs">Pending</span>
+        </p>
+        <div class="flex space-x-2">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-lg text-sm">View</button>
+          <button class="bg-red-500 text-white py-1 px-3 rounded-lg text-sm">Delete</button>
+        </div>
+      </div>
+
+      <!-- Card 1 -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-2">Transaction ID: TX12345</h2>
+        <p class="text-gray-600 mb-1"><strong>Customer Name:</strong> John Doe</p>
+        <p class="text-gray-600 mb-1"><strong>Date:</strong> 2024-08-23</p>
+        <p class="text-gray-600 mb-1"><strong>Amount:</strong> $150.00</p>
+        <p class="text-gray-600 mb-4"><strong>Status:</strong>
+          <span class="bg-green-500 text-white py-1 px-2 rounded-full text-xs">Completed</span>
+        </p>
+        <div class="flex space-x-2">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-lg text-sm">View</button>
+          <button class="bg-red-500 text-white py-1 px-3 rounded-lg text-sm">Delete</button>
+        </div>
+      </div>
+      
+      <!-- Card 2 -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-2">Transaction ID: TX67890</h2>
+        <p class="text-gray-600 mb-1"><strong>Customer Name:</strong> Jane Smith</p>
+        <p class="text-gray-600 mb-1"><strong>Date:</strong> 2024-08-22</p>
+        <p class="text-gray-600 mb-1"><strong>Amount:</strong> $250.00</p>
+        <p class="text-gray-600 mb-4"><strong>Status:</strong>
+          <span class="bg-yellow-500 text-white py-1 px-2 rounded-full text-xs">Pending</span>
+        </p>
+        <div class="flex space-x-2">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-lg text-sm">View</button>
+          <button class="bg-red-500 text-white py-1 px-3 rounded-lg text-sm">Delete</button>
+        </div>
+      </div>
+
+      <!-- Add more cards as needed -->
+
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -75,6 +75,15 @@ import Address from './pages/Admin/Address/Address';
 import AddAddress from './pages/Admin/Address/AddAddress.jsx';
 import EditAddress from './pages/Admin/Address/EditAddress.jsx';
 import DetailAddress from './pages/Admin/Address/DetailAddress.jsx';
+
+// Home User
+import Home from './pages/Users/Home/Home.jsx';
+import ProductsFilter from './pages/Users/Product/ProductFilter.jsx';
+import VocPromo from './pages/Users/VcPromo/VocPromo.jsx';
+import Transactions from './pages/Users/Transaksi/Transactions.jsx';
+import Notifications from './pages/Users/Notifications/Notifications.jsx';
+import Carts from './pages/Users/Carts/Carts.jsx';
+
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
@@ -576,7 +585,60 @@ function App() {
             </>
           }
         />
-        {/* <Route path="*" element={<ErrorPage />} /> */}
+        <Route
+          path="/"
+          element={
+            <>
+              <PageTitle title="Home | Putra Komputer" />
+              <Home />
+            </>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <>
+              <PageTitle title="Products | Putra Komputer" />
+              <ProductsFilter />
+            </>
+          }
+        />
+        <Route
+          path="/promo-voucher"
+          element={
+            <>
+              <PageTitle title="Promo Voucher | Putra Komputer" />
+              <VocPromo />
+            </>
+          }
+        />
+        <Route
+          path="/transaction-me"
+          element={
+            <>
+              <PageTitle title="Transactions | Putra Komputer" />
+              <Transactions />
+            </>
+          }
+        />
+        <Route
+          path="/notification-me"
+          element={
+            <>
+              <PageTitle title="Notifications | Putra Komputer" />
+              <Notifications />
+            </>
+          }
+        />
+        <Route
+          path="/carts"
+          element={
+            <>
+              <PageTitle title="Carts | Putra Komputer" />
+              <Carts />
+            </>
+          }
+        />
       </Routes>
     </>
   );
