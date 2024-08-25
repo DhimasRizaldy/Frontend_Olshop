@@ -1,8 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css'; // Import CSS untuk skeleton loader
 import { getCategories } from '../../../../services/admin/category/services-category';
+
+const CategorySkeleton = () => (
+  <div className="bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap">
+    <Skeleton width={100} height={20} />
+  </div>
+);
 
 const CategorySlider = () => {
   const [categories, setCategories] = useState([]); // State untuk menyimpan kategori
+  const [isLoading, setIsLoading] = useState(true); // State untuk melacak status pemuatan data
   const sliderRef = useRef(null); // Gunakan useRef untuk mendapatkan referensi ke elemen slider
 
   useEffect(() => {
@@ -13,6 +22,8 @@ const CategorySlider = () => {
         setCategories(categoriesData); // Set kategori ke state
       } catch (error) {
         console.error('Error fetching categories:', error);
+      } finally {
+        setIsLoading(false); // Set loading menjadi false setelah data diambil atau terjadi error
       }
     };
 
@@ -42,14 +53,19 @@ const CategorySlider = () => {
       <h2 className="text-xl font-bold mb-4">Kategori Produk</h2>
       {/* Gunakan ref untuk menghubungkan div ini ke sliderRef */}
       <div className="flex space-x-4" ref={sliderRef}>
-        {categories.map((category, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap"
-          >
-            {category.name} {/* Asumsi nama kategori ada di properti 'name' */}
-          </div>
-        ))}
+        {isLoading
+          ? Array.from({ length: 6 }, (_, index) => (
+              <CategorySkeleton key={index} /> // Tampilkan skeleton loader jika sedang memuat
+            ))
+          : categories.map((category, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap"
+              >
+                {category.name}{' '}
+                {/* Asumsi nama kategori ada di properti 'name' */}
+              </div>
+            ))}
       </div>
     </div>
   );

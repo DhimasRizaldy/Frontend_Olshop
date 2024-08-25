@@ -1,7 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css'; // Import CSS untuk skeleton loader
 import { getProduct } from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
+
+const ProductCardSkeleton = () => (
+  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <Skeleton height={192} width="100%" /> {/* Skeleton untuk gambar produk */}
+    <div className="p-4">
+      <Skeleton height={20} width="60%" className="mb-2" />{' '}
+      {/* Skeleton untuk nama produk */}
+      <Skeleton height={20} width="50%" className="mb-1" />{' '}
+      {/* Skeleton untuk harga asli */}
+      <Skeleton height={20} width="40%" /> {/* Skeleton untuk harga promo */}
+      <Skeleton height={20} width="50%" className="mt-1" />{' '}
+      {/* Skeleton untuk stok */}
+      <Skeleton height={36} width="100%" className="mt-3" />{' '}
+      {/* Skeleton untuk tombol "Beli Sekarang" */}
+    </div>
+  </div>
+);
 
 const ProductCard = ({ product }) => (
   <Link
@@ -33,12 +52,18 @@ const ProductCard = ({ product }) => (
     </div>
     <div className="p-4">
       <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
-      <p className="text-gray-500 line-through">
-        Rp {formatRupiah(product.price)}
-      </p>
-      <p className="text-red-500 font-bold">
-        Rp {formatRupiah(product.promoPrice)}
-      </p>
+      {product.promoPrice > 0 ? (
+        <>
+          <p className="text-gray-500 line-through">
+            {formatRupiah(product.price)}
+          </p>
+          <p className="text-red-500 font-bold">
+            {formatRupiah(product.promoPrice)}
+          </p>
+        </>
+      ) : (
+        <p className="text-gray-500 font-bold">{formatRupiah(product.price)}</p>
+      )}
       <p className="text-sm text-gray-600 mt-1">Stok: {product.stock}</p>
       <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
         Beli Sekarang
@@ -49,6 +74,7 @@ const ProductCard = ({ product }) => (
 
 const ProductNew = () => {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // State untuk melacak status pemuatan data
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -57,6 +83,8 @@ const ProductNew = () => {
         setProducts(response.data); // Menggunakan data produk dari response API
       } catch (error) {
         console.error('Error fetching products:', error);
+      } finally {
+        setIsLoading(false); // Set loading menjadi false setelah data diambil atau terjadi error
       }
     };
 
@@ -68,9 +96,13 @@ const ProductNew = () => {
       <div className="max-w-6xl mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold mb-4">Produk Terbaru</h1>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard key={product.productId} product={product} />
-          ))}
+          {isLoading
+            ? Array.from({ length: 8 }, (_, index) => (
+                <ProductCardSkeleton key={index} /> // Tampilkan skeleton loader jika sedang memuat
+              ))
+            : products.map((product) => (
+                <ProductCard key={product.productId} product={product} />
+              ))}
         </div>
       </div>
       {/* button selengkapnya */}
