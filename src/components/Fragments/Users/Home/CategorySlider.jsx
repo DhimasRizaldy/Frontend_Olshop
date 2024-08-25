@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css'; // Import CSS untuk skeleton loader
 import { getCategories } from '../../../../services/admin/category/services-category';
+import { useNavigate } from 'react-router-dom'; // Untuk navigasi ke halaman kategori
 
 const CategorySkeleton = () => (
   <div className="bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap">
@@ -12,7 +13,9 @@ const CategorySkeleton = () => (
 const CategorySlider = () => {
   const [categories, setCategories] = useState([]); // State untuk menyimpan kategori
   const [isLoading, setIsLoading] = useState(true); // State untuk melacak status pemuatan data
+  const [selectedCategory, setSelectedCategory] = useState(null); // State untuk kategori yang dipilih
   const sliderRef = useRef(null); // Gunakan useRef untuk mendapatkan referensi ke elemen slider
+  const navigate = useNavigate(); // Hook untuk navigasi
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -48,6 +51,28 @@ const CategorySlider = () => {
     };
   }, []); // Dependensi array kosong berarti useEffect hanya akan berjalan sekali ketika komponen dipasang
 
+  useEffect(() => {
+    if (selectedCategory !== null) {
+      const categoryElements =
+        sliderRef.current.querySelectorAll('.category-item');
+      const selectedElement = Array.from(categoryElements).find((element) =>
+        element.textContent.includes(selectedCategory.name),
+      );
+
+      if (selectedElement) {
+        sliderRef.current.scrollLeft =
+          selectedElement.offsetLeft -
+          sliderRef.current.offsetWidth / 2 +
+          selectedElement.offsetWidth / 2;
+      }
+    }
+  }, [selectedCategory]);
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    navigate(`/products-category/${category.name}`); // Arahkan ke halaman produk berdasarkan kategori
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-4 overflow-x-auto">
       <h2 className="text-xl font-bold mb-4">Kategori Produk</h2>
@@ -57,10 +82,11 @@ const CategorySlider = () => {
           ? Array.from({ length: 6 }, (_, index) => (
               <CategorySkeleton key={index} /> // Tampilkan skeleton loader jika sedang memuat
             ))
-          : categories.map((category, index) => (
+          : categories.map((category) => (
               <div
-                key={index}
-                className="bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap"
+                key={category.id} // Gunakan id sebagai key untuk menghindari masalah dengan index
+                className="category-item bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap"
+                onClick={() => handleCategoryClick(category)}
               >
                 {category.name}{' '}
                 {/* Asumsi nama kategori ada di properti 'name' */}

@@ -84,6 +84,7 @@ import Transactions from './pages/Users/Transaksi/Transactions.jsx';
 import Notifications from './pages/Users/Notifications/Notifications.jsx';
 import Carts from './pages/Users/Carts/Carts.jsx';
 import ProductsDetail from './pages/Users/Product/ProductDetail.jsx';
+import ProductCategory from './pages/Users/Product/ProductCategory.jsx';
 
 // Service User
 import About from './pages/Users/Service/AboutUs.jsx';
@@ -612,6 +613,16 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/products-category/:categoryId"
+          element={
+            <>
+              <PageTitle title="Products Category | Putra Komputer" />
+              <ProductCategory />
+            </>
+          }
+        />
+
         <Route
           path="/details-products/:productId"
           element={
