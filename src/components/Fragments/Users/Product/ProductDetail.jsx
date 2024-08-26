@@ -47,10 +47,10 @@ const ProductDetails = () => {
           <p className="text-gray-600 mb-4">{product.description}</p>
           <div className="mb-4">
             <p className="text-xl font-bold text-red-500">
-              Rp {formatRupiah(product.promoPrice)}
+              {formatRupiah(product.promoPrice)}
             </p>
             <p className="text-gray-500 line-through">
-              Rp {formatRupiah(product.price)}
+              {formatRupiah(product.price)}
             </p>
           </div>
           <div className="flex items-center mb-4">
