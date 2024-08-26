@@ -60,7 +60,7 @@ const ProductDiscount = () => {
               products.map((product) => (
                 <Link
                   key={product.productId} // Tambahkan key disini untuk menghindari warning pada console
-                  to={`/detail-product/${product.productId}`}
+                  to={`/details-products/${product.productId}`}
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
                 >
                   <div className="relative">

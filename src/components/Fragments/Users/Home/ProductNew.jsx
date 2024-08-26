@@ -24,7 +24,7 @@ const ProductCardSkeleton = () => (
 
 const ProductCard = ({ product }) => (
   <Link
-    to={`/detail-product/${product.productId}`}
+    to={`/details-products/${product.productId}`}
     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
   >
     <div className="relative">
@@ -77,7 +77,7 @@ const ProductCard = ({ product }) => (
   </Link>
 );
 
-const ProductNew = () => {
+const ProductNew = ({ searchTerm }) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // State untuk melacak status pemuatan data
 
@@ -85,7 +85,13 @@ const ProductNew = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProduct(); // Asumsikan ini adalah fungsi yang mengambil data dari API
-        const limitedProducts = response.data.slice(0, 8); // Batasi produk menjadi hanya 8 item
+        const filteredProducts = searchTerm
+          ? response.data.filter((product) =>
+              product.name.toLowerCase().includes(searchTerm.toLowerCase()),
+            )
+          : response.data;
+
+        const limitedProducts = filteredProducts.slice(0, 8); // Batasi produk menjadi hanya 8 item
         setProducts(limitedProducts); // Menggunakan data produk dari response API
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -95,7 +101,7 @@ const ProductNew = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [searchTerm]); // Tambahkan searchTerm sebagai dependensi
 
   return (
     <>

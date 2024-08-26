@@ -24,7 +24,7 @@ const fetchProducts = async (filters) => {
   if (page) url.searchParams.append('page', page);
   if (limit) url.searchParams.append('limit', limit);
 
-  console.log('Fetching URL:', url.toString());
+  // console.log('Fetching URL:', url.toString());
 
   const response = await axios.get(url.toString());
   return response.data.data;
@@ -32,7 +32,7 @@ const fetchProducts = async (filters) => {
 
 const ProductCard = ({ product }) => (
   <Link
-    to={`/detail-product/${product.productId}`}
+    to={`/details-products/${product.productId}`}
     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
   >
     <div className="relative">
@@ -257,7 +257,7 @@ const ProductFilter = () => {
           {noData ? (
             <p className="text-center text-gray-500">No products found</p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map((product) => (
                 <ProductCard key={product.productId} product={product} />
               ))}

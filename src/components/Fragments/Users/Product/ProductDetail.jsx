@@ -1,37 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { getProductById } from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
 
-const ProductDetails = ({ productId }) => {
+const ProductDetails = () => {
+  const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!productId) {
-      setError('Product ID is missing');
-      setLoading(false);
-      return;
-    }
-
     const fetchProduct = async () => {
       try {
         const response = await getProductById(productId);
-        console.log('Response API:', response); // Console log to check the API response
-        const productData = response.data[0];
-
-        if (!productData) {
-          setError('Product not found');
-          setLoading(false);
-          return;
-        }
-
-        console.log('Product Data:', productData); // Console log to check the extracted product data
-        setProduct(productData);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching product details:', err); // Console log to check for errors
-        setError('Failed to fetch product details');
+        setProduct(response.data);
+      } catch (error) {
+        console.error('Failed to fetch product:', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -39,44 +23,40 @@ const ProductDetails = ({ productId }) => {
     fetchProduct();
   }, [productId]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-  if (!product) return <p>No product data available</p>;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Product Image */}
         <div className="flex justify-center items-center">
           <img
-            src={product.image || '/path/to/placeholder-image.jpg'}
+            src={product.image}
             alt={product.name}
             className="w-full h-auto rounded-lg shadow-md"
           />
         </div>
-
-        {/* Product Information */}
         <div>
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
           <p className="text-gray-600 mb-4">{product.description}</p>
-
           <div className="mb-4">
             <p className="text-xl font-bold text-red-500">
-              {formatRupiah(product.promoPrice || product.price)}
+              Rp {formatRupiah(product.promoPrice)}
             </p>
-            {product.promoPrice && product.promoPrice < product.price && (
-              <p className="text-gray-500 line-through">
-                {formatRupiah(product.price)}
-              </p>
-            )}
+            <p className="text-gray-500 line-through">
+              Rp {formatRupiah(product.price)}
+            </p>
           </div>
-
           <div className="flex items-center mb-4">
-            {/* Star rating */}
             {[...Array(5)].map((_, index) => (
               <svg
                 key={index}
-                className={`w-6 h-6 ${index < product.averageRating ? 'text-yellow-500' : 'text-gray-300'} mr-1`}
+                className={`w-6 h-6 ${index < (product.ratings[0]?.rating || 0) ? 'text-yellow-500' : 'text-gray-300'} mr-1`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 24 24"
@@ -84,16 +64,25 @@ const ProductDetails = ({ productId }) => {
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             ))}
-            <p className="text-gray-600">{product.averageRating}/5</p>
+            <p className="text-gray-600">{product.ratings[0]?.rating || 0}/5</p>
           </div>
-
+          <div className="mb-4">
+            <p className="text-gray-700">
+              <strong>Stock:</strong> {product.stock}
+            </p>
+            <p className="text-gray-700">
+              <strong>Weight:</strong> {product.weight} grams
+            </p>
+            <p className="text-gray-700">
+              <strong>Category:</strong>{' '}
+              {product.category?.name || 'Unknown Category'}
+            </p>
+          </div>
           <div className="mb-4">
             <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300">
               Tambah ke Keranjang
             </button>
           </div>
-
-          {/* Detail and Reviews Tabs */}
           <div className="border-t mt-6">
             <ul className="flex border-b">
               <li className="mr-6">
@@ -116,45 +105,60 @@ const ProductDetails = ({ productId }) => {
           </div>
         </div>
       </div>
-
-      {/* Product Reviews */}
       <div className="mt-6" id="product-reviews">
         <h2 className="text-2xl font-bold mb-4">Ulasan Produk</h2>
-
-        <div className="space-y-6">
-          {product.ratings && product.ratings.length > 0 ? (
-            product.ratings.map((review, index) => (
-              <div key={index} className="flex items-start gap-4">
-                <img
-                  src={review.image || '/path/to/default-reviewer-image.jpg'}
-                  alt={review.userId}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="flex items-center mb-2">
-                    <h3 className="font-semibold mr-2">{review.userId}</h3>
-                    <div className="flex items-center text-yellow-500">
-                      {[...Array(5)].map((_, starIndex) => (
-                        <svg
-                          key={starIndex}
-                          className={`w-5 h-5 ${starIndex < review.rating ? 'text-yellow-500' : 'text-gray-300'}`}
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
-                        </svg>
-                      ))}
+        {product.ratings.length === 0 ? (
+          <p className="text-gray-600">Produk belum memiliki ulasan</p>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {product.ratings.map((review, index) => (
+              <div
+                key={index}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <img
+                    src={review.image}
+                    alt={`Review ${index}`}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="flex-1">
+                    <div className="mb-2">
+                      <p className="text-gray-700 font-bold">
+                        {review.products?.name || 'Unknown Product'}
+                      </p>
                     </div>
+                    <div className="flex items-center mb-2">
+                      <div className="flex items-center ml-2 text-yellow-500">
+                        {[...Array(5)].map((_, starIndex) => (
+                          <svg
+                            key={starIndex}
+                            className={`w-5 h-5 ${
+                              starIndex < review.rating
+                                ? 'text-yellow-500'
+                                : 'text-gray-300'
+                            }`}
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-gray-700">
+                      <strong>
+                        {review.users?.username || 'Unknown User'}:
+                      </strong>{' '}
+                      {review.review}
+                    </p>
                   </div>
-                  <p className="text-gray-600">{review.review}</p>
                 </div>
               </div>
-            ))
-          ) : (
-            <p>Tidak ada ulasan untuk produk ini.</p>
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

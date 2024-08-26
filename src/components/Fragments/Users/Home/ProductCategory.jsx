@@ -3,19 +3,33 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { formatRupiah } from '../../../../utils/constants/function';
 
+// Skeleton component for loading state
+const SkeletonCard = () => (
+  <div className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+    <div className="relative bg-gray-300 h-48"></div>
+    <div className="p-4">
+      <div className="h-4 bg-gray-300 rounded mb-2"></div>
+      <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
+      <div className="h-6 bg-gray-300 rounded w-1/3 mb-2"></div>
+      <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+      <div className="h-8 bg-gray-300 rounded mt-3"></div>
+    </div>
+  </div>
+);
+
 // Fetch products based on categoryId
 const fetchProductsByCategory = async (categoryId) => {
-  console.log(`Fetching products for categoryId: ${categoryId}`);
+  // console.log(`Fetching products for categoryId: ${categoryId}`);
   const response = await axios.get(
     `https://backend-olshop.vercel.app/api/v1/product?category=${categoryId}`,
   );
-  console.log('Products fetched:', response.data.data);
+  // console.log('Products fetched:', response.data.data);
   return response.data.data;
 };
 
 const ProductCard = ({ product }) => (
   <Link
-    to={`/detail-product/${product.productId}`}
+    to={`/details-products/${product.productId}`}
     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
   >
     <div className="relative">
@@ -76,10 +90,10 @@ const ProductCategory = () => {
 
   useEffect(() => {
     const loadProducts = async () => {
-      console.log(`Category ID from URL: ${categoryId}`);
+      // console.log(`Category ID from URL: ${categoryId}`);
       try {
         const productsData = await fetchProductsByCategory(categoryId);
-        console.log('Products data:', productsData);
+        // console.log('Products data:', productsData);
         setProducts(productsData);
         setNoData(productsData.length === 0);
       } catch (error) {
@@ -92,7 +106,14 @@ const ProductCategory = () => {
     loadProducts();
   }, [categoryId]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {[...Array(4)].map((_, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
+    );
 
   return (
     <>
@@ -100,8 +121,7 @@ const ProductCategory = () => {
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-8">
           Product category
         </h1>
-        <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {noData ? (
               <p className="text-center text-gray-500">No products found</p>
             ) : (
@@ -110,7 +130,6 @@ const ProductCategory = () => {
               ))
             )}
           </div>
-        </div>
       </div>
     </>
   );
