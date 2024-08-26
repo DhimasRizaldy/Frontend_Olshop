@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProductById } from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
+import SkeletonProductDetails from './SkeletonProductDetails'; // import skeleton
 
 const ProductDetails = () => {
   const { productId } = useParams();
@@ -24,7 +25,7 @@ const ProductDetails = () => {
   }, [productId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <SkeletonProductDetails />; // tampilkan skeleton saat loading
   }
 
   if (!product) {
