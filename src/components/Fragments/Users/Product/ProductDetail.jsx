@@ -46,12 +46,20 @@ const ProductDetails = () => {
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
           <p className="text-gray-600 mb-4">{product.description}</p>
           <div className="mb-4">
-            <p className="text-xl font-bold text-red-500">
-              {formatRupiah(product.promoPrice)}
-            </p>
-            <p className="text-gray-500 line-through">
-              {formatRupiah(product.price)}
-            </p>
+            {product.promoPrice > 0 ? (
+              <>
+                <p className="text-gray-500 line-through">
+                  {formatRupiah(product.price)}
+                </p>
+                <p className="text-red-500 font-bold">
+                  {formatRupiah(product.promoPrice)}
+                </p>
+              </>
+            ) : (
+              <p className="text-gray-500 font-bold">
+                {formatRupiah(product.price)}
+              </p>
+            )}
           </div>
           <div className="flex items-center mb-4">
             {[...Array(5)].map((_, index) => (
