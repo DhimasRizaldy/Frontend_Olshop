@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { addProduct } from '../../../../services/admin/category/services-product';
+import { getProduct } from '../../../../services/admin/product/services-product';
 
 const AddProduct = () => {
   const [name, setName] = useState('');
@@ -45,24 +45,31 @@ const AddProduct = () => {
       return;
     }
 
-    const manageStokData = {
-      supplierId,
-      productId,
-      stockIn: parseInt(stockIn, 10),
-      dateStockIn: new Date(dateStockIn).toISOString(),
+    const Product = {
+      name,
+      categoryId,
+      price,
+      promoPrice,
+      weight,
+      stock,
+      description
     };
 
     setIsLoading(true);
 
     try {
-      await addManageStok(manageStokData);
-      toast.success('Manage Stock added successfully!');
-      setSupplierId('');
-      setProductId('');
-      setStockIn('');
-      setDateStockIn('');
+      await addProduct(Product);
+      toast.success('Product added successfully!');
+      setName('');
+      setCategoryId('');
+      setPrice('');
+      setPromoPrice('');
+      setWeight(false);
+      setStock([]);
+      setDescription('');
+      
     } catch (error) {
-      toast.error('Failed to add manage Stock');
+      toast.error('Failed to add Product');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -71,11 +78,15 @@ const AddProduct = () => {
 
 
   return (
-    <form action="#">
+    <form onSubmit={handleSubmit}>
+      {/* Toast Container for notifications */}
+      <ToastContainer />
+
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-      <div className="w-full sm:w-1/2">
+        <div className="w-full sm:w-1/2">
           <label
             className="mb-3 block font-medium text-black dark:text-white"
+            htmlFor="name"
           >
             Name
           </label>
@@ -83,122 +94,15 @@ const AddProduct = () => {
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
               type="text"
-              name="Name"
-              id="Name"
+              name="name"
+              id="name"
+              placeholder="Product Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
         </div>
-        <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block font-medium text-black dark:text-white"
-          >
-            Category Id
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="CategoryId"
-              id="CategoryId"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-      <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block font-medium text-black dark:text-white"
-          >
-            Price
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="Price"
-              id="Price"
-            />
-          </div>
-        </div>
-        <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block font-medium text-black dark:text-white"
-          >
-            Promo Price
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="promoPrice"
-              id="promoPrice"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-      <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block font-medium text-black dark:text-white"
-          >
-            Weight
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="Weight"
-              id="Weight"
-            />
-          </div>
-        </div>
-        <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block font-medium text-black dark:text-white"
-          >
-            Stock
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="Stock"
-              id="Stock"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-      <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block font-medium text-black dark:text-white"
-          >
-            description
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="description"
-              id="description"
-            />
-          </div>
-        </div>
-        <div className="w-full sm:w-1/2">
-          <label
-            className="mb-3 block font-medium text-black dark:text-white"
-          >
-            Image
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="Image"
-              id="Image"
-            />
-          </div>
-        </div>
+
       </div>
 
       <div className="flex justify-end gap-4.5">
