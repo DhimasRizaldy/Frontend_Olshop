@@ -93,7 +93,9 @@ const ProductDiscount = () => {
                   </div>
                   <div className="p-4">
                     <h2 className="text-lg font-semibold mb-2">
-                      {product.name}
+                      {product.name.length > 20
+                        ? product.name.substring(0, 20) + '...'
+                        : product.name}
                     </h2>
                     {product.promoPrice > 0 ? (
                       <>

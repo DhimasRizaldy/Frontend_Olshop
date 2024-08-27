@@ -56,7 +56,11 @@ const ProductCard = ({ product }) => (
       </div>
     </div>
     <div className="p-4">
-      <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
+      <h2 className="text-lg font-semibold mb-2">
+        {product.name.length > 20
+          ? product.name.substring(0, 20) + '...'
+          : product.name}
+      </h2>
       {product.promoPrice > 0 ? (
         <>
           <p className="text-gray-500 line-through">
