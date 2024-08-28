@@ -11,9 +11,8 @@ import {
 
 const BottomNavBar = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-boxdark shadow-md md:hidden">
-      {' '}
-      {/* Warna latar belakang disesuaikan */}
+    <nav className="fixed bottom-0 left-0 right-0 bg-boxdark shadow-md md:hidden z-50">
+      {/* Menambahkan z-index agar tetap di atas */}
       <div className="flex justify-around items-center py-2">
         {/* Home Icon */}
         <Link

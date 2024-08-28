@@ -1,10 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // Pastikan sudah menginstall axios dengan `npm install axios`
+import axios from 'axios';
+import DropdownUser from './DropdownUser';
+import { getWHOAMI } from '../../services/auth/admin/getDataUser';
+import Button from '../Elements/Button/Index.jsx';
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]); // Untuk menyimpan hasil pencarian
+  const [searchResults, setSearchResults] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getWHOAMI();
+        setUserData(response.data); // Adjust based on your actual response structure
+      } catch (error) {
+        // console.error('Failed to fetch user data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const isUserLoggedIn = userData !== null;
 
   // Mengambil hasil pencarian saat searchTerm berubah
   useEffect(() => {
@@ -13,14 +35,13 @@ const Header = () => {
         setSearchResults([]); // Kosongkan hasil pencarian jika searchTerm kosong
         return;
       }
-
       try {
         const response = await axios.get(
           `https://backend-olshop.vercel.app/api/v1/product?search=${searchTerm}`,
         );
         setSearchResults(response.data.data); // Menyimpan hasil pencarian
       } catch (error) {
-        console.error('Error fetching search results:', error);
+        // console.error('Error fetching search results:', error);
       }
     };
 
@@ -187,13 +208,22 @@ const Header = () => {
             <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full ring-2 ring-white"></span>
           </Link>
           {/* Profile Icon */}
-          <a href="#">
-            <img
-              src="https://via.placeholder.com/40"
-              alt="Profile"
-              className="w-10 h-10 rounded-full"
-            />
-          </a>
+          <div className="flex items-center gap-3 2xsm:gap-7">
+            {!loading && !isUserLoggedIn && (
+              <div className="flex items-center gap-2">
+                <Link to="/login">
+                  <Button
+                    type="button"
+                    classname="px-4 py-2 font-medium text-white bg-primary border border-primary rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition"
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </div>
+            )}
+
+            {isUserLoggedIn && <DropdownUser />}
+          </div>
         </div>
 
         {/* Icons (Mobile) */}
@@ -220,13 +250,23 @@ const Header = () => {
             <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full ring-2 ring-white"></span>
           </Link>
           {/* Profile Icon */}
-          <a href="#">
-            <img
-              src="https://via.placeholder.com/40"
-              alt="Profile"
-              className="w-10 h-10 rounded-full"
-            />
-          </a>
+          {/* Profile Icon */}
+          <div className="flex items-center gap-3 2xsm:gap-7">
+            {!loading && !isUserLoggedIn && (
+              <div className="flex items-center gap-2">
+                <Link to="/login">
+                  <Button
+                    type="button"
+                    classname="px-4 py-2 font-medium text-white bg-primary border border-primary rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition"
+                  >
+                    Login
+                  </Button>
+                </Link>
+              </div>
+            )}
+
+            {isUserLoggedIn && <DropdownUser />}
+          </div>
         </div>
       </div>
     </header>

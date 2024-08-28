@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Button from '../../Elements/Button/Index';
 import { userOTP } from '../../../services/auth/user/userAuthServices';
 
-
 const FormVerifyOtp = () => {
   const [otp, setOtp] = useState('');
   const [token, setToken] = useState('');
@@ -40,17 +39,19 @@ const FormVerifyOtp = () => {
   };
 
   return (
-    <form>
-      {/* button activate */}
-      <div className="mb-5">
-        <Button
-          onClick={handleOTP}
-          classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
-        >
-          Verify Accounts
-        </Button>
-      </div>
-    </form>
+    <div>
+      <form>
+        {/* button activate */}
+        <div className="mb-5">
+          <Button
+            onClick={handleOTP}
+            classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
+          >
+            Verify Accounts
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 

@@ -9,10 +9,10 @@ const getWHOAMI = async () => {
     // console.log('API WHOAMI Response:', response.data);
     return response.data;
   } catch (error) {
-    console.error(
-      'Error fetching user data:',
-      error.response?.data?.message || 'Unknown error',
-    );
+    // console.error(
+    //   'Error fetching user data:',
+    //   error.response?.data?.message || 'Unknown error',
+    // );
     throw new Error(
       error.response?.data?.message || 'Error fetching user data',
     );
@@ -51,7 +51,7 @@ const getUserData = (token) => {
       role: decoded.role,
     };
   } catch (error) {
-    console.error('Error decoding token:', error);
+    // console.error('Error decoding token:', error);
     return null;
   }
 };
