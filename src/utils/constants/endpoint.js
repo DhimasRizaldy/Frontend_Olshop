@@ -120,6 +120,7 @@ export const API_ENDPOINT = {
   },
 
   // Notification
+  GET_NOTIFICATION: '/notification/',
 
   // ManageStok
   GET_MANAGE_STOK: '/manageStok/',

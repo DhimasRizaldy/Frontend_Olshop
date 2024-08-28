@@ -19,7 +19,7 @@ const DataPromo = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterStatus, setFilterStatus] = useState('ALL');
-  const [role, setRole] = useState('USER'); // Default role or set as needed
+  const [role, setRole] = useState('USER'); 
 
   // Fetch promos
   useEffect(() => {
