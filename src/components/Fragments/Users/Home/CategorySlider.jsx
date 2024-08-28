@@ -84,7 +84,7 @@ const CategorySlider = () => {
             ))
           : categories.map((category) => (
               <div
-                key={category.id} // Gunakan id sebagai key untuk menghindari masalah dengan index
+                key={category.categoriId} // Gunakan id sebagai key untuk menghindari masalah dengan index
                 className="category-item bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap"
                 onClick={() => handleCategoryClick(category)}
               >
