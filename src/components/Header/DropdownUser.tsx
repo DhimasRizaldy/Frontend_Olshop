@@ -65,7 +65,9 @@ const DropdownUser = () => {
   // Fungsi untuk logout
   const handleLogout = () => {
     CookieStorage.remove(CookieKeys.AuthToken); // Hapus token dari cookies
+    localStorage.removeItem(CookieKeys.AuthToken); // Hapus token dari localStorage jika ada
     navigate('/'); // Arahkan ke halaman login
+    window.location.reload(); // Reload halaman setelah logout
   };
 
   // Menampilkan konten berdasarkan status loading dan error
