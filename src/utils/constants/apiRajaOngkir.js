@@ -3,11 +3,14 @@ import axios from 'axios';
 // Fetch provinces
 export const fetchProvinces = async (setProvinces) => {
   try {
-    const response = await axios.get('/api/province', {
-      headers: {
-        key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
+    const response = await axios.get(
+      'https://pro.rajaongkir.com/api/province',
+      {
+        headers: {
+          key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
+        },
       },
-    });
+    );
 
     if (
       response.data &&
@@ -26,11 +29,14 @@ export const fetchProvinces = async (setProvinces) => {
 // Fetch cities
 export const fetchCities = async (provinceId, setCities) => {
   try {
-    const response = await axios.get(`/api/city?province=${provinceId}`, {
-      headers: {
-        key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
+    const response = await axios.get(
+      `https://pro.rajaongkir.com/api/city?province=${provinceId}`,
+      {
+        headers: {
+          key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
+        },
       },
-    });
+    );
 
     if (
       response.data &&
