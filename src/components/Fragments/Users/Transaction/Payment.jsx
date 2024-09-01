@@ -30,29 +30,6 @@ const PaymentsMe = () => {
   const [total, setTotal] = useState(0);
   const [shippingOptions, setShippingOptions] = useState([]);
 
-  // Fetch promos when component mounts
-  useEffect(() => {
-    const fetchPromos = async () => {
-      try {
-        const response = await getPromo();
-        if (response.success) {
-          const now = new Date();
-          const validPromos = response.data.filter(
-            (promo) => new Date(promo.expiresAt) > now,
-          );
-          setPromos(validPromos);
-        } else {
-          console.error('Failed to fetch promotions');
-        }
-      } catch (error) {
-        console.error('Error fetching promotions:', error);
-      }
-    };
-
-    fetchPromos();
-  }, []);
-
-  // Fetch cart items and address data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -74,7 +51,18 @@ const PaymentsMe = () => {
         const addressResponse = await getAddress();
         setAddresses(addressResponse.data || []);
 
-        // Recalculate total
+        const promoResponse = await getPromo();
+        if (promoResponse.success) {
+          // Filter promos that haven't expired yet
+          const now = new Date();
+          const validPromos = promoResponse.data.filter(
+            (promo) => new Date(promo.expiresAt) > now,
+          );
+          setPromos(validPromos);
+        } else {
+          console.error('Failed to fetch promotions');
+        }
+
         setTotal(subtotal - discount + shippingCost);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -84,14 +72,12 @@ const PaymentsMe = () => {
     fetchData();
   }, [subtotal, discount, shippingCost]);
 
-  // Fetch cities when provinceId changes
   useEffect(() => {
     if (provinceId) {
       fetchCities(provinceId).then(setCities).catch(console.error);
     }
   }, [provinceId]);
 
-  // Fetch shipping options when shippingOption changes
   useEffect(() => {
     if (shippingOption) {
       fetchShippingCost(shippingOption)
@@ -100,17 +86,11 @@ const PaymentsMe = () => {
     }
   }, [shippingOption]);
 
-  // Recalculate total whenever subtotal, discount, or shippingCost changes
-  useEffect(() => {
-    setTotal(subtotal - discount + shippingCost);
-  }, [subtotal, discount, shippingCost]);
-
   const handleApplyDiscount = () => {
+    // Apply the discount logic
     const promo = promos.find((p) => p.promoId === selectedPromo);
     if (promo) {
-      // Calculate discount as a percentage of the subtotal
-      const discountAmount = (subtotal * promo.discount) / 100;
-      setDiscount(discountAmount);
+      setDiscount(subtotal * (promo.discount / 100));
     } else {
       setDiscount(0);
     }
@@ -137,6 +117,10 @@ const PaymentsMe = () => {
     }
   };
 
+  useEffect(() => {
+    setTotal(subtotal - discount + shippingCost);
+  }, [subtotal, discount, shippingCost]);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
       <h1 className="text-3xl font-bold mb-6">Checkout</h1>
@@ -154,7 +138,7 @@ const PaymentsMe = () => {
           <option value="">Select Address</option>
           {addresses.map((addr) => (
             <option key={addr.addressId} value={addr.addressId}>
-              {addr.nameAddress} - {addr.address}, {addr.city}, {addr.country},{' '}
+              {addr.recipient} - {addr.street}, {addr.city}, {addr.state},{' '}
               {addr.postalCode}
             </option>
           ))}
@@ -219,44 +203,6 @@ const PaymentsMe = () => {
         )}
       </div>
 
-      {/* Promo Code Section */}
-      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Promo Code</h2>
-        <select
-          className="w-full border border-gray-300 rounded-md p-2 mb-2"
-          value={selectedPromo}
-          onChange={(e) => setSelectedPromo(e.target.value)}
-        >
-          <option value="">Select Promo Code</option>
-          {promos.map((promo) => (
-            <option key={promo.promoId} value={promo.promoId}>
-              {promo.codePromo} - {promo.discount}% Off
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={handleApplyDiscount}
-          className="w-full bg-blue-500 text-white py-2 rounded-md"
-        >
-          Apply Promo Code
-        </button>
-      </div>
-
-      {/* Payment Method Section */}
-      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-        <select
-          className="w-full border border-gray-300 rounded-md p-2"
-          value={paymentMethod}
-          onChange={(e) => setPaymentMethod(e.target.value)}
-        >
-          <option value="">Select Payment Method</option>
-          <option value="credit_card">Credit Card</option>
-          <option value="bank_transfer">Bank Transfer</option>
-          <option value="cod">Cash on Delivery</option>
-        </select>
-      </div>
-
       {/* Cart Items and Order Summary Section */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
@@ -277,35 +223,72 @@ const PaymentsMe = () => {
             </div>
           ))
         ) : (
-          <p>No items in cart</p>
+          <p>No items in the cart.</p>
         )}
-        <div className="mt-4">
-          <div className="flex justify-between mb-2">
-            <span className="font-semibold">Subtotal:</span>
-            <span>{formatRupiah(subtotal)}</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span className="font-semibold">Discount:</span>
-            <span>{formatRupiah(discount)}</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span className="font-semibold">Shipping Cost:</span>
-            <span>{formatRupiah(shippingCost)}</span>
-          </div>
-          <div className="flex justify-between font-bold text-xl">
-            <span>Total:</span>
-            <span>{formatRupiah(total)}</span>
-          </div>
-        </div>
+      </div>
+
+      {/* Discount Code Section */}
+      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+        <h2 className="text-xl font-semibold mb-4">Discount Code</h2>
+        <select
+          className="w-full border border-gray-300 rounded-md p-2 mb-2"
+          value={selectedPromo}
+          onChange={(e) => setSelectedPromo(e.target.value)}
+        >
+          <option value="">Select Promo</option>
+          {promos.map((promo) => (
+            <option key={promo.promoId} value={promo.promoId}>
+              {promo.codePromo} - {promo.discount}%
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={handleApplyDiscount}
+          className="bg-blue-500 text-white rounded-md p-2 mt-2"
+        >
+          Apply Discount
+        </button>
+        {discount > 0 && <p>Discount Applied: {formatRupiah(discount)}</p>}
+      </div>
+
+      {/* Payment Method Section */}
+      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+        <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
+        <select
+          className="w-full border border-gray-300 rounded-md p-2"
+          value={paymentMethod}
+          onChange={(e) => setPaymentMethod(e.target.value)}
+        >
+          <option value="">Select Payment Method</option>
+          <option value="credit_card">Credit Card</option>
+          <option value="bank_transfer">Bank Transfer</option>
+          <option value="cod">Cash on Delivery</option>
+        </select>
       </div>
 
       {/* Checkout Button */}
-      <button
-        onClick={handleCheckout}
-        className="w-full bg-green-500 text-white py-2 rounded-md"
-      >
-        Checkout
-      </button>
+      <div className="flex justify-between bg-white shadow-md rounded-lg p-4">
+        <div>
+          <h3 className="text-lg font-semibold">
+            Subtotal: {formatRupiah(subtotal)}
+          </h3>
+          <h3 className="text-lg font-semibold">
+            Discount: {formatRupiah(discount)}
+          </h3>
+          <h3 className="text-lg font-semibold">
+            Shipping Cost: {formatRupiah(shippingCost)}
+          </h3>
+          <h2 className="text-2xl font-bold mt-4">
+            Total: {formatRupiah(total)}
+          </h2>
+        </div>
+        <button
+          onClick={handleCheckout}
+          className="bg-green-500 text-white rounded-md p-4"
+        >
+          Checkout
+        </button>
+      </div>
     </div>
   );
 };

@@ -33,11 +33,11 @@ const NotificationsMe = () => {
         if (response.status && response.data) {
           setNotifications(response.data);
         } else {
-          setError('Failed to fetch notifications.');
+          // setError('Failed to fetch notifications.');
         }
       } catch (error) {
-        console.error('Error fetching notifications:', error);
-        setError('Error fetching notifications.');
+        // console.error('Error fetching notifications:', error);
+        // setError('Error fetching notifications.');
       } finally {
         setLoading(false);
       }
