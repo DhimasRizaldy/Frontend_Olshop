@@ -48,11 +48,11 @@ const CartsMe = () => {
         } else if (response.status === 401) {
           setUnauthorized(true);
         } else {
-          setError('Failed to fetch cart items');
+          // setError('Failed to fetch cart items');
         }
       } catch (error) {
-        console.error('Error fetching cart items:', error);
-        setError('An error occurred while fetching cart items');
+        // console.error('Error fetching cart items:', error);
+        // setError('An error occurred while fetching cart items');
       } finally {
         setLoading(false);
       }
