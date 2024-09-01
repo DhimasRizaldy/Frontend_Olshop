@@ -4,7 +4,7 @@ import CoverOne from '../../../images/cover/cover-01.png';
 import userSix from '../../../images/user/user-06.png';
 import { Link } from 'react-router-dom';
 
-const Profile = () => {
+const ProfileAdmin = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Profile" />
@@ -285,4 +285,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileAdmin;

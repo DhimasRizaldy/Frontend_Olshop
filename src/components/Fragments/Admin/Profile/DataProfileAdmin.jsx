@@ -1,13 +1,13 @@
 import Breadcrumb from '../../../Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../../../../layout/DefaultLayout';
-import DataAddress from '../Address/DataAddress';
+import DataAddress from '../Address/DataAddress.jsx';
 import Button from '../../../Elements/Button/Index.jsx';
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import {
   getProfile,
   editProfile,
-} from '../../../../services/admin/profile/services-profile';
+} from '../../../../services/admin/profile/services-profile.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPhone,
@@ -23,7 +23,7 @@ const genderOptions = [
   { value: 'Perempuan', label: 'Perempuan' },
 ];
 
-const DataProfile = () => {
+const DataProfileAdmin = () => {
   const [profiles, setProfiles] = useState([]);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -275,7 +275,7 @@ const DataProfile = () => {
                   </div>
 
                   <div className="flex justify-end gap-4.5">
-                    <Link to="/profile">
+                    <Link to="/admin/profile">
                       <button
                         className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                         type="submit"
@@ -300,7 +300,7 @@ const DataProfile = () => {
 
       {/* Address */}
       <div className="mb-5 mt-10 flex space-x-4">
-        <Link to="/add-address">
+        <Link to="/admin/add-address">
           <Button
             type="submit"
             classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
@@ -327,4 +327,4 @@ const DataProfile = () => {
   );
 };
 
-export default DataProfile;
+export default DataProfileAdmin;

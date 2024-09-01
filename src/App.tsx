@@ -20,7 +20,7 @@ import ResetPage from './pages/Authentication/reset-password.jsx';
 
 // Admin
 import ECommerce from './pages/Admin/Dashboard/ECommerce';
-import DataProfile from './components/Fragments/Admin/Profile/DataProfile.jsx';
+import DataProfileAdmin from './components/Fragments/Admin/Profile/DataProfileAdmin.jsx';
 
 // CRUD Rating
 import Rating from './pages/Admin/Rating/Rating';
@@ -85,6 +85,12 @@ import Notifications from './pages/Users/Notifications/Notifications.jsx';
 import Carts from './pages/Users/Carts/Carts.jsx';
 import ProductsDetail from './pages/Users/Product/ProductDetail.jsx';
 import ProductCategory from './pages/Users/Product/ProductCategory.jsx';
+import DataProfileUsers from './components/Fragments/Users/Profile/DataProfileUsers.jsx';
+
+// CRUD Address Users
+import AddAddressUsers from './pages/Users/Address/AddAddress.jsx';
+import EditAddressUsers from './pages/Users/Address/EditAddress.jsx';
+import DetailAddressUsers from './pages/Users/Address/DetailAddress.jsx';
 
 // Service User
 import About from './pages/Users/Service/AboutUs.jsx';
@@ -428,25 +434,44 @@ function App() {
 
         {/* Admin Profile */}
         <Route
-          path="/profile"
+          path="/admin/profile"
           element={
             <>
               <PageTitle title="Profile | Putra Komputer" />
-              <DataProfile />
+              <DataProfileAdmin />
             </>
           }
         />
         <Route
-          path="/edit-profile"
+          path="/admin/edit-profile"
           element={
             <>
               <PageTitle title="Edit Profile | Putra Komputer" />
-              <DataProfile />
+              <DataProfileAdmin />
+            </>
+          }
+        />
+        {/* Users Profile */}
+        <Route
+          path="/users/profile"
+          element={
+            <>
+              <PageTitle title="Profile | Putra Komputer" />
+              <DataProfileUsers />
+            </>
+          }
+        />
+        <Route
+          path="/users/edit-profile"
+          element={
+            <>
+              <PageTitle title="Edit Profile | Putra Komputer" />
+              <DataProfileUsers />
             </>
           }
         />
 
-        {/* address */}
+        {/* address admin */}
         <Route
           path="/address"
           element={
@@ -457,7 +482,7 @@ function App() {
           }
         />
         <Route
-          path="/add-address"
+          path="/admin/add-address"
           element={
             <>
               <PageTitle title="Add Address | Putra Komputer" />
@@ -466,7 +491,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-address/:addressId"
+          path="/admin/edit-address/:addressId"
           element={
             <>
               <PageTitle title="Edit Address | Putra Komputer" />
@@ -475,11 +500,40 @@ function App() {
           }
         />
         <Route
-          path="/detail-address/:addressId"
+          path="/admin/detail-address/:addressId"
           element={
             <>
               <PageTitle title="Detail Address | Putra Komputer" />
               <DetailAddress />
+            </>
+          }
+        />
+
+        {/* address admin */}
+        <Route
+          path="/users/add-address"
+          element={
+            <>
+              <PageTitle title="Add Address | Putra Komputer" />
+              <AddAddressUsers />
+            </>
+          }
+        />
+        <Route
+          path="/users/edit-address/:addressId"
+          element={
+            <>
+              <PageTitle title="Edit Address | Putra Komputer" />
+              <EditAddressUsers />
+            </>
+          }
+        />
+        <Route
+          path="/users/detail-address/:addressId"
+          element={
+            <>
+              <PageTitle title="Detail Address | Putra Komputer" />
+              <DetailAddressUsers />
             </>
           }
         />

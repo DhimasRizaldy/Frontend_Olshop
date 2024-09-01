@@ -5,6 +5,7 @@ import defaultUser from '../../images/user/default-user.png';
 import {
   useUserGetData,
   getUserData,
+  getWHOAMI, // Import fungsi getWHOAMI
 } from '../../services/auth/admin/getDataUser';
 import { getProfile } from '../../services/admin/profile/services-profile';
 
@@ -14,6 +15,15 @@ const DropdownUser = () => {
   const dropdown = useRef(null);
   const navigate = useNavigate();
   const [imageProfile, setImageProfile] = useState(null);
+  const [userRole, setUserRole] = useState(''); // State untuk menyimpan role pengguna
+
+  // Ambil token dari cookies atau localStorage
+  const token =
+    CookieStorage.get(CookieKeys.AuthToken) ||
+    localStorage.getItem(CookieKeys.AuthToken);
+
+  // Ambil data pengguna menggunakan useUserGetData
+  const { data, error, isLoading } = useUserGetData();
 
   // get profile
   useEffect(() => {
@@ -28,13 +38,22 @@ const DropdownUser = () => {
     fetchProfile();
   }, []);
 
-  // Ambil token dari cookies atau localStorage
-  const token =
-    CookieStorage.get(CookieKeys.AuthToken) ||
-    localStorage.getItem(CookieKeys.AuthToken);
+  // Ambil role pengguna saat komponen di-mount
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await getWHOAMI(); // Panggil getWHOAMI untuk mendapatkan data pengguna
+        const user = response.data.user; // Asumsi bahwa response mengikuti struktur yang diberikan
 
-  // Ambil data pengguna menggunakan useUserGetData
-  const { data, error, isLoading } = useUserGetData();
+        setUserRole(user.role); // Setel state userRole berdasarkan peran pengguna
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        // Tambahkan handling error di sini jika diperlukan
+      }
+    };
+
+    fetchUserRole();
+  }, []); // Hapus navigasi otomatis dengan mengosongkan dependensi useEffect
 
   // Tutup dropdown saat klik di luar
   useEffect(() => {
@@ -130,14 +149,28 @@ const DropdownUser = () => {
         }`}
       >
         <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
-          <li>
-            <Link
-              to="/profile"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-            >
-              My Profile
-            </Link>
-          </li>
+          {/* Tampilkan link berdasarkan role pengguna */}
+          {userRole === 'USER' && (
+            <li>
+              <Link
+                to="/users/profile"
+                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+              >
+                User Profile
+              </Link>
+            </li>
+          )}
+          {userRole === 'ADMIN' && (
+            <li>
+              <Link
+                to="/admin/profile"
+                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+              >
+                Admin Profile
+              </Link>
+            </li>
+          )}
+          {/* Tambahkan item tambahan berdasarkan role lainnya jika diperlukan */}
         </ul>
         <button
           onClick={handleLogout}

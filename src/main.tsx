@@ -11,7 +11,6 @@ import store from './redux/store/store'; // Import Redux store Anda
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      {' '}
       {/* Bungkus Router dengan Provider */}
       <Router>
         <App />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,21 +7,32 @@ import Input from '../../Elements/Input/Inputs';
 import Button from '../../Elements/Button/Index';
 import { userChangePassword } from '../../../services/auth/user/userAuthServices';
 import Swal from 'sweetalert2';
+import { getWHOAMI } from '../../../services/auth/admin/getDataUser';
 
 const FormChange = () => {
   const [old_password, setOldPassword] = useState('');
   const [new_password, setNewPassword] = useState('');
   const [confirm_password, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
 
-  // Handle form submit
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await getWHOAMI();
+        setUserRole(response.data.user.role);
+      } catch (error) {
+        toast.error('Failed to fetch user role');
+        console.error('Error:', error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
-
-    console.log('old_password:', old_password);
-    console.log('new_password:', new_password);
-    console.log('confirm_password:', confirm_password);
 
     if (new_password !== confirm_password) {
       toast.error('Password does not match');
@@ -46,7 +57,12 @@ const FormChange = () => {
         timer: 2000,
       });
 
-      navigate('/profile'); // contoh redirect setelah sukses, sesuaikan dengan kebutuhan Anda
+      // Redirect based on user role
+      if (userRole === 'ADMIN') {
+        navigate('/admin/profile');
+      } else if (userRole === 'USER') {
+        navigate('/users/profile');
+      }
     } catch (error) {
       toast.error('Failed to change password. Please try again.');
     } finally {
@@ -99,7 +115,7 @@ const FormChange = () => {
         <div className="relative">
           <Input
             type="password"
-            placeholder="Enter your confirm password"
+            placeholder="Confirm your new password"
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={confirm_password}
             onChange={(e) => setConfirmPassword(e.target.value)}

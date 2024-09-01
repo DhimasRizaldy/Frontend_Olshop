@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   editAddress,
   getAddressById,
 } from '../../../../services/admin/address/services-address';
+import { getWHOAMI } from '../../../../services/auth/admin/getDataUser';
 
 const EditAddress = () => {
   const { addressId } = useParams();
+  const navigate = useNavigate();
   const [nameAddress, setnameAddress] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  //
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
     const fetchAddressData = async () => {
@@ -33,10 +34,20 @@ const EditAddress = () => {
       }
     };
 
+    const fetchUserRole = async () => {
+      try {
+        const response = await getWHOAMI();
+        setUserRole(response.data.user.role);
+      } catch (error) {
+        toast.error('Failed to fetch user role');
+        console.error('Error:', error);
+      }
+    };
+
     fetchAddressData();
+    fetchUserRole();
   }, [addressId]);
 
-  // handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -63,6 +74,14 @@ const EditAddress = () => {
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    if (userRole === 'ADMIN') {
+      navigate('/admin/profile');
+    } else if (userRole === 'USER') {
+      navigate('/users/profile');
     }
   };
 
@@ -159,16 +178,16 @@ const EditAddress = () => {
         </div>
 
         <div className="flex justify-end gap-4.5">
-          <Link to="/address">
-            <button
-              className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-              type="submit"
-            >
-              Cancel
-            </button>
-          </Link>
           <button
-            className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
+            className={`flex justify-center rounded border border-stroke py-2 px-6 font-medium ${isLoading ? 'text-gray-400 border-gray-300' : 'text-black hover:shadow-1 dark:border-strokedark dark:text-white'}`}
+            type="button"
+            onClick={handleCancel}
+            disabled={isLoading}
+          >
+            Cancel
+          </button>
+          <button
+            className={`flex justify-center rounded py-2 px-6 font-medium ${isLoading ? 'bg-gray-400 text-gray-200' : 'bg-primary text-gray hover:bg-opacity-90'}`}
             type="submit"
             disabled={isLoading}
           >

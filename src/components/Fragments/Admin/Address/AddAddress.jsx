@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { addAddress } from '../../../../services/admin/address/services-address';
+import { getWHOAMI } from '../../../../services/auth/admin/getDataUser';
 
 const AddAddress = () => {
-  const [nameAddress, setnameAddress] = useState('');
+  const [nameAddress, setNameAddress] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [role, setRole] = useState('USER'); // Default role
   const navigate = useNavigate();
 
-  // hadle submit
+  // Fetch user role
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await getWHOAMI();
+        setRole(response.data.role || 'USER'); // Default to 'USER' if role not found
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+      }
+    };
+    fetchUserRole();
+  }, []);
+
+  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -35,11 +50,12 @@ const AddAddress = () => {
     try {
       await addAddress(addressData, setIsLoading);
       toast.success('Address added successfully!');
-      setnameAddress('');
+      setNameAddress('');
       setAddress('');
       setCity('');
       setCountry('');
       setPostalCode('');
+      navigate(role === 'USER' ? '/users/address' : '/admin/address'); // Redirect based on role
     } catch (error) {
       toast.error('Failed to add address');
       console.error('Error:', error);
@@ -64,7 +80,7 @@ const AddAddress = () => {
               id="nameAddress"
               placeholder="Name Address"
               value={nameAddress}
-              onChange={(e) => setnameAddress(e.target.value)}
+              onChange={(e) => setNameAddress(e.target.value)}
             />
           </div>
         </div>
@@ -140,10 +156,10 @@ const AddAddress = () => {
       </div>
 
       <div className="flex justify-end gap-4.5">
-        <Link to="/address">
+        <Link to={role === 'USER' ? '/users/profile' : '/admin/profile'}>
           <button
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-            type="submit"
+            type="button" // Change type to button to avoid form submission
           >
             Cancel
           </button>

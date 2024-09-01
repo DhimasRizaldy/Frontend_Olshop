@@ -1,35 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getAddressById } from '../../../../services/admin/address/services-address';
+import { getWHOAMI } from '../../../../services/auth/admin/getDataUser';
+import { toast } from 'react-toastify';
 
 const DetailAddress = () => {
   const { addressId } = useParams();
-  const [nameAddress, setnameAddress] = useState('');
+  const [nameAddress, setNameAddress] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [postalCode, setPostalCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  //
+  const [role, setRole] = useState('USER'); // Default role
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAddressData = async () => {
       try {
         const response = await getAddressById(addressId);
-        setnameAddress(response.data.nameAddress);
+        setNameAddress(response.data.nameAddress);
         setAddress(response.data.address);
         setCity(response.data.city);
         setCountry(response.data.country);
         setPostalCode(response.data.postalCode);
       } catch (error) {
-        toast.error('Failed to fetch address data');
+        console.error('Error fetching address data:', error);
+      }
+    };
+
+    const fetchUserRole = async () => {
+      try {
+        const response = await getWHOAMI();
+        setRole(response.data.user.role);
+      } catch (error) {
+        toast.error('Failed to fetch user role');
         console.error('Error:', error);
       }
     };
 
     fetchAddressData();
+    fetchUserRole();
   }, [addressId]);
+
+  const handleCancel = () => {
+    if (role === 'ADMIN') {
+      navigate('/admin/profile');
+    } else if (role === 'USER') {
+      navigate('/users/profile');
+    }
+  };
 
   return (
     <form>
@@ -45,7 +64,7 @@ const DetailAddress = () => {
               name="nameAddress"
               id="nameAddress"
               value={nameAddress}
-              onChange={(e) => setnameAddress(e.target.value)}
+              onChange={(e) => setNameAddress(e.target.value)}
               disabled
             />
           </div>
@@ -122,14 +141,13 @@ const DetailAddress = () => {
       </div>
 
       <div className="flex justify-end gap-4.5">
-        <Link to="/address">
-          <button
-            className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-            type="submit"
-          >
-            Back
-          </button>
-        </Link>
+        <button
+          className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+          type="button"
+          onClick={handleCancel}
+        >
+          Back
+        </button>
       </div>
     </form>
   );
