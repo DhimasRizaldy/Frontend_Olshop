@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { checkoutPayment } from '../../../../services/users/payment/servives-payment';
+import { getAddress } from '../../../../services/admin/address/services-address';
+import { getPromo } from '../../../../services/admin/promo/services-promo';
+import { getCarts } from '../../../../services/users/carts/services-carts';
 import { formatRupiah } from '../../../../utils/constants/function';
-import axios from 'axios';
+import {
+  fetchCities,
+  fetchProvinces,
+  fetchShippingCost,
+} from '../../../../utils/constants/apiRajaOngkir';
 
 const PaymentsMe = () => {
   const [cartItems, setCartItems] = useState([]);
   const [discountCode, setDiscountCode] = useState('');
-  const [address, setAddress] = useState({
-    recipient: '',
-    street: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
-  });
-  const [cityId, setCityId] = useState('');
+  const [address, setAddress] = useState({});
+  const [selectedAddress, setSelectedAddress] = useState('');
+  const [addresses, setAddresses] = useState([]);
+  const [selectedPromo, setSelectedPromo] = useState('');
+  const [promos, setPromos] = useState([]);
   const [provinceId, setProvinceId] = useState('');
+  const [cityId, setCityId] = useState('');
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [shippingOption, setShippingOption] = useState('');
@@ -26,99 +30,90 @@ const PaymentsMe = () => {
   const [total, setTotal] = useState(0);
   const [shippingOptions, setShippingOptions] = useState([]);
 
+  // Fetch promos when component mounts
   useEffect(() => {
-    setCartItems([
-      {
-        id: 1,
-        name: 'Product Name 1',
-        price: 50000,
-        imageUrl: 'https://via.placeholder.com/80',
-      },
-    ]);
-    setSubtotal(50000);
-    setDiscount(15000);
-    setShippingCost(5000);
-    setTotal(50000 - 15000 + 5000);
-    fetchProvinces(); // Fetch provinces when component mounts
+    const fetchPromos = async () => {
+      try {
+        const response = await getPromo();
+        if (response.success) {
+          const now = new Date();
+          const validPromos = response.data.filter(
+            (promo) => new Date(promo.expiresAt) > now,
+          );
+          setPromos(validPromos);
+        } else {
+          console.error('Failed to fetch promotions');
+        }
+      } catch (error) {
+        console.error('Error fetching promotions:', error);
+      }
+    };
+
+    fetchPromos();
   }, []);
 
-  const fetchProvinces = async () => {
-    try {
-      const response = await axios.get(
-        'https://api.rajaongkir.com/starter/province',
-        {
-          headers: {
-            key: 'caacb37b4f708a6966beddebf3119822', // API key Raja Ongkir
-          },
-        },
-      );
-      setProvinces(response.data.rajaongkir.results);
-    } catch (error) {
-      console.error('Error fetching provinces:', error);
-    }
-  };
+  // Fetch cart items and address data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const cartResponse = await getCarts();
+        if (cartResponse.success && Array.isArray(cartResponse.data)) {
+          setCartItems(cartResponse.data);
+          setSubtotal(
+            cartResponse.data.reduce(
+              (sum, item) => sum + item.products.price * item.qty,
+              0,
+            ),
+          );
+        } else {
+          console.error(
+            'Error: cartResponse is not an array or success is false',
+          );
+        }
 
-  const fetchCities = async (provinceId) => {
-    try {
-      const response = await axios.get(
-        `https://api.rajaongkir.com/starter/city?province=${provinceId}`,
-        {
-          headers: {
-            key: 'caacb37b4f708a6966beddebf3119822', // API key Raja Ongkir
-          },
-        },
-      );
-      setCities(response.data.rajaongkir.results);
-    } catch (error) {
-      console.error('Error fetching cities:', error);
-    }
-  };
+        const addressResponse = await getAddress();
+        setAddresses(addressResponse.data || []);
 
-  const fetchShippingCost = async (courier) => {
-    try {
-      const response = await axios.post(
-        'https://api.rajaongkir.com/starter/cost',
-        {
-          origin: '501', // Ganti dengan ID kota asal Anda
-          destination: cityId, // Menggunakan ID kota tujuan dari input
-          weight: 1000, // Ganti dengan berat total dari cart Anda
-          courier: courier,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            key: 'caacb37b4f708a6966beddebf3119822', // API key Raja Ongkir
-          },
-        },
-      );
-
-      if (response.data.rajaongkir.status.code === 200) {
-        setShippingOptions(response.data.rajaongkir.results[0].costs); // Simpan opsi pengiriman
-      } else {
-        console.error(
-          'Error fetching shipping cost:',
-          response.data.rajaongkir.status.description,
-        );
+        // Recalculate total
+        setTotal(subtotal - discount + shippingCost);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-    } catch (error) {
-      console.error('Error fetching shipping cost:', error);
-    }
-  };
+    };
 
+    fetchData();
+  }, [subtotal, discount, shippingCost]);
+
+  // Fetch cities when provinceId changes
   useEffect(() => {
     if (provinceId) {
-      fetchCities(provinceId); // Fetch cities when province changes
+      fetchCities(provinceId).then(setCities).catch(console.error);
     }
   }, [provinceId]);
 
+  // Fetch shipping options when shippingOption changes
   useEffect(() => {
     if (shippingOption) {
-      fetchShippingCost(shippingOption); // Fetch shipping cost when shipping option changes
+      fetchShippingCost(shippingOption)
+        .then(setShippingOptions)
+        .catch(console.error);
     }
   }, [shippingOption]);
 
+  // Recalculate total whenever subtotal, discount, or shippingCost changes
+  useEffect(() => {
+    setTotal(subtotal - discount + shippingCost);
+  }, [subtotal, discount, shippingCost]);
+
   const handleApplyDiscount = () => {
-    console.log(`Applying discount code: ${discountCode}`);
+    const promo = promos.find((p) => p.promoId === selectedPromo);
+    if (promo) {
+      // Calculate discount as a percentage of the subtotal
+      const discountAmount = (subtotal * promo.discount) / 100;
+      setDiscount(discountAmount);
+    } else {
+      setDiscount(0);
+    }
   };
 
   const handleCheckout = async () => {
@@ -126,7 +121,7 @@ const PaymentsMe = () => {
       const response = await checkoutPayment({
         cartItems,
         discountCode,
-        address,
+        address: selectedAddress,
         shippingOption,
         paymentMethod,
         total,
@@ -149,24 +144,23 @@ const PaymentsMe = () => {
       {/* Shipping Address Section */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
-        <input
-          type="text"
-          placeholder="Recipient Name"
-          className="w-full border border-gray-300 rounded-md p-2 mb-2"
-          value={address.recipient}
-          onChange={(e) =>
-            setAddress({ ...address, recipient: e.target.value })
-          }
-        />
-        <input
-          type="text"
-          placeholder="Street Address"
-          className="w-full border border-gray-300 rounded-md p-2 mb-2"
-          value={address.street}
-          onChange={(e) => setAddress({ ...address, street: e.target.value })}
-        />
 
-        {/* Dropdown untuk Provinsi */}
+        {/* Dropdown for Address */}
+        <select
+          className="w-full border border-gray-300 rounded-md p-2 mb-2"
+          value={selectedAddress}
+          onChange={(e) => setSelectedAddress(e.target.value)}
+        >
+          <option value="">Select Address</option>
+          {addresses.map((addr) => (
+            <option key={addr.addressId} value={addr.addressId}>
+              {addr.nameAddress} - {addr.address}, {addr.city}, {addr.country},{' '}
+              {addr.postalCode}
+            </option>
+          ))}
+        </select>
+
+        {/* Dropdown for Province */}
         <select
           className="w-full border border-gray-300 rounded-md p-2 mb-2"
           value={provinceId}
@@ -180,7 +174,7 @@ const PaymentsMe = () => {
           ))}
         </select>
 
-        {/* Dropdown untuk Kota */}
+        {/* Dropdown for City */}
         <select
           className="w-full border border-gray-300 rounded-md p-2 mb-2"
           value={cityId}
@@ -225,39 +219,32 @@ const PaymentsMe = () => {
         )}
       </div>
 
-      {/* Cart Items and Order Summary Section */}
+      {/* Promo Code Section */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-        <ul>
-          {cartItems.map((item) => (
-            <li key={item.id} className="flex justify-between mb-2">
-              <span>{item.name}</span>
-              <span>{formatRupiah(item.price)}</span>
-            </li>
+        <h2 className="text-xl font-semibold mb-4">Promo Code</h2>
+        <select
+          className="w-full border border-gray-300 rounded-md p-2 mb-2"
+          value={selectedPromo}
+          onChange={(e) => setSelectedPromo(e.target.value)}
+        >
+          <option value="">Select Promo Code</option>
+          {promos.map((promo) => (
+            <option key={promo.promoId} value={promo.promoId}>
+              {promo.codePromo} - {promo.discount}% Off
+            </option>
           ))}
-        </ul>
-        <div className="flex justify-between mb-2">
-          <span>Subtotal</span>
-          <span>{formatRupiah(subtotal)}</span>
-        </div>
-        <div className="flex justify-between mb-2">
-          <span>Discount</span>
-          <span>-{formatRupiah(discount)}</span>
-        </div>
-        <div className="flex justify-between mb-2">
-          <span>Shipping</span>
-          <span>{formatRupiah(shippingCost)}</span>
-        </div>
-        <hr className="my-2" />
-        <div className="flex justify-between font-semibold">
-          <span>Total</span>
-          <span>{formatRupiah(total)}</span>
-        </div>
+        </select>
+        <button
+          onClick={handleApplyDiscount}
+          className="w-full bg-blue-500 text-white py-2 rounded-md"
+        >
+          Apply Promo Code
+        </button>
       </div>
 
-      {/* Payment Section */}
+      {/* Payment Method Section */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Payment</h2>
+        <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
         <select
           className="w-full border border-gray-300 rounded-md p-2"
           value={paymentMethod}
@@ -266,13 +253,56 @@ const PaymentsMe = () => {
           <option value="">Select Payment Method</option>
           <option value="credit_card">Credit Card</option>
           <option value="bank_transfer">Bank Transfer</option>
+          <option value="cod">Cash on Delivery</option>
         </select>
+      </div>
+
+      {/* Cart Items and Order Summary Section */}
+      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+        {cartItems.length > 0 ? (
+          cartItems.map((item) => (
+            <div key={item.cartId} className="flex items-center mb-4">
+              <img
+                src={item.products.image}
+                alt={item.products.name}
+                className="w-20 h-20 mr-4"
+              />
+              <div>
+                <h3 className="text-lg font-semibold">{item.products.name}</h3>
+                <p className="text-gray-600">
+                  {formatRupiah(item.products.price)} x {item.qty}
+                </p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No items in cart</p>
+        )}
+        <div className="mt-4">
+          <div className="flex justify-between mb-2">
+            <span className="font-semibold">Subtotal:</span>
+            <span>{formatRupiah(subtotal)}</span>
+          </div>
+          <div className="flex justify-between mb-2">
+            <span className="font-semibold">Discount:</span>
+            <span>{formatRupiah(discount)}</span>
+          </div>
+          <div className="flex justify-between mb-2">
+            <span className="font-semibold">Shipping Cost:</span>
+            <span>{formatRupiah(shippingCost)}</span>
+          </div>
+          <div className="flex justify-between font-bold text-xl">
+            <span>Total:</span>
+            <span>{formatRupiah(total)}</span>
+          </div>
+        </div>
       </div>
 
       {/* Checkout Button */}
       <button
         onClick={handleCheckout}
-        className="bg-blue-500 text-white rounded-md py-2 px-4"
+        className="w-full bg-green-500 text-white py-2 rounded-md"
       >
         Checkout
       </button>

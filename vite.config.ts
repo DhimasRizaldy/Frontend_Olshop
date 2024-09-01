@@ -1,7 +1,15 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-})
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api.rajaongkir.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''), // Menghapus '/api' dari path untuk request yang di-proxy
+      },
+    },
+  },
+});
