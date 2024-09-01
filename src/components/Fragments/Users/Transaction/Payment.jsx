@@ -91,6 +91,8 @@ const PaymentsMe = () => {
         try {
           const weight = 1000; // Example weight in grams
           const courier = shippingOption;
+
+          // Fetch shipping options
           await fetchShippingCost(
             provinceId,
             cityId,
@@ -99,15 +101,16 @@ const PaymentsMe = () => {
             setShippingOptions,
           );
 
-          // If shippingOptions were set by fetchShippingCost
-          if (shippingOptions.length > 0) {
+          // Once shippingOptions are set, find the relevant cost
+          // Delay the cost setting until the shippingOptions are properly updated
+          setTimeout(() => {
             const selectedOption = shippingOptions.find(
               (option) => option.service === shippingOption,
             );
             if (selectedOption) {
-              setShippingCost(selectedOption.cost[0].value);
+              setShippingCost(selectedOption.costs[0].value);
             }
-          }
+          }, 100); // Delay to allow state update
         } catch (error) {
           console.error('Error fetching shipping cost:', error);
         }
@@ -115,7 +118,7 @@ const PaymentsMe = () => {
     };
 
     calculateShippingCost();
-  }, [provinceId, cityId, shippingOption, shippingOptions]);
+  }, [provinceId, cityId, shippingOption]);
 
   useEffect(() => {
     // Recalculate total whenever subtotal, discount, or shippingCost changes
@@ -152,7 +155,6 @@ const PaymentsMe = () => {
     }
   };
 
-
   useEffect(() => {
     setTotal(subtotal - discount + shippingCost);
   }, [subtotal, discount, shippingCost]);
@@ -160,8 +162,6 @@ const PaymentsMe = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
       <h1 className="text-3xl font-bold mb-6">Checkout</h1>
-
-      {/* Shipping Address Section */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
 
@@ -209,7 +209,7 @@ const PaymentsMe = () => {
         </select>
       </div>
 
-      {/* Shipping Options Section */}
+      {/* Shipping Address Section */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <h2 className="text-xl font-semibold mb-4">Shipping Options</h2>
         <select
@@ -230,6 +230,14 @@ const PaymentsMe = () => {
           <option value="jne">JNE</option>
           <option value="pos">Pos Indonesia</option>
           <option value="tiki">TIKI</option>
+          <option value="anteraja">Anteraja</option>
+          <option value="jnt">JNT</option>
+          <option value="sicepat">SiCepat</option>
+          <option value="jasa">Jasa</option>
+          <option value="ninja">Ninja</option>
+          <option value="gojek">Gojek</option>
+          <option value="grab">Grab</option>
+          <option value="lion">Lion</option>
         </select>
 
         {shippingOptions.length > 0 && (
@@ -240,7 +248,8 @@ const PaymentsMe = () => {
             <option value="">Select Shipping Service</option>
             {shippingOptions.map((option, index) => (
               <option key={index} value={option.cost[0].value}>
-                {option.service} - {option.description} (
+                {option.service} - {option.description} - ( Estimasi{' '}
+                {option.cost[0].etd} Hari) - (
                 {formatRupiah(option.cost[0].value)})
               </option>
             ))}
@@ -297,7 +306,7 @@ const PaymentsMe = () => {
       </div>
 
       {/* Payment Method Section */}
-      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+      {/* <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
         <select
           className="w-full border border-gray-300 rounded-md p-2"
@@ -309,28 +318,39 @@ const PaymentsMe = () => {
           <option value="bank_transfer">Bank Transfer</option>
           <option value="cod">Cash on Delivery</option>
         </select>
-      </div>
+      </div> */}
 
       {/* Checkout Button */}
-      <div className="flex flex-col bg-white shadow-md rounded-lg p-4 space-y-4 md:space-y-6">
-        <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+      <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+        <div className="bg-white rounded-lg p-6 mb-6">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">
-              Subtotal: {formatRupiah(subtotal)}
+            <h3 className="text-base md:text-lg font-semibold text-gray-700">
+              Subtotal:{' '}
+              <span className="font-medium text-gray-900">
+                {formatRupiah(subtotal)}
+              </span>
             </h3>
-            <h3 className="text-lg font-semibold">
-              Discount: {formatRupiah(discount)}
+            <h3 className="text-base md:text-lg font-semibold text-gray-700">
+              Discount:{' '}
+              <span className="font-medium text-gray-900">
+                {formatRupiah(discount)}
+              </span>
             </h3>
-            <h3 className="text-lg font-semibold">
-              Shipping Cost: {formatRupiah(shippingCost)}
+            <h3 className="text-base md:text-lg font-semibold text-gray-700">
+              Shipping Cost:{' '}
+              <span className="font-medium text-gray-900">
+                {formatRupiah(shippingCost)}
+              </span>
             </h3>
-            <h2 className="text-2xl font-bold">Total: {formatRupiah(total)}</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+              Total: <span className="text-primary">{formatRupiah(total)}</span>
+            </h2>
           </div>
           <button
             onClick={handleCheckout}
-            className="bg-primary text-white rounded-md p-2 mt-4 justify-center "
+            className="bg-primary text-white rounded-lg p-3 mt-4 w-full transition duration-300 ease-in-out hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-opacity-50"
           >
-            Checkout
+            Proceed to Checkout
           </button>
         </div>
       </div>
