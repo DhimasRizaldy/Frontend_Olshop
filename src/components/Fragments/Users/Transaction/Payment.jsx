@@ -46,10 +46,10 @@ const PaymentsMe = () => {
   const fetchProvinces = async () => {
     try {
       const response = await axios.get(
-        'https://pro.rajaongkir.com/api/province',
+        'https://api.rajaongkir.com/starter/province',
         {
           headers: {
-            key: 'f774d2c9f8e361a935ba992a1fca0efa', // API key Raja Ongkir
+            key: 'caacb37b4f708a6966beddebf3119822', // API key Raja Ongkir
           },
         },
       );
@@ -63,10 +63,10 @@ const PaymentsMe = () => {
   const fetchCities = async (provinceId) => {
     try {
       const response = await axios.get(
-        `https://pro.rajaongkir.com/api/city?province=${provinceId}`,
+        `https://api.rajaongkir.com/starter/city?province=${provinceId}`,
         {
           headers: {
-            key: 'f774d2c9f8e361a935ba992a1fca0efa', // API key Raja Ongkir
+            key: 'caacb37b4f708a6966beddebf3119822', // API key Raja Ongkir
           },
         },
       );
@@ -80,7 +80,7 @@ const PaymentsMe = () => {
   const fetchShippingCost = async (courier) => {
     try {
       const response = await axios.post(
-        'https://pro.rajaongkir.com/api/cost',
+        'https://api.rajaongkir.com/starter/cost',
         {
           origin: '501', // Ganti dengan ID kota asal Anda
           destination: cityId, // Menggunakan ID kota tujuan dari input
@@ -90,7 +90,7 @@ const PaymentsMe = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            key: 'f774d2c9f8e361a935ba992a1fca0efa', // API key Raja Ongkir
+            key: 'caacb37b4f708a6966beddebf3119822', // API key Raja Ongkir
           },
         },
       );
