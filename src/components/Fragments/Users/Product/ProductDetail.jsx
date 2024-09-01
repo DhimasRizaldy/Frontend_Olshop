@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import { getProductById } from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
 import SkeletonProductDetails from './SkeletonProductDetails'; // import skeleton
+import { createCarts } from '../../../../services/users/carts/services-carts';
 
 const ProductDetails = () => {
   const { productId } = useParams();
@@ -23,6 +25,40 @@ const ProductDetails = () => {
 
     fetchProduct();
   }, [productId]);
+
+  const handleAddToCart = async () => {
+    try {
+      // Assuming user ID is available in the current session or can be retrieved
+      const response = await createCarts({ productId }); // qty will default to 1
+      if (response.success) {
+        Swal.fire({
+          title: 'Added to Cart',
+          text: 'The product has been added to your cart.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload(); // Reload the page after SweetAlert confirmation
+          }
+        });
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to add the product to the cart.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'An error occurred while adding the product to the cart.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    }
+  };
 
   if (loading) {
     return <SkeletonProductDetails />; // tampilkan skeleton saat loading
@@ -88,7 +124,10 @@ const ProductDetails = () => {
             </p>
           </div>
           <div className="mb-4">
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+            <button
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+              onClick={handleAddToCart}
+            >
               Tambah ke Keranjang
             </button>
           </div>

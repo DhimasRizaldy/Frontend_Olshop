@@ -86,6 +86,7 @@ import Carts from './pages/Users/Carts/Carts.jsx';
 import ProductsDetail from './pages/Users/Product/ProductDetail.jsx';
 import ProductCategory from './pages/Users/Product/ProductCategory.jsx';
 import DataProfileUsers from './components/Fragments/Users/Profile/DataProfileUsers.jsx';
+import Payments from './pages/Users/Transaksi/Payment.jsx';
 
 // CRUD Address Users
 import AddAddressUsers from './pages/Users/Address/AddAddress.jsx';
@@ -539,7 +540,7 @@ function App() {
         />
 
         {/* Admin Settings */}
-        <Route
+        {/* <Route
           path="/settings"
           element={
             <>
@@ -574,7 +575,7 @@ function App() {
               <Buttons />
             </>
           }
-        />
+        /> */}
 
         {/* Auth Route */}
         <Route
@@ -719,6 +720,16 @@ function App() {
             <>
               <PageTitle title="Carts | Putra Komputer" />
               <Carts />
+            </>
+          }
+        />
+        {/* Payment me*/}
+        <Route
+          path="/payment-me"
+          element={
+            <>
+              <PageTitle title="Payment | Putra Komputer" />
+              <Payments />
             </>
           }
         />

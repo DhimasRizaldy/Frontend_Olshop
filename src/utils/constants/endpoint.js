@@ -120,7 +120,17 @@ export const API_ENDPOINT = {
   },
 
   // Notification
-  GET_NOTIFICATION: '/notification/',
+  GET_NOTIFICATION: '/notification/all',
+  GET_ALL_NOTIFICATION: '/notification/',
+  UPDATE_NOTIFICATION: (notificationId) => {
+    return `/notification/${notificationId}`;
+  },
+  DELETE_NOTIFICATION: (notificationId) => {
+    return `/notification/${notificationId}`;
+  },
+  GET_NOTIFICATION_BY_ID: (notificationId) => {
+    return `/notification/${notificationId}`;
+  },
 
   // ManageStok
   GET_MANAGE_STOK: '/manageStok/',
@@ -148,6 +158,10 @@ export const API_ENDPOINT = {
   DELETE_TRANSACTION: (transactionId) => {
     return `/transaction/${transactionId}`;
   },
+
+  // Payment
+  CHECKOUT_PAYMENT: '/payment/checkout',
+  CHECKOUT_PAYMENT_NOTIFICATION: '/payment/notification',
 
   // Ratings
   GET_RATINGS: '/ratings/',

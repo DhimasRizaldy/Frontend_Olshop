@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getNotification } from '../../../../services/admin/notification/services-notification';
+import {
+  getNotification,
+  updateNotification,
+} from '../../../../services/admin/notification/services-notification';
 
 const statusClasses = {
   unread: 'bg-blue-50 border-blue-400 text-blue-800 hover:text-blue-900',
@@ -20,6 +23,8 @@ const NotificationSkeleton = () => (
 const NotificationsMe = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -27,25 +32,33 @@ const NotificationsMe = () => {
         const response = await getNotification();
         if (response.status && response.data) {
           setNotifications(response.data);
+        } else {
+          setError('Failed to fetch notifications.');
         }
       } catch (error) {
         console.error('Error fetching notifications:', error);
+        setError('Error fetching notifications.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchNotifications();
-  }, []);
+  }, [reload]); // Add `reload` as a dependency to refetch notifications when it changes
 
-  const handleMarkAsRead = (id) => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.map((notification) =>
-        notification.notificationId === id
-          ? { ...notification, isRead: true }
-          : notification,
-      ),
-    );
+  const handleMarkAsRead = async (id) => {
+    try {
+      const response = await updateNotification(id);
+      if (response.status) {
+        // Trigger reload by toggling the `reload` state
+        setReload((prev) => !prev);
+      } else {
+        setError('Failed to mark notification as read.');
+      }
+    } catch (error) {
+      console.error('Error updating notification:', error);
+      setError('Error updating notification.');
+    }
   };
 
   return (
@@ -57,6 +70,10 @@ const NotificationsMe = () => {
           <NotificationSkeleton />
           <NotificationSkeleton />
         </>
+      ) : error ? (
+        <div className="text-center text-red-500">
+          <h2 className="text-xl md:text-2xl font-semibold mb-4">{error}</h2>
+        </div>
       ) : notifications.length === 0 ? (
         <div className="text-center">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">
@@ -92,7 +109,7 @@ const NotificationsMe = () => {
               ].replace('text-', 'hover:text-')}`}
               onClick={() => handleMarkAsRead(notification.notificationId)}
             >
-              {notification.isRead ? 'Read Again' : 'Mark as Read'}
+              {notification.isRead ? '' : 'Mark as Read'}
             </button>
           </div>
         ))
