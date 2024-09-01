@@ -55,7 +55,7 @@ const AddAddress = () => {
       setCity('');
       setCountry('');
       setPostalCode('');
-      navigate(role === 'USER' ? '/users/address' : '/admin/address'); // Redirect based on role
+      navigate(role === 'USER' ? '/users/profile' : '/admin/profile'); // Redirect based on role
     } catch (error) {
       toast.error('Failed to add address');
       console.error('Error:', error);
