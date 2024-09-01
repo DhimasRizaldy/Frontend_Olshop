@@ -3,11 +3,14 @@ import axios from 'axios';
 // fetchCities
 export const fetchCities = async (provinceId, setCities) => {
   try {
-    const response = await axios.get(`/api/city?province=${provinceId}`, {
-      headers: {
-        key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
+    const response = await axios.get(
+      `https://pro.rajaongkir.com/api/city?province=${provinceId}`,
+      {
+        headers: {
+          key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
+        },
       },
-    });
+    );
 
     setCities(response.data.rajaongkir.results);
   } catch (error) {
@@ -18,11 +21,14 @@ export const fetchCities = async (provinceId, setCities) => {
 // fetchProvinces
 export const fetchProvinces = async (setProvinces) => {
   try {
-    const response = await axios.get(`/api/province`, {
-      headers: {
-        key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
+    const response = await axios.get(
+      `https://pro.rajaongkir.com/api/province`,
+      {
+        headers: {
+          key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
+        },
       },
-    });
+    );
 
     setProvinces(response.data.rajaongkir.results);
   } catch (error) {
@@ -41,7 +47,7 @@ export const fetchShippingCost = async (
   try {
     // Send the request with the necessary payload as per the required format
     const response = await axios.post(
-      `/api/cost`,
+      `https://pro.rajaongkir.com/api/cost`,
       {
         origin: originId, // e.g., "501" for city
         originType: 'city', // Always set to "city" for the origin type
