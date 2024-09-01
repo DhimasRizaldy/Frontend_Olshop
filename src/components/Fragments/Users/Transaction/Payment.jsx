@@ -42,7 +42,6 @@ const PaymentsMe = () => {
     fetchProvinces(); // Fetch provinces when component mounts
   }, []);
 
-  // Fungsi untuk mengambil data provinsi dari Raja Ongkir
   const fetchProvinces = async () => {
     try {
       const response = await axios.get(
@@ -59,7 +58,6 @@ const PaymentsMe = () => {
     }
   };
 
-  // Fungsi untuk mengambil data kota berdasarkan provinsi dari Raja Ongkir
   const fetchCities = async (provinceId) => {
     try {
       const response = await axios.get(
@@ -76,7 +74,6 @@ const PaymentsMe = () => {
     }
   };
 
-  // Fungsi untuk mengambil data ongkos kirim dari Raja Ongkir
   const fetchShippingCost = async (courier) => {
     try {
       const response = await axios.post(
