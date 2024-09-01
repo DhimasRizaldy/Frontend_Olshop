@@ -138,7 +138,7 @@ const PaymentsMe = () => {
           <option value="">Select Address</option>
           {addresses.map((addr) => (
             <option key={addr.addressId} value={addr.addressId}>
-              {addr.recipient} - {addr.street}, {addr.city}, {addr.state},{' '}
+              {addr.nameAddress} - {addr.address}, {addr.city}, {addr.country},{' '}
               {addr.postalCode}
             </option>
           ))}
@@ -244,7 +244,7 @@ const PaymentsMe = () => {
         </select>
         <button
           onClick={handleApplyDiscount}
-          className="bg-blue-500 text-white rounded-md p-2 mt-2"
+          className="bg-primary text-white rounded-md p-2 mt-2"
         >
           Apply Discount
         </button>
@@ -267,27 +267,27 @@ const PaymentsMe = () => {
       </div>
 
       {/* Checkout Button */}
-      <div className="flex justify-between bg-white shadow-md rounded-lg p-4">
-        <div>
-          <h3 className="text-lg font-semibold">
-            Subtotal: {formatRupiah(subtotal)}
-          </h3>
-          <h3 className="text-lg font-semibold">
-            Discount: {formatRupiah(discount)}
-          </h3>
-          <h3 className="text-lg font-semibold">
-            Shipping Cost: {formatRupiah(shippingCost)}
-          </h3>
-          <h2 className="text-2xl font-bold mt-4">
-            Total: {formatRupiah(total)}
-          </h2>
+      <div className="flex flex-col bg-white shadow-md rounded-lg p-4 space-y-4 md:space-y-6">
+        <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">
+              Subtotal: {formatRupiah(subtotal)}
+            </h3>
+            <h3 className="text-lg font-semibold">
+              Discount: {formatRupiah(discount)}
+            </h3>
+            <h3 className="text-lg font-semibold">
+              Shipping Cost: {formatRupiah(shippingCost)}
+            </h3>
+            <h2 className="text-2xl font-bold">Total: {formatRupiah(total)}</h2>
+          </div>
+          <button
+            onClick={handleCheckout}
+            className="bg-primary text-white rounded-md p-2 mt-4 justify-center "
+          >
+            Checkout
+          </button>
         </div>
-        <button
-          onClick={handleCheckout}
-          className="bg-green-500 text-white rounded-md p-4"
-        >
-          Checkout
-        </button>
       </div>
     </div>
   );
