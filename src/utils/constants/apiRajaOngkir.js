@@ -3,16 +3,21 @@ import axios from 'axios';
 // fetchCities
 export const fetchCities = async (provinceId, setCities) => {
   try {
-    const response = await axios.get(
-      `https://pro.rajaongkir.com/api/city?province=${provinceId}`,
-      {
-        headers: {
-          key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
-        },
+    const response = await axios.get(`/api/city?province=${provinceId}`, {
+      headers: {
+        key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // Pastikan nama header sesuai dokumentasi API
       },
-    );
+    });
 
-    setCities(response.data.rajaongkir.results);
+    if (
+      response.data &&
+      response.data.rajaongkir &&
+      response.data.rajaongkir.results
+    ) {
+      setCities(response.data.rajaongkir.results);
+    } else {
+      console.error('Invalid response structure:', response.data);
+    }
   } catch (error) {
     console.error('Error fetching cities:', error);
   }
@@ -21,16 +26,21 @@ export const fetchCities = async (provinceId, setCities) => {
 // fetchProvinces
 export const fetchProvinces = async (setProvinces) => {
   try {
-    const response = await axios.get(
-      `https://pro.rajaongkir.com/api/province`,
-      {
-        headers: {
-          key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // API key Raja Ongkir
-        },
+    const response = await axios.get(`/api/province`, {
+      headers: {
+        key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // Pastikan nama header sesuai dokumentasi API
       },
-    );
+    });
 
-    setProvinces(response.data.rajaongkir.results);
+    if (
+      response.data &&
+      response.data.rajaongkir &&
+      response.data.rajaongkir.results
+    ) {
+      setProvinces(response.data.rajaongkir.results);
+    } else {
+      console.error('Invalid response structure:', response.data);
+    }
   } catch (error) {
     console.error('Error fetching provinces:', error);
   }
@@ -47,7 +57,7 @@ export const fetchShippingCost = async (
   try {
     // Send the request with the necessary payload as per the required format
     const response = await axios.post(
-      `https://pro.rajaongkir.com/api/cost`,
+      `/api/cost`,
       {
         origin: originId, // e.g., "501" for city
         originType: 'city', // Always set to "city" for the origin type
@@ -58,8 +68,8 @@ export const fetchShippingCost = async (
       },
       {
         headers: {
-          key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // Raja Ongkir API key
-          'Content-Type': 'application/json', // Content-Type header for JSON payload
+          key: import.meta.env.VITE_APP_API_KEY_RAJAONGKIR, // Pastikan nama header sesuai dokumentasi API
+          'Content-Type': 'application/json', // Content-Type header untuk payload JSON
         },
       },
     );
