@@ -33,27 +33,32 @@ const PaymentsMe = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch Cart Data
         const cartResponse = await getCarts();
         if (cartResponse.success && Array.isArray(cartResponse.data)) {
           setCartItems(cartResponse.data);
-          setSubtotal(
-            cartResponse.data.reduce(
-              (sum, item) => sum + item.products.price * item.qty,
-              0,
-            ),
+          const calculatedSubtotal = cartResponse.data.reduce(
+            (sum, item) => sum + item.products.price * item.qty,
+            0,
           );
+          setSubtotal(calculatedSubtotal);
         } else {
           console.error(
             'Error: cartResponse is not an array or success is false',
           );
         }
 
+        // Fetch Address Data
         const addressResponse = await getAddress();
-        setAddresses(addressResponse.data || []);
+        if (addressResponse.success) {
+          setAddresses(addressResponse.data || []);
+        } else {
+          console.error('Failed to fetch addresses');
+        }
 
+        // Fetch Promo Data
         const promoResponse = await getPromo();
         if (promoResponse.success) {
-          // Filter promos that haven't expired yet
           const now = new Date();
           const validPromos = promoResponse.data.filter(
             (promo) => new Date(promo.expiresAt) > now,
@@ -62,32 +67,62 @@ const PaymentsMe = () => {
         } else {
           console.error('Failed to fetch promotions');
         }
-
-        setTotal(subtotal - discount + shippingCost);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, [subtotal, discount, shippingCost]);
+  }, []); // Empty dependency array to run only on mount
+
+  useEffect(() => {
+    fetchProvinces(setProvinces).catch(console.error);
+  }, []); // Fetch provinces on component mount
 
   useEffect(() => {
     if (provinceId) {
-      fetchCities(provinceId).then(setCities).catch(console.error);
+      fetchCities(provinceId, setCities).catch(console.error);
     }
-  }, [provinceId]);
+  }, [provinceId]); // Fetch cities when provinceId changes
 
   useEffect(() => {
-    if (shippingOption) {
-      fetchShippingCost(shippingOption)
-        .then(setShippingOptions)
-        .catch(console.error);
-    }
-  }, [shippingOption]);
+    const calculateShippingCost = async () => {
+      if (provinceId && cityId && shippingOption) {
+        try {
+          const weight = 1000; // Example weight in grams
+          const courier = shippingOption;
+          await fetchShippingCost(
+            provinceId,
+            cityId,
+            weight,
+            courier,
+            setShippingOptions,
+          );
+
+          // If shippingOptions were set by fetchShippingCost
+          if (shippingOptions.length > 0) {
+            const selectedOption = shippingOptions.find(
+              (option) => option.service === shippingOption,
+            );
+            if (selectedOption) {
+              setShippingCost(selectedOption.cost[0].value);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching shipping cost:', error);
+        }
+      }
+    };
+
+    calculateShippingCost();
+  }, [provinceId, cityId, shippingOption, shippingOptions]);
+
+  useEffect(() => {
+    // Recalculate total whenever subtotal, discount, or shippingCost changes
+    setTotal(subtotal - discount + shippingCost);
+  }, [subtotal, discount, shippingCost]);
 
   const handleApplyDiscount = () => {
-    // Apply the discount logic
     const promo = promos.find((p) => p.promoId === selectedPromo);
     if (promo) {
       setDiscount(subtotal * (promo.discount / 100));
@@ -100,7 +135,7 @@ const PaymentsMe = () => {
     try {
       const response = await checkoutPayment({
         cartItems,
-        discountCode,
+        discountCode: selectedPromo,
         address: selectedAddress,
         shippingOption,
         paymentMethod,
@@ -116,6 +151,7 @@ const PaymentsMe = () => {
       console.error('Error during checkout:', error);
     }
   };
+
 
   useEffect(() => {
     setTotal(subtotal - discount + shippingCost);
@@ -179,7 +215,16 @@ const PaymentsMe = () => {
         <select
           className="w-full border border-gray-300 rounded-md p-2"
           value={shippingOption}
-          onChange={(e) => setShippingOption(e.target.value)}
+          onChange={(e) => {
+            setShippingOption(e.target.value);
+            fetchShippingCost(
+              provinceId,
+              cityId,
+              1000,
+              e.target.value,
+              setShippingOptions,
+            );
+          }}
         >
           <option value="">Select a Courier</option>
           <option value="jne">JNE</option>

@@ -6,9 +6,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.rajaongkir.com',
+        target: 'https://pro.rajaongkir.com/api/',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Menghapus '/api' dari path untuk request yang di-proxy
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
