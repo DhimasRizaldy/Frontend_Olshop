@@ -53,11 +53,11 @@ const NotificationsMe = () => {
         // Trigger reload by toggling the `reload` state
         setReload((prev) => !prev);
       } else {
-        setError('Failed to mark notification as read.');
+        // setError('Failed to mark notification as read.');
       }
     } catch (error) {
-      console.error('Error updating notification:', error);
-      setError('Error updating notification.');
+      // console.error('Error updating notification:', error);
+      // setError('Error updating notification.');
     }
   };
 
