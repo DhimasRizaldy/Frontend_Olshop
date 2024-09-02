@@ -33,22 +33,6 @@ const ProductCard = ({ product }) => (
         alt={product.name}
         className="w-full h-48 object-cover"
       />
-      {/* <div className="absolute top-2 right-2">
-        <svg
-          className="w-6 h-6 text-gray-700"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4.318 6.318a4.5 4.5 0 016.364 0l.318.318.318-.318a4.5 4.5 0 016.364 6.364l-6.682 6.682a.75.75 0 01-1.06 0l-6.682-6.682a4.5 4.5 0 010-6.364z"
-          />
-        </svg>
-      </div> */}
       <div className="absolute bottom-2 left-2">
         <span className="bg-yellow-500 px-2 py-1 text-xs rounded-full text-white">
           {product.averageRating}★
@@ -95,7 +79,7 @@ const ProductNew = ({ searchTerm }) => {
             )
           : response.data;
 
-        const limitedProducts = filteredProducts.slice(0, 8); // Batasi produk menjadi hanya 8 item
+        const limitedProducts = filteredProducts.slice(0, 16); // Batasi produk menjadi hanya 8 item
         setProducts(limitedProducts); // Menggunakan data produk dari response API
       } catch (error) {
         console.error('Error fetching products:', error);
