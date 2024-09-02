@@ -1,49 +1,57 @@
-import { http } from '../../../utils/constants/http'; // Pastikan path dan nama import sesuai
-import { API_ENDPOINT } from '../../../utils/constants/endpoint'; // Pastikan path dan nama import sesuai
+import axios from 'axios';
+
+// Base URL for RajaOngkir API
+const BASE_URL = 'https://backend-olshop.vercel.app/api/v1/rajaongkir';
 
 // Get provinces
 export const fetchProvinces = async () => {
   try {
-    const response = await http.get(API_ENDPOINT.GET_PROVINSI); // Gunakan instance http
-    // console.log('API Get Provinsi Response:', response.data);
-    return response.data;
+    const response = await axios.get(`${BASE_URL}/provinsi`);
+    if (response.status === 200) {
+      const { results } = response.data.rajaongkir;
+      return results; // Return the results array directly
+    } else {
+      console.error('Failed to fetch provinces:', response.statusText);
+      return [];
+    }
   } catch (error) {
-    console.error(
-      'Error fetching Provinsi:',
-      error.response?.data?.message || 'Unknown error',
-    );
-    throw new Error(error.response?.data?.message || 'Error fetching Provinsi');
+    console.error('Error fetching provinces:', error);
+    return [];
   }
 };
 
 // Get cities
 export const fetchCities = async (provId) => {
   try {
-    const response = await http.get(API_ENDPOINT.GET_CITY(provId)); // Gunakan instance http
-    // console.log('API Get City Response:', response.data);
-    return response.data;
+    const response = await axios.get(`${BASE_URL}/kota/${provId}`);
+    if (response.status === 200) {
+      const { results } = response.data.rajaongkir;
+      return results; // Return the results array directly
+    } else {
+      console.error('Failed to fetch cities:', response.statusText);
+      return [];
+    }
   } catch (error) {
-    console.error(
-      'Error fetching City:',
-      error.response?.data?.message || 'Unknown error',
-    );
-    throw new Error(error.response?.data?.message || 'Error fetching City');
+    console.error('Error fetching cities:', error);
+    throw new Error(error.response?.data?.message || 'Error fetching cities');
   }
 };
 
 // Get cost
-export const fetchCost = async (asal, tujuan, berat, kurir) => {
+export const fetchShippingCost = async (asal, tujuan, berat, kurir) => {
   try {
-    const response = await http.get(
-      API_ENDPOINT.GET_COST(asal, tujuan, berat, kurir), // Gunakan instance http
-    );
+    const response = await axios.get(`${BASE_URL}/cost`, {
+      params: {
+        asal,
+        tujuan,
+        berat,
+        kurir,
+      },
+    });
     // console.log('API Get Cost Response:', response.data);
     return response.data;
   } catch (error) {
-    console.error(
-      'Error fetching Cost:',
-      error.response?.data?.message || 'Unknown error',
-    );
-    throw new Error(error.response?.data?.message || 'Error fetching Cost');
+    console.error('Error fetching cost:', error);
+    throw new Error(error.response?.data?.message || 'Error fetching cost');
   }
 };
