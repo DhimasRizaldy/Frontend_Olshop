@@ -13,10 +13,10 @@ export const fetchCities = async (provinceId, setCities) => {
     if (results) {
       setCities(results);
     } else {
-      console.error('Invalid response structure:', data);
+      // console.error('Invalid response structure:', data);
     }
   } catch (error) {
-    console.error('Error fetching cities:', error);
+    // console.error('Error fetching cities:', error);
   }
 };
 
@@ -34,10 +34,10 @@ export const fetchProvinces = async (setProvinces) => {
     if (results) {
       setProvinces(results);
     } else {
-      console.error('Invalid response structure:', response.data);
+      // console.error('Invalid response structure:', response.data);
     }
   } catch (error) {
-    console.error('Error fetching provinces:', error);
+    // console.error('Error fetching provinces:', error);
   }
 };
 
@@ -73,10 +73,10 @@ export const fetchShippingCost = async (
     if (costs) {
       setShippingOptions(costs);
     } else {
-      console.error('Invalid response structure:', data);
+      // console.error('Invalid response structure:', data);
     }
   } catch (error) {
-    console.error('Error fetching shipping cost:', error);
+    // console.error('Error fetching shipping cost:', error);
   }
 };
 
