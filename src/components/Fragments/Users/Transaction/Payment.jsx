@@ -111,40 +111,45 @@ const PaymentsMe = () => {
     getCities(); // Call function to fetch cities
   }, [provId]); // Fetch cities when provId changes
 
- useEffect(() => {
-   const calculateShippingCost = async () => {
-     if (provId && cityId && shippingOption) {
-       try {
-         const weight = 1000; // Example weight in grams
-         const courier = shippingOption;
+useEffect(() => {
+  const calculateShippingCost = async () => {
+    if (provId && cityId && shippingOption) {
+      try {
+        const weight = 1000; // Example weight in grams
+        const courier = shippingOption;
 
-         // Fetch shipping options
-         await fetchShippingCost(
-           provId,
-           cityId,
-           weight,
-           courier,
-           setShippingOptions,
-         );
+        // Fetch shipping options
+        await fetchShippingCost(
+          provId,
+          cityId,
+          weight,
+          courier,
+          setShippingOptions,
+        );
+      } catch (error) {
+        console.error('Error fetching shipping cost:', error);
+      }
+    }
+  };
 
-         // Once shippingOptions are set, find the relevant cost
-         // Delay the cost setting until the shippingOptions are properly updated
-         setTimeout(() => {
-           const selectedOption = shippingOptions.find(
-             (option) => option.service === shippingOption,
-           );
-           if (selectedOption) {
-             setShippingCost(selectedOption.costs[0].value);
-           }
-         }, 100); // Delay to allow state update
-       } catch (error) {
-         console.error('Error fetching shipping cost:', error);
-       }
-     }
-   };
+  calculateShippingCost();
+}, [provId, cityId, shippingOption]);
 
-   calculateShippingCost();
- }, [provId, cityId, shippingOption]);
+useEffect(() => {
+  if (shippingOptions.length > 0 && shippingOption) {
+    const selectedOption = shippingOptions.find(
+      (option) => option.service === shippingOption,
+    );
+    if (selectedOption && selectedOption.costs.length > 0) {
+      setShippingCost(selectedOption.costs[0].value);
+    } else {
+      // Handle case where costs is empty or selectedOption is not found
+      setShippingCost(null); // Or set a default value or handle it differently
+    }
+  }
+}, [shippingOptions, shippingOption]);
+
+
 
  useEffect(() => {
    // Recalculate total whenever subtotal, discount, or shippingCost changes

@@ -47,33 +47,25 @@ export const fetchShippingCost = async (
 ) => {
   try {
     const response = await axios.post(`${BASE_URL}/ongkos`, {
-      origin: asal,
-      originType: 'city', // pastikan tipe sesuai dengan kebutuhan API
-      destination: tujuan,
-      destinationType: 'subdistrict', // pastikan tipe sesuai dengan kebutuhan API
-      weight: berat,
-      courier: kurir,
+      asal: asal,
+      asalType: 'city', // sesuaikan dengan kebutuhan API Anda
+      tujuan: tujuan,
+      tujuanType: 'subdistrict', // sesuaikan dengan kebutuhan API Anda
+      berat: berat,
+      kurir: kurir,
     });
 
-    if (response.status === 200) {
-      const rajaongkirData = response.data.rajaongkir;
-
-      // Tambahkan pengecekan untuk memastikan data ada
-      if (rajaongkirData && rajaongkirData.results) {
-        setShippingOptions(rajaongkirData.results); // Set the shipping options state
-      } else {
-        console.error('Invalid response format:', response.data);
-        throw new Error('Invalid response format from RajaOngkir');
-      }
+    const costs = response.data?.rajaongkir?.results?.[0]?.costs;
+    if (costs) {
+      setShippingOptions(costs);
     } else {
-      console.error('Failed to fetch cost:', response.statusText);
-      throw new Error(response.statusText);
+      console.error('Invalid response structure:', response.data);
     }
   } catch (error) {
-    console.error('Error fetching cost:', error);
-    throw new Error(error.response?.data?.message || 'Error fetching cost');
+    console.error('Error fetching shipping cost:', error);
   }
 };
+
 
 // Fetch waybill information
 export const fetchWaybillInfo = async (waybill, courier) => {
