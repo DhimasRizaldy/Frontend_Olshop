@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "src": "https://pro.rajaongkir.com/api/(.*)",
+      "src": "/api/(.*)",
       "headers": {
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Origin": "*",

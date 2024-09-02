@@ -8,7 +8,7 @@ import {
   fetchCities,
   fetchProvinces,
   fetchShippingCost,
-} from '../../../../utils/constants/apiRajaOngkir';
+} from '../../../../services/users/rajaongkir/rajaongkir-services';
 
 const PaymentsMe = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -76,13 +76,31 @@ const PaymentsMe = () => {
   }, []); // Empty dependency array to run only on mount
 
   useEffect(() => {
-    fetchProvinces(setProvinces).catch(console.error);
+    const getProvinces = async () => {
+      try {
+        const data = await fetchProvinces(); // Mengambil data dari fetchProvinces
+        setProvinces(data); // Mengatur state dengan data yang diambil
+      } catch (error) {
+        console.error('Error fetching provinces:', error);
+      }
+    };
+
+    getProvinces(); // Panggil fungsi getProvinces
   }, []); // Fetch provinces on component mount
 
   useEffect(() => {
-    if (provinceId) {
-      fetchCities(provinceId, setCities).catch(console.error);
-    }
+    const getCities = async () => {
+      if (provinceId) {
+        try {
+          const data = await fetchCities(provinceId); // Mengambil data dari fetchCities
+          setCities(data); // Mengatur state dengan data yang diambil
+        } catch (error) {
+          console.error('Error fetching cities:', error);
+        }
+      }
+    };
+
+    getCities(); // Panggil fungsi getCities
   }, [provinceId]); // Fetch cities when provinceId changes
 
   useEffect(() => {
@@ -93,24 +111,16 @@ const PaymentsMe = () => {
           const courier = shippingOption;
 
           // Fetch shipping options
-          await fetchShippingCost(
-            provinceId,
-            cityId,
-            weight,
-            courier,
-            setShippingOptions,
-          );
+          const data = await fetchCost(provinceId, cityId, weight, courier);
+          setShippingOptions(data); // Atur state dengan data yang diterima
 
           // Once shippingOptions are set, find the relevant cost
-          // Delay the cost setting until the shippingOptions are properly updated
-          setTimeout(() => {
-            const selectedOption = shippingOptions.find(
-              (option) => option.service === shippingOption,
-            );
-            if (selectedOption) {
-              setShippingCost(selectedOption.costs[0].value);
-            }
-          }, 100); // Delay to allow state update
+          const selectedOption = data.find(
+            (option) => option.service === shippingOption,
+          );
+          if (selectedOption) {
+            setShippingCost(selectedOption.costs[0].value);
+          }
         } catch (error) {
           console.error('Error fetching shipping cost:', error);
         }
@@ -118,7 +128,7 @@ const PaymentsMe = () => {
     };
 
     calculateShippingCost();
-  }, [provinceId, cityId, shippingOption]);
+  }, [provinceId, cityId, shippingOption]); // Fetch shipping cost when dependencies change
 
   useEffect(() => {
     // Recalculate total whenever subtotal, discount, or shippingCost changes

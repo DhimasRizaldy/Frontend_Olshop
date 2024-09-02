@@ -1,4 +1,3 @@
-import axios from 'axios';
 
 // fetchCities
 export const fetchCities = async (provinceId, setCities) => {

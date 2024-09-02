@@ -175,4 +175,15 @@ export const API_ENDPOINT = {
   DELETE_RATINGS: (ratingsId) => {
     return `/ratings/${ratingsId}`;
   },
+
+  // raja ongkir
+  GET_PROVINSI: '/rajaongkir/provinsi',
+  GET_CITY: (provId) => {
+    return `/rajaongkir/kota/:${provId}`;
+  },
+  GET_COST: (asal, tujuan, berat, kurir) => {
+    return `/rajaongkir/ongkos/:${asal}/:${tujuan}/:${berat}/:${kurir}`;
+  },
 };
+
+
