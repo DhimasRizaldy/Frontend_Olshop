@@ -1,14 +1,28 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="images/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Putra Komputer</title>
 
-  </head>
-  <body className="bg-gray-100">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="images/logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Putra Komputer</title>
+  <script>
+    window.config = {
+      midtransClientKey: 'SB-Mid-client-uRT4DUpB0_FGkMnG'
+    };
+  </script>
+</head>
+
+<body class="bg-gray-100">
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    const script = document.createElement('script');
+    script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+    script.dataset.clientKey = window.config.midtransClientKey;
+    script.async = true;
+    document.head.appendChild(script);
+  </script>
+</body>
+
 </html>
