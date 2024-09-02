@@ -1,39 +1,61 @@
 import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { fetchWaybillInfo } from '../../../../services/users/rajaongkir/rajaongkir-services';
 
 const OrderTrackings = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
+  const [selectedCourier, setSelectedCourier] = useState('jne'); // Default courier
   const [trackingDetails, setTrackingDetails] = useState(null);
+  const [couriers, setCouriers] = useState([
+    { id: 'jne', name: 'JNE' },
+    { id: 'pos', name: 'POS' },
+    { id: 'tiki', name: 'TIKI' },
+    { id: 'jnt', name: 'J&T' },
+    { id: 'sicepat', name: 'SiCepat' },
+  ]); // Example couriers, update this list as needed
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simulasi data tracking
-    // Gantilah dengan API atau logika yang sesuai di aplikasi Anda
-    const mockTrackingDetails = {
-      trackingNumber: 'JNE1234567890',
-      status: 'Dalam Perjalanan',
-      courier: 'JNE',
-      estimatedDelivery: '2024-08-30',
-      statusUpdates: [
-        {
-          status: 'Paket Diterima di Hub JNE',
-          timestamp: '2024-08-22 10:00 AM',
-        },
-        { status: 'Dalam Perjalanan', timestamp: '2024-08-23 12:00 PM' },
-        { status: 'Dalam Pengiriman', timestamp: '2024-08-24 08:00 AM' },
-        { status: 'Terkirim', timestamp: '2024-08-24 03:00 PM' },
-      ],
-      deliveryAddress: {
-        street: '123 Main St',
-        city: 'Contoh Kota',
-        state: 'Contoh Provinsi',
-        postalCode: '12345',
-        country: 'Contoh Negara',
-      },
-    };
+    try {
+      // Fetch tracking details from API
+      const data = await fetchWaybillInfo(trackingNumber, selectedCourier);
+      const { result } = data;
 
-    // Simulasikan pengambilan data
-    setTrackingDetails(mockTrackingDetails);
+      // Check if the tracking number is empty
+      if (!result || !result.summary || !result.summary.waybill_number) {
+        toast.error(
+          'Data resi tidak ditemukan. Pastikan nomor resi dan kurir sudah benar.',
+        );
+        setTrackingDetails(null);
+        return;
+      }
+
+      const trackingDetails = {
+        trackingNumber: result.summary.waybill_number,
+        status: result.summary.status,
+        courier: result.summary.courier_name,
+        estimatedDelivery: result.summary.waybill_date, // Update sesuai dengan data yang relevan
+        statusUpdates: result.manifest.map((entry) => ({
+          status: entry.manifest_description,
+          timestamp: `${entry.manifest_date} ${entry.manifest_time}`,
+        })),
+        deliveryAddress: {
+          street: result.details.receiver_address1,
+          city: result.details.receiver_city,
+          state: '', // Update jika ada informasi provinsi
+          postalCode: '', // Update jika ada informasi kode pos
+          country: '', // Update jika ada informasi negara
+        },
+      };
+
+      setTrackingDetails(trackingDetails);
+      toast.success('Data resi berhasil ditemukan!');
+    } catch (error) {
+      console.error('Error fetching tracking details:', error);
+      toast.error('Terjadi kesalahan saat mengambil data resi.');
+    }
   };
 
   return (
@@ -56,6 +78,17 @@ const OrderTrackings = () => {
               onChange={(e) => setTrackingNumber(e.target.value)}
               className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <select
+              value={selectedCourier}
+              onChange={(e) => setSelectedCourier(e.target.value)}
+              className="mt-4 sm:mt-0 sm:ml-4 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {couriers.map((courier) => (
+                <option key={courier.id} value={courier.id}>
+                  {courier.name}
+                </option>
+              ))}
+            </select>
             <button
               type="submit"
               className="mt-4 sm:mt-0 sm:ml-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -92,14 +125,16 @@ const OrderTrackings = () => {
 
             <div className="border-b border-gray-200 pb-4 mb-4">
               <h2 className="text-xl font-semibold mb-2">Status Saat Ini</h2>
-              <ul>
+              <ul className="space-y-2">
                 {trackingDetails.statusUpdates.map((update, index) => (
                   <li
                     key={index}
-                    className="flex justify-between py-2 border-b"
+                    className="flex items-center justify-between py-2 border-b border-gray-200"
                   >
-                    <span>{update.status}</span>
-                    <span className="text-gray-600">{update.timestamp}</span>
+                    <span className="font-medium">{update.status}</span>
+                    <span className="text-gray-600 text-sm">
+                      {update.timestamp}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -129,6 +164,9 @@ const OrderTrackings = () => {
           </div>
         )}
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 };

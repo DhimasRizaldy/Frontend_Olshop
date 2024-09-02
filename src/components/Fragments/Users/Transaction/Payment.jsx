@@ -256,15 +256,8 @@ useEffect(() => {
          <option value="jne">JNE</option>
          <option value="pos">Pos Indonesia</option>
          <option value="tiki">TIKI</option>
-         <option value="wahana">Wahana</option>
          <option value="jnt">JNT</option>
-         <option value="rpx">Rpx</option>
-         <option value="sap">SAP</option>
          <option value="sicepat">SiCepat</option>
-         <option value="pcp">PCP</option>
-         <option value="jet">Jet</option>
-         <option value="dse">DSE</option>
-         <option value="first">First</option>
        </select>
 
        {shippingOptions.length > 0 && (

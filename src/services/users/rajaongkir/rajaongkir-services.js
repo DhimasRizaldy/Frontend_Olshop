@@ -66,27 +66,28 @@ export const fetchShippingCost = async (
   }
 };
 
-
 // Fetch waybill information
 export const fetchWaybillInfo = async (waybill, courier) => {
   try {
-    // Menggunakan axios untuk mengirim request POST ke backend Anda
     const response = await axios.post(
       `${BASE_URL}/waybill`,
-      new URLSearchParams({ waybill, courier }).toString(), // URL-encoded string
+      {
+        waybill,
+        courier,
+      },
       {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded', // Menentukan tipe konten
+          'Content-Type': 'application/json', // Assuming the API expects JSON
         },
       },
     );
 
-    // Memastikan respons sesuai dengan struktur data yang diharapkan
-    if (response.data && response.data.rajaongkir) {
-      return response.data.rajaongkir;
+    // Ensure response matches expected structure
+    if (response.data && response.data.status && response.data.result) {
+      return response.data;
     } else {
       console.error('Unexpected response format:', response.data);
-      throw new Error('Invalid response format from backend');
+      throw new Error('Invalid response format from API');
     }
   } catch (error) {
     console.error('Error fetching waybill info:', error);
