@@ -122,6 +122,12 @@ const ProductDetails = () => {
               <strong>Category:</strong>{' '}
               {product.category?.name || 'Unknown Category'}
             </p>
+            <p className="text-gray-700">
+              <strong>Terjual:</strong> {product.totalSold}
+            </p>
+            <p className="text-gray-700">
+              <strong>Ulasan:</strong> {product.totalReview}
+            </p>
           </div>
           <div className="mb-4">
             <button

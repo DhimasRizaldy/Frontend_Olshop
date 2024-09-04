@@ -98,6 +98,15 @@ const ProductDiscount = () => {
                     <p className="text-sm text-gray-600 mt-1">
                       Stok: {product.stock}
                     </p>
+                    <div className="flex mt-1">
+                      <p className="text-sm text-gray-600">
+                        Terjual : {product.totalSold}
+                      </p>{' '}
+                      &nbsp;
+                      <p className="text-sm text-gray-600">
+                        Ulasan : {product.totalReview}
+                      </p>
+                    </div>
                     <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
                       Beli Sekarang
                     </button>
