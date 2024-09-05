@@ -386,7 +386,7 @@ function App() {
           }
         />
         <Route
-          path="/detail-transaction"
+          path="/detail-transaction/:transactionId"
           element={
             <>
               <PageTitle title="Detail Transaction | Putra Komputer" />

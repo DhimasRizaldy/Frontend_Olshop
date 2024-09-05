@@ -30,3 +30,20 @@ export const getTransaction = async () => {
     );
   }
 };
+
+export const getDetailTransaction = async (transactionId) => {
+  try {
+    const response = await http.get(
+      API_ENDPOINT.GET_DETAIL_TRANSACTION(transactionId),
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Error fetching Transaction:',
+      error.response?.data?.message || 'Unknown error',
+    );
+    throw new Error(
+      error.response?.data?.message || 'Error fetching Transaction',
+    );
+  }
+};

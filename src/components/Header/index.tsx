@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
 import DarkModeSwitcher from './DarkModeSwitcher';
-import DropdownCart from './DropdownCart';
 import { getWHOAMI } from '../../services/auth/admin/getDataUser';
 import Button from '../Elements/Button/Index.jsx';
 
@@ -90,10 +89,6 @@ const Header = (props: {
             {/* <!-- Dark Mode Toggler --> */}
             <DarkModeSwitcher />
             {/* <!-- Dark Mode Toggler --> */}
-            {/* <!-- Cart Menu Area --> */}
-            <DropdownCart />
-            {/* <!-- Cart Menu Area --> */}
-
             {/* <!-- Notification Menu Area --> */}
             {isUserLoggedIn && !loading && <DropdownNotification />}
             {/* <!-- Notification Menu Area --> */}

@@ -6,6 +6,7 @@ import {
   faUser,
   faBoxesStacked,
   faCartShopping,
+  faMoneyBill1,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DataTransaction from '../../../components/Fragments/Admin/Transaction/DataTransaction.jsx';
@@ -102,6 +103,11 @@ const ECommerce: React.FC = () => {
   const totalProducts = products.length;
   const totalTransactions = transactions.length;
 
+  // Filter transactions with successful payment status and calculate total payment
+  const totalPayment = transactions
+    .filter((transaction) => transaction.status_payment === 'Success')
+    .reduce((sum, transaction) => sum + transaction.total, 0); // Assuming each transaction has a total field
+
   return (
     <DefaultLayout>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
@@ -120,6 +126,12 @@ const ECommerce: React.FC = () => {
         )}
         <CardDataStats title="Total Transaction" total={totalTransactions}>
           <FontAwesomeIcon icon={faCartShopping} />
+        </CardDataStats>
+        <CardDataStats
+          title="Total Credit Payment"
+          total={`Rp ${totalPayment.toLocaleString()}`}
+        >
+          <FontAwesomeIcon icon={faMoneyBill1} />
         </CardDataStats>
       </div>
       <div className="mt-4 flex flex-col gap-10">

@@ -16,9 +16,13 @@ import { formatRupiah } from '../../../../utils/constants/function';
 
 const DataTransaction = () => {
   const [transactions, setTransactions] = useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [role, setRole] = useState('');
+
+  const [statusPaymentFilter, setStatusPaymentFilter] = useState('All');
+  const [statusShippingFilter, setStatusShippingFilter] = useState('All');
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -44,6 +48,7 @@ const DataTransaction = () => {
           response = await getTransaction();
         }
         setTransactions(response.data || []);
+        setFilteredTransactions(response.data || []);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -55,6 +60,28 @@ const DataTransaction = () => {
     }
   }, [role]);
 
+  const handleFilter = () => {
+    let filteredData = transactions;
+
+    if (statusPaymentFilter !== 'All') {
+      filteredData = filteredData.filter(
+        (transaction) => transaction.status_payment === statusPaymentFilter,
+      );
+    }
+
+    if (statusShippingFilter !== 'All') {
+      filteredData = filteredData.filter(
+        (transaction) => transaction.shippingStatus === statusShippingFilter,
+      );
+    }
+
+    setFilteredTransactions(filteredData);
+  };
+
+  useEffect(() => {
+    handleFilter();
+  }, [statusPaymentFilter, statusShippingFilter, transactions]);
+
   const columns = [
     { name: 'No', selector: (row, index) => index + 1, sortable: true },
     {
@@ -64,22 +91,17 @@ const DataTransaction = () => {
     },
     {
       name: 'Username',
-      selector: (row) => row.users?.username || 'N/A', // Display username
-      sortable: true,
-    },
-    {
-      name: 'CartId',
-      selector: (row) => row.cartId,
+      selector: (row) => row.users?.username || 'N/A',
       sortable: true,
     },
     {
       name: 'PromoCode',
-      selector: (row) => row.promo?.codePromo || 'N/A', // Display codePromo
+      selector: (row) => row.promo?.codePromo || 'N/A',
       sortable: true,
     },
     {
       name: 'Address',
-      selector: (row) => row.address?.nameAddress || 'N/A', // Display nameAddress
+      selector: (row) => row.address?.nameAddress || 'N/A',
       sortable: true,
     },
     {
@@ -105,20 +127,52 @@ const DataTransaction = () => {
     },
     {
       name: 'StatusPay',
-      selector: (row) => (
-        <button className="bg-success text-white px-3 py-1 rounded-md">
-          {row.status_payment}
-        </button>
-      ),
+      selector: (row) => {
+        const getColor = (status) => {
+          switch (status) {
+            case 'Pending':
+              return 'bg-warning';
+            case 'Success':
+              return 'bg-success';
+            case 'Expired':
+              return 'bg-danger';
+            default:
+              return 'bg-secondary';
+          }
+        };
+        return (
+          <button
+            className={`${getColor(row.status_payment)} text-white px-3 py-1 rounded-md`}
+          >
+            {row.status_payment}
+          </button>
+        );
+      },
       sortable: true,
     },
     {
       name: 'StatusShip',
-      selector: (row) => (
-        <button className="bg-warning text-white px-3 py-1 rounded-md">
-          {row.shippingStatus}
-        </button>
-      ),
+      selector: (row) => {
+        const getColor = (status) => {
+          switch (status) {
+            case 'Pending':
+              return 'bg-warning';
+            case 'Delivered':
+              return 'bg-success';
+            case 'Cancel':
+              return 'bg-danger';
+            default:
+              return 'bg-secondary';
+          }
+        };
+        return (
+          <button
+            className={`${getColor(row.shippingStatus)} text-white px-3 py-1 rounded-md`}
+          >
+            {row.shippingStatus}
+          </button>
+        );
+      },
       sortable: true,
     },
     {
@@ -164,8 +218,50 @@ const DataTransaction = () => {
       </div>
 
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6.5 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="flex mb-4 space-x-4">
+          <div>
+            <label
+              htmlFor="statusPaymentFilter"
+              className="mr-2 text-black dark:text-white"
+            >
+              Filter by Payment Status:
+            </label>
+            <select
+              id="statusPaymentFilter"
+              value={statusPaymentFilter}
+              onChange={(e) => setStatusPaymentFilter(e.target.value)}
+              className="border border-gray-300 rounded-md p-2"
+            >
+              <option value="All">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Success">Success</option>
+              <option value="Expired">Expired</option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="statusShippingFilter"
+              className="mr-2 text-black dark:text-white"
+            >
+              Filter by Shipping Status:
+            </label>
+            <select
+              id="statusShippingFilter"
+              value={statusShippingFilter}
+              onChange={(e) => setStatusShippingFilter(e.target.value)}
+              className="border border-gray-300 rounded-md p-2"
+            >
+              <option value="All">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Expired">Expired</option>
+            </select>
+          </div>
+        </div>
+
         <div className="max-w-full overflow-x-auto">
-          <DataTable columns={columns} data={transactions} pagination />
+          <DataTable columns={columns} data={filteredTransactions} pagination />
         </div>
       </div>
     </div>

@@ -3,9 +3,18 @@ import { getTransactionMe } from '../../../../services/admin/transaction/service
 import { formatRupiah } from '../../../../utils/constants/function';
 
 const statusColors = {
-  Completed: 'bg-green-500',
+  Success: 'bg-green-500',
   Pending: 'bg-yellow-500',
+  Expired: 'bg-red-500',
+  Failed: 'bg-red-500',
   Canceled: 'bg-red-500',
+};
+
+const shippingStatusColors = {
+  'On Process': 'bg-yellow-500',
+  Pending: 'bg-gray-500',
+  Cancel: 'bg-red-500',
+  Delivered: 'bg-green-500',
 };
 
 const TransactionSkeleton = () => (
@@ -97,21 +106,26 @@ const TransactionsMe = () => {
               <p className="text-sm md:text-base text-gray-700">
                 <strong>Amount:</strong> {formatRupiah(transaction.total)}
               </p>
-              <p className="text-sm md:text-base text-gray-700 mb-4">
-                <strong>Status:</strong>
+              <p className="text-sm md:text-base text-gray-700">
+                <strong>Status Payment:</strong>
                 <span
                   className={`text-white py-1 px-2 rounded-full text-xs md:text-sm ${statusColors[transaction.status_payment] || 'bg-gray-500'}`}
                 >
                   {transaction.status_payment}
                 </span>
               </p>
+              <p className="text-sm md:text-base text-gray-700 mb-4">
+                <strong>Shipping Status:</strong>
+                <span
+                  className={`text-white py-1 px-2 rounded-full text-xs md:text-sm ${shippingStatusColors[transaction.shippingStatus] || 'bg-gray-500'}`}
+                >
+                  {transaction.shippingStatus}
+                </span>
+              </p>
             </div>
             <div className="flex space-x-2">
               <button className="bg-blue-500 text-white py-2 px-4 rounded-lg text-sm md:text-base">
                 View
-              </button>
-              <button className="bg-red-500 text-white py-2 px-4 rounded-lg text-sm md:text-base">
-                Delete
               </button>
             </div>
           </div>
