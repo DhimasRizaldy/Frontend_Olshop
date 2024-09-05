@@ -148,7 +148,7 @@ export const API_ENDPOINT = {
   // Transaction
   GET_TRANSACTION_ME: '/transaction/me',
   GET_TRANSACTION: '/transaction/',
-  GET_DETAIL_TRANSACTION: (transactionId) => {
+  GET_TRANSACTION_BY_ID: (transactionId) => {
     return `/transaction/${transactionId}`;
   },
   POST_TRANSACTION: '/transaction/',

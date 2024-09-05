@@ -5,6 +5,7 @@ import { getProductById } from '../../../../services/admin/product/services-prod
 import { formatRupiah } from '../../../../utils/constants/function';
 import SkeletonProductDetails from './SkeletonProductDetails'; // import skeleton
 import { createCarts } from '../../../../services/users/carts/services-carts';
+import { AiOutlineShareAlt } from 'react-icons/ai';
 
 const ProductDetails = () => {
   const { productId } = useParams();
@@ -58,6 +59,15 @@ const ProductDetails = () => {
         confirmButtonText: 'OK',
       });
     }
+  };
+
+  // handle tanya admin
+  const handleContactAdmin = () => {
+    const message = `Halo Admin, saya ingin menanyakan tentang produk berikut:\n\nNama Produk: ${product.name}\nHarga: ${formatRupiah(product.promoPrice > 0 ? product.promoPrice : product.price)}\nLink Produk: ${window.location.href}\nGambar Produk: ${product.image}`;
+    const waNumber = '6289521937647'; // Ganti dengan nomor WhatsApp admin
+    const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(waLink, '_blank'); // Buka WhatsApp di tab baru
   };
 
   if (loading) {
@@ -136,7 +146,14 @@ const ProductDetails = () => {
             >
               Tambah ke Keranjang
             </button>
+            <button
+              className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition duration-300 ml-4"
+              onClick={handleContactAdmin}
+            >
+              Tanya Admin
+            </button>
           </div>
+
           <div className="border-t mt-6">
             <ul className="flex border-b">
               <li className="mr-6">

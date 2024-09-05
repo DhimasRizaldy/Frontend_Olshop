@@ -4,7 +4,7 @@ import Skeleton from 'react-loading-skeleton'; // Import Skeleton
 import { formatRupiah } from '../../../../utils/constants/function';
 import { getTransactionById } from '../../../../services/admin/transaction/services-transaction';
 
-const DetailTransaction = () => {
+const DetailTransactionMe = () => {
   const { transactionId } = useParams();
   const [transactionDetail, setTransactionDetail] = useState(null);
 
@@ -250,4 +250,4 @@ const DetailTransaction = () => {
   );
 };
 
-export default DetailTransaction;
+export default DetailTransactionMe;

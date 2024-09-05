@@ -87,6 +87,7 @@ import ProductsDetail from './pages/Users/Product/ProductDetail.jsx';
 import ProductCategory from './pages/Users/Product/ProductCategory.jsx';
 import DataProfileUsers from './components/Fragments/Users/Profile/DataProfileUsers.jsx';
 import Payments from './pages/Users/Transaksi/Payment.jsx';
+import DetailTransactionMes from './pages/Users/Transaksi/DetailTransactionMe.jsx';
 
 // CRUD Address Users
 import AddAddressUsers from './pages/Users/Address/AddAddress.jsx';
@@ -377,7 +378,7 @@ function App() {
           }
         />
         <Route
-          path="/edit-transaction"
+          path="/edit-transaction/:transactionId"
           element={
             <>
               <PageTitle title="Edit Transaction | Putra Komputer" />
@@ -702,6 +703,15 @@ function App() {
             <>
               <PageTitle title="Transactions | Putra Komputer" />
               <Transactions />
+            </>
+          }
+        />
+        <Route
+          path="/transaction-me/:transactionId"
+          element={
+            <>
+              <PageTitle title="Transactions Detail | Putra Komputer" />
+              <DetailTransactionMes />
             </>
           }
         />

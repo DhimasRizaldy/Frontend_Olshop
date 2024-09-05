@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Ensure you import Link if using it
 import { getTransactionMe } from '../../../../services/admin/transaction/services-transaction';
 import { formatRupiah } from '../../../../utils/constants/function';
+import {
+  AiOutlineCar,
+  AiOutlineClockCircle,
+  AiOutlineCheckCircle,
+  AiOutlineCloseCircle,
+} from 'react-icons/ai';
 
 const statusColors = {
   Success: 'bg-green-500',
+  Completed: 'bg-green-500',
   Pending: 'bg-yellow-500',
   Expired: 'bg-red-500',
   Failed: 'bg-red-500',
-  Canceled: 'bg-red-500',
+  Cancel: 'bg-red-500',
 };
 
 const shippingStatusColors = {
   'On Process': 'bg-yellow-500',
-  Pending: 'bg-gray-500',
-  Cancel: 'bg-red-500',
+  Pending: 'bg-yellow-500',
+  Canceled: 'bg-red-500',
   Delivered: 'bg-green-500',
 };
 
@@ -34,8 +42,10 @@ const TransactionSkeleton = () => (
 
 const TransactionsMe = () => {
   const [transactions, setTransactions] = useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [filter, setFilter] = useState('All'); // Default filter
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -43,6 +53,7 @@ const TransactionsMe = () => {
         const response = await getTransactionMe();
         if (response.success) {
           setTransactions(response.data);
+          setFilteredTransactions(response.data);
         } else {
           setError('Failed to fetch transactions');
         }
@@ -56,11 +67,76 @@ const TransactionsMe = () => {
     fetchTransactions();
   }, []);
 
+  // Fungsi untuk mengubah filter
+  const handleFilterChange = (status) => {
+    setFilter(status);
+    if (status === 'All') {
+      setFilteredTransactions(transactions);
+    } else {
+      setFilteredTransactions(
+        transactions.filter(
+          (transaction) => transaction.shippingStatus === status,
+        ),
+      );
+    }
+  };
+
+  // Hitung total untuk setiap status
+  const countByStatus = (status) => {
+    return transactions.filter(
+      (transaction) => transaction.shippingStatus === status,
+    ).length;
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-14">
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-8">
         Transactions
       </h1>
+
+      {/* Filter Header */}
+      <div className="flex justify-around mb-6">
+        <div
+          className="text-center cursor-pointer"
+          onClick={() => handleFilterChange('On Process')}
+        >
+          <AiOutlineClockCircle className="text-yellow-500 text-2xl mx-auto" />
+          <p>Diproses</p>
+          <span>{countByStatus('On Process')}</span>
+        </div>
+        <div
+          className="text-center cursor-pointer"
+          onClick={() => handleFilterChange('Delivered')}
+        >
+          <AiOutlineCar className="text-green-500 text-2xl mx-auto" />
+          <p>Dikirim</p>
+          <span>{countByStatus('Delivered')}</span>
+        </div>
+        <div
+          className="text-center cursor-pointer"
+          onClick={() => handleFilterChange('Received')}
+        >
+          <AiOutlineCheckCircle className="text-blue-500 text-2xl mx-auto" />
+          <p>Diterima</p>
+          <span>{countByStatus('Received')}</span>
+        </div>
+        <div
+          className="text-center cursor-pointer"
+          onClick={() => handleFilterChange('Cancel')}
+        >
+          <AiOutlineCloseCircle className="text-red-500 text-2xl mx-auto" />
+          <p>Dibatalkan</p>
+          <span>{countByStatus('Cancel')}</span>
+        </div>
+        <div
+          className="text-center cursor-pointer"
+          onClick={() => handleFilterChange('All')}
+        >
+          <p>Semua</p>
+          <span>{transactions.length}</span>
+        </div>
+      </div>
+
       {loading ? (
         <>
           <TransactionSkeleton />
@@ -74,7 +150,7 @@ const TransactionsMe = () => {
             Anda Belum Login Silakan Login Terlebih Dahulu
           </p>
         </div>
-      ) : transactions.length === 0 ? (
+      ) : filteredTransactions.length === 0 ? (
         <div className="text-center">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">
             No Transactions Available
@@ -85,7 +161,7 @@ const TransactionsMe = () => {
           </p>
         </div>
       ) : (
-        transactions.map((transaction) => (
+        filteredTransactions.map((transaction) => (
           <div
             key={transaction.transactionId}
             className="p-4 rounded-md shadow-md mb-4 flex flex-col md:flex-row justify-between items-start border-l-4 bg-white border-gray-300"
@@ -124,9 +200,11 @@ const TransactionsMe = () => {
               </p>
             </div>
             <div className="flex space-x-2">
-              <button className="bg-blue-500 text-white py-2 px-4 rounded-lg text-sm md:text-base">
-                View
-              </button>
+              <Link to={`/transaction-me/${transaction.transactionId}`}>
+                <button className="bg-blue-500 text-white py-2 px-4 rounded-lg text-sm md:text-base">
+                  View
+                </button>
+              </Link>
             </div>
           </div>
         ))
