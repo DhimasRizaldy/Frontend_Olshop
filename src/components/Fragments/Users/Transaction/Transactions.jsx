@@ -88,7 +88,7 @@ const TransactionsMe = () => {
     } else {
       setFilteredTransactions(
         transactions.filter(
-          (transaction) => transaction.statusPayment === status,
+          (transaction) => transaction.status_payment === status,
         ),
       );
     }
@@ -103,7 +103,7 @@ const TransactionsMe = () => {
 
   const countByStatusPay = (status) => {
     return transactions.filter(
-      (transaction) => transaction.statusPayment === status,
+      (transaction) => transaction.status_payment === status,
     ).length;
   };
   return (

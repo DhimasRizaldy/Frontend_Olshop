@@ -72,6 +72,17 @@ const DetailTransactionMe = () => {
           >
             Download PDF
           </button>
+          {transactionDetail &&
+            transactionDetail.status_payment === 'Pending' && (
+              <a
+                href={transactionDetail.paymentUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+              >
+                Bayar
+              </a>
+            )}
         </div>
 
         <div className="border-b border-gray-200 pb-4 mb-4">
