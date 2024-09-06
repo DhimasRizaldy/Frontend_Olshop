@@ -7,9 +7,7 @@ const DetailTransactions = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Detail Transaction" />
-      <ManageLayouts title="detailTransaction">
-        <DetailTransaction />
-      </ManageLayouts>
+      <DetailTransaction />
     </DefaultLayout>
   );
 };

@@ -20,7 +20,7 @@ const statusColors = {
 const shippingStatusColors = {
   'On Process': 'bg-yellow-500',
   Pending: 'bg-yellow-500',
-  Canceled: 'bg-red-500',
+  Cancel: 'bg-red-500',
   Delivered: 'bg-green-500',
   Accepted: 'bg-green-500',
 };
@@ -45,7 +45,7 @@ const TransactionsMe = () => {
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filter, setFilter] = useState('All'); // Default filter
+  const [filter, setFilter] = useState('All');
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -195,9 +195,13 @@ const TransactionsMe = () => {
               <p className="text-sm md:text-base text-gray-700">
                 <strong>Date:</strong>{' '}
                 {transaction.createdAt
-                  ? new Date(transaction.createdAt).toLocaleDateString()
+                  ? new Date(transaction.createdAt).toLocaleString('id-ID', {
+                      dateStyle: 'medium',
+                      timeStyle: 'short',
+                    })
                   : 'N/A'}
               </p>
+
               <p className="text-sm md:text-base text-gray-700">
                 <strong>Amount:</strong> {formatRupiah(transaction.total)}
               </p>

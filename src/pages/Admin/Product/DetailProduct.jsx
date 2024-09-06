@@ -7,9 +7,7 @@ const DetailProducts = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Detail Product" />
-      <ManageLayouts title="detailProduct">
-        <DetailProduct />
-      </ManageLayouts>
+      <DetailProduct />
     </DefaultLayout>
   );
 };

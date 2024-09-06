@@ -68,12 +68,10 @@ export const editTransaction = async (transactionId, transactionData) => {
 };
 
 export const getTransactionById = async (transactionId) => {
-  console.log('Fetching transaction with ID:', transactionId); // Check if transactionId is correct
   try {
     const response = await http.get(
       API_ENDPOINT.GET_TRANSACTION_BY_ID(transactionId),
     );
-    console.log('API Response:', response); // Log full response
     return response.data;
   } catch (error) {
     console.error(

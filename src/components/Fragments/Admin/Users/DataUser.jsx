@@ -32,7 +32,42 @@ const DataUser = () => {
   }, []);
 
   // handle delete
-  const handleDelete = async (userId, username) => {
+const handleDelete = async (userId, username, userRole) => {
+  const deleteUserAndReload = async () => {
+    try {
+      const response = await deleteUser(userId);
+      Swal.fire(
+        'Success!',
+        `User "${username}" has been deleted successfully.`,
+        'success',
+      ).then(() => {
+        window.location.reload(); // Reload page after successful deletion
+      });
+    } catch (error) {
+      console.error('Error deleting user:', error.message);
+      Swal.fire('Error!', `Failed to delete user "${username}".`, 'error').then(
+        () => {
+          window.location.reload(); // Reload page after failure
+        },
+      );
+    }
+  };
+
+  if (userRole === 'ADMIN') {
+    Swal.fire({
+      title: 'Delete Admin?',
+      text: `You are about to delete an Admin user "${username}". Are you sure you want to proceed?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete Admin!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteUserAndReload();
+      }
+    });
+  } else {
     Swal.fire({
       title: 'Are you sure?',
       text: `You are about to delete the user "${username}". You won't be able to revert this!`,
@@ -41,25 +76,14 @@ const DataUser = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
-        try {
-          const response = await deleteUser(userId);
-          if (response.success) {
-            Swal.fire(
-              'Deleted!',
-              `Users "${username}" has been deleted.`,
-              'success',
-            );
-            setUsers(users.filter((user) => user.userId !== userId));
-          }
-        } catch (error) {
-          console.error('Error deleting user:', error.message);
-          Swal.fire('Error!', error.message, 'error');
-        }
+        deleteUserAndReload();
       }
     });
-  };
+  }
+};
+
 
   const columns = [
     {

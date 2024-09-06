@@ -20,6 +20,7 @@ const DataProduct = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterStock, setFilterStock] = useState('ALL');
+  const [filterTotalSold, setFilterTotalSold] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
   const [role, setRole] = useState('USER'); // Default role or set as needed
 
@@ -30,7 +31,6 @@ const DataProduct = () => {
         const response = await getProduct();
         setProduct(response.data || []);
       } catch (error) {
-        // console.error('Fetch product failed:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -46,7 +46,6 @@ const DataProduct = () => {
         const response = await getWHOAMI();
         setRole(response.data.user.role);
       } catch (error) {
-        // console.error('Fetch user role failed:', error.message);
         setError(error.message);
       }
     };
@@ -80,7 +79,6 @@ const DataProduct = () => {
             Swal.fire('Error!', response.message, 'error');
           }
         } catch (error) {
-          // console.error('Delete product failed:', error.message);
           Swal.fire('Error!', error.message, 'error');
         }
       }
@@ -144,6 +142,16 @@ const DataProduct = () => {
       sortable: true,
     },
     {
+      name: 'Total Terjual',
+      selector: (row) => row.totalSold,
+      sortable: true,
+    },
+    {
+      name: 'Total Review',
+      selector: (row) => row.totalReview,
+      sortable: true,
+    },
+    {
       name: 'Description',
       selector: (row) =>
         row.description.length > 15
@@ -180,15 +188,20 @@ const DataProduct = () => {
     },
   ];
 
-  // Filter products based on stock and search term
+  // Filter products based on stock and totalSold
   const filteredProducts = products.filter((product) => {
     const matchesStock =
       filterStock === 'ALL' ||
       (filterStock === 'ABOVE_10' ? product.stock > 10 : product.stock < 3);
+    const matchesTotalSold =
+      filterTotalSold === 'ALL' ||
+      (filterTotalSold === 'HIGH_SOLD'
+        ? product.totalSold > 5
+        : product.totalSold < 5);
     const matchesSearch = product.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    return matchesStock && matchesSearch;
+    return matchesStock && matchesTotalSold && matchesSearch;
   });
 
   if (loading) {
@@ -209,35 +222,48 @@ const DataProduct = () => {
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-between pb-4">
           <div>
-            <button
-              className={`mr-2 px-4 py-2 rounded-md ${
-                filterStock === 'ALL' ? 'bg-primary text-white' : 'bg-gray-300'
-              }`}
-              onClick={() => setFilterStock('ALL')}
-            >
-              All
-            </button>
-            <button
-              className={`mr-2 px-4 py-2 rounded-md ${
-                filterStock === 'ABOVE_10'
-                  ? 'bg-success text-white'
-                  : 'bg-gray-300'
-              }`}
-              onClick={() => setFilterStock('ABOVE_10')}
-            >
-              Stock diatas 10
-            </button>
-            <button
-              className={`px-4 py-2 rounded-md ${
-                filterStock === 'BELOW_3'
-                  ? 'bg-primary text-white'
-                  : 'bg-gray-300'
-              }`}
-              onClick={() => setFilterStock('BELOW_3')}
-            >
-              Stock dibawah 3
-            </button>
+            {/* Filter by Stock */}
+            <div>
+              <label
+                htmlFor="stockFilter"
+                className="mr-2 text-black dark:text-white"
+              >
+                Filter by Stock:
+              </label>
+              <select
+                id="stockFilter"
+                value={filterStock}
+                onChange={(e) => setFilterStock(e.target.value)}
+                className="border border-gray-300 rounded-md p-2"
+              >
+                <option value="ALL">All</option>
+                <option value="ABOVE_10">Stock Diatas 10</option>
+                <option value="BELOW_3">Stock Dibawah 3</option>
+              </select>
+            </div>
+
+            {/* Filter by Total Sold */}
+            <div className="mt-4">
+              <label
+                htmlFor="totalSoldFilter"
+                className="mr-2 text-black dark:text-white"
+              >
+                Filter by Total Sold:
+              </label>
+              <select
+                id="totalSoldFilter"
+                value={filterTotalSold}
+                onChange={(e) => setFilterTotalSold(e.target.value)}
+                className="border border-gray-300 rounded-md p-2"
+              >
+                <option value="ALL">All</option>
+                <option value="HIGH_SOLD">Tejual Terbanyak</option>
+                <option value="LOW_SOLD">Terjual Sedikit</option>
+              </select>
+            </div>
           </div>
+
+          {/* Search by name */}
           <div>
             <input
               type="text"

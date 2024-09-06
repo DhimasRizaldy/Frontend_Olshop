@@ -39,7 +39,7 @@ export const addUser = async (userData, setIsLoading) => {
 
   try {
     const response = await http.post(API_ENDPOINT.REGISTER_ADMIN, userData);
-    toast.success('User added successfully!');
+    toast.success('Admin add successfully!');
     return response.data;
   } catch (error) {
     console.error('Error adding User:', error.response?.data || error.message);

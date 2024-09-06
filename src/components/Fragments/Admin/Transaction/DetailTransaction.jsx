@@ -13,7 +13,6 @@ const DetailTransaction = () => {
       const fetchTransactionDetail = async () => {
         try {
           const response = await getTransactionById(transactionId);
-          console.log('API Response:', response); // Log the response for debugging
           if (response.success) {
             setTransactionDetail(response.data);
           } else {
@@ -173,6 +172,14 @@ const DetailTransaction = () => {
         <div className="border-b border-gray-200 pb-4 mb-4">
           <h2 className="text-xl font-semibold mb-2">Delivery Address</h2>
           <p className="text-gray-600 mb-2">
+            <strong>Name Address:</strong>{' '}
+            {transactionDetail ? (
+              transactionDetail.address.nameAddress
+            ) : (
+              <Skeleton width={200} />
+            )}
+          </p>
+          <p className="text-gray-600 mb-2">
             <strong>Street:</strong>{' '}
             {transactionDetail ? (
               transactionDetail.address.address
@@ -298,26 +305,6 @@ const DetailTransaction = () => {
           )}
         </div>
         <div className="mt-6 flex gap-4">
-          {transactionDetail &&
-            transactionDetail.shippingStatus !== 'Accepted' &&
-            transactionDetail.shippingStatus !== 'Cancel' && (
-              <button
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
-                onClick={() => console.log('Konfirmasi Penerima')}
-              >
-                Konfirmasi Penerima
-              </button>
-            )}
-
-          {transactionDetail &&
-            transactionDetail.shippingStatus === 'Accepted' && (
-              <button
-                className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300"
-                onClick={() => console.log('Kasih Review')}
-              >
-                Kasih Review
-              </button>
-            )}
           <Link to={`/order-tracking`}>
             <button className="bg-primary text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300">
               Lacak Paket

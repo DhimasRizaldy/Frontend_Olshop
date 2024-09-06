@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import Logo from '../../../public/images/logo-putkom.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBox,
@@ -86,7 +85,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           { to: '/supplier', icon: faTruckField, label: 'Supplier' },
           { to: '/management', icon: faBox, label: 'Management Product' },
           { to: '/category', icon: faList, label: 'Category Product' },
-          { to: '/rating', icon: faComment, label: 'Rating' },
         ]
       : []),
     { to: '/product', icon: faBoxesStacked, label: 'Product' },
@@ -104,7 +102,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       {/* SIDEBAR HEADER */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/dashboard">
-          <img src={Logo} alt="Logo" />
+          <img
+            src="https://ik.imagekit.io/xnl4hkzkx/logo-putkom.png?updatedAt=1723732981440"
+            alt="Logo"
+          />
         </NavLink>
 
         <button
