@@ -11,7 +11,6 @@ import {
 
 const statusColors = {
   Success: 'bg-green-500',
-  Completed: 'bg-green-500',
   Pending: 'bg-yellow-500',
   Expired: 'bg-red-500',
   Failed: 'bg-red-500',
@@ -23,6 +22,7 @@ const shippingStatusColors = {
   Pending: 'bg-yellow-500',
   Canceled: 'bg-red-500',
   Delivered: 'bg-green-500',
+  Accepted: 'bg-green-500',
 };
 
 const TransactionSkeleton = () => (
@@ -81,6 +81,19 @@ const TransactionsMe = () => {
     }
   };
 
+  const handleFilterChangePay = (status) => {
+    setFilter(status);
+    if (status === 'All') {
+      setFilteredTransactions(transactions);
+    } else {
+      setFilteredTransactions(
+        transactions.filter(
+          (transaction) => transaction.statusPayment === status,
+        ),
+      );
+    }
+  };
+
   // Hitung total untuk setiap status
   const countByStatus = (status) => {
     return transactions.filter(
@@ -88,6 +101,11 @@ const TransactionsMe = () => {
     ).length;
   };
 
+  const countByStatusPay = (status) => {
+    return transactions.filter(
+      (transaction) => transaction.statusPayment === status,
+    ).length;
+  };
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-14">
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-8">
@@ -98,10 +116,18 @@ const TransactionsMe = () => {
       <div className="flex justify-around mb-6">
         <div
           className="text-center cursor-pointer"
+          onClick={() => handleFilterChangePay('Pending')}
+        >
+          <AiOutlineClockCircle className="text-yellow-500 text-2xl mx-auto" />
+          <p>Belum Bayar</p>
+          <span>{countByStatusPay('Pending')}</span>
+        </div>
+        <div
+          className="text-center cursor-pointer"
           onClick={() => handleFilterChange('On Process')}
         >
           <AiOutlineClockCircle className="text-yellow-500 text-2xl mx-auto" />
-          <p>Diproses</p>
+          <p>Dikemas</p>
           <span>{countByStatus('On Process')}</span>
         </div>
         <div
@@ -114,11 +140,11 @@ const TransactionsMe = () => {
         </div>
         <div
           className="text-center cursor-pointer"
-          onClick={() => handleFilterChange('Received')}
+          onClick={() => handleFilterChange('Accepted')}
         >
           <AiOutlineCheckCircle className="text-blue-500 text-2xl mx-auto" />
           <p>Diterima</p>
-          <span>{countByStatus('Received')}</span>
+          <span>{countByStatus('Accepted')}</span>
         </div>
         <div
           className="text-center cursor-pointer"
@@ -127,13 +153,6 @@ const TransactionsMe = () => {
           <AiOutlineCloseCircle className="text-red-500 text-2xl mx-auto" />
           <p>Dibatalkan</p>
           <span>{countByStatus('Cancel')}</span>
-        </div>
-        <div
-          className="text-center cursor-pointer"
-          onClick={() => handleFilterChange('All')}
-        >
-          <p>Semua</p>
-          <span>{transactions.length}</span>
         </div>
       </div>
 

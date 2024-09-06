@@ -8,6 +8,7 @@ import { formatRupiah } from '../../../../utils/constants/function';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const SkeletonLoader = () => (
   <div className="bg-white shadow-md rounded-lg p-4 mb-4 animate-pulse">
@@ -29,12 +30,13 @@ const SkeletonLoader = () => (
 );
 
 const CartsMe = () => {
-  const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [unauthorized, setUnauthorized] = useState(false);
   const [updatePending, setUpdatePending] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const navigate = useNavigate(); // Initialize the navigate function
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -147,7 +149,12 @@ const CartsMe = () => {
       confirmButtonText: 'Yes, proceed',
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = '/payment-me'; // Change this as needed
+        const selectedCartItems = cartItems.filter((item) =>
+          selectedItems.includes(item.cartId),
+        );
+
+        // Redirect to the payment page, passing the selected items as state
+        navigate('/payment-me', { state: { selectedCartItems } });
       }
     });
   };

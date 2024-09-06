@@ -91,11 +91,10 @@ const EditTransaction = () => {
                 disabled={isLoading}
               >
                 <option value="Pending">Pending</option>
-                <option value="On Process">On Process</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Accepted">Accepted</option>
-                <option value="Cancel">Cancel</option>
+                <option value="On Process">Dikemas</option>
+                <option value="Delivered">Dikirim</option>
+                <option value="Accepted">Diterima</option>
+                <option value="Cancel">Dibatalkan</option>
               </select>
             </div>
           </div>

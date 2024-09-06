@@ -185,42 +185,42 @@ const PaymentsMe = () => {
   //  };
   const handleCheckout = async () => {
     try {
+      const cartIds = cartItems.map((item) => item.cartId); // Ambil semua cartId dari item keranjang
+      const ongkirValue = shippingCost; // Ongkos kirim yang dihitung
+      const courier = shippingOption; // Kurir yang dipilih
+
       const response = await checkoutPayment({
-        cartItems,
-        discountCode: selectedPromo,
-        address: selectedAddress,
-        shippingOption,
-        paymentMethod,
-        total,
+        cartIds,
+        promoId: selectedPromo || null, // Promo yang dipilih, jika ada
+        addressId: selectedAddress, // Alamat yang dipilih
+        ongkirValue, // Ongkir yang telah dihitung
+        courier, // Nama kurir dan estimasi
       });
 
       if (response.status === 200 && response.data.token) {
-        // Initialize Midtrans Snap
         window.snap.pay(response.data.token, {
           onSuccess: function (result) {
-            console.log('Payment Success:', result);
-            // Handle success scenario (e.g., redirect to success page)
+            console.log('Pembayaran Berhasil:', result);
+            // Tambahkan aksi setelah pembayaran berhasil, seperti redirect
           },
           onPending: function (result) {
-            console.log('Payment Pending:', result);
-            // Handle pending scenario (e.g., inform user)
+            console.log('Pembayaran Tertunda:', result);
           },
           onError: function (result) {
-            console.log('Payment Error:', result);
-            // Handle error scenario (e.g., show error message)
+            console.log('Terjadi Kesalahan Pembayaran:', result);
           },
           onClose: function () {
-            console.log('Payment Popup Closed');
-            // Handle popup close scenario
+            console.log('Popup Pembayaran Ditutup');
           },
         });
       } else {
-        console.log('Checkout failed:', response.message);
+        console.log('Checkout gagal:', response.message);
       }
     } catch (error) {
-      console.error('Error during checkout:', error);
+      console.error('Terjadi kesalahan saat checkout:', error);
     }
   };
+
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">

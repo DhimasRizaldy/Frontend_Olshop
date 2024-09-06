@@ -156,8 +156,10 @@ const DataTransaction = () => {
         const getColor = (status) => {
           switch (status) {
             case 'Pending':
+            case 'On Process':
               return 'bg-warning';
             case 'Delivered':
+            case 'Accepted':
               return 'bg-success';
             case 'Cancel':
               return 'bg-danger';
@@ -254,8 +256,10 @@ const DataTransaction = () => {
             >
               <option value="All">All</option>
               <option value="Pending">Pending</option>
+              <option value="On Process">On Process</option>
               <option value="Delivered">Delivered</option>
-              <option value="Expired">Expired</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Cancel">Cancel</option>
             </select>
           </div>
         </div>
