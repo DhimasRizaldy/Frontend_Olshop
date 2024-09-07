@@ -3,9 +3,10 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="images/logo.png" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Putra Komputer</title>
+  <!-- Include Midtrans Client Key -->
   <script>
     window.config = {
       midtransClientKey: 'SB-Mid-client-uRT4DUpB0_FGkMnG'
@@ -15,7 +16,9 @@
 
 <body class="bg-gray-100">
   <div id="root"></div>
+<!-- React Application Script -->
   <script type="module" src="/src/main.tsx"></script>
+<!-- Midtrans Snap JS SDK -->
   <script>
     const script = document.createElement('script');
     script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';

@@ -9,6 +9,8 @@ import {
   fetchProvinces,
   fetchShippingCost,
 } from '../../../../services/users/rajaongkir/rajaongkir-services';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 
 const PaymentsMe = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -23,12 +25,13 @@ const PaymentsMe = () => {
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [shippingOption, setShippingOption] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
   const [subtotal, setSubtotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [shippingCost, setShippingCost] = useState(0);
   const [total, setTotal] = useState(0);
   const [shippingOptions, setShippingOptions] = useState([]);
+  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,64 +166,116 @@ const PaymentsMe = () => {
     }
   };
 
-  //  const handleCheckout = async () => {
-  //    try {
-  //      const response = await checkoutPayment({
-  //        cartItems,
-  //        discountCode: selectedPromo,
-  //        address: selectedAddress,
-  //        shippingOption,
-  //        paymentMethod,
-  //        total,
-  //      });
-
-  //      if (response.status === 200) {
-  //        console.log('Checkout successful:', response.data);
-  //      } else {
-  //        console.log('Checkout failed:', response.message);
-  //      }
-  //    } catch (error) {
-  //      console.error('Error during checkout:', error);
-  //    }
-  //  };
+  // handle checkout
   const handleCheckout = async () => {
     try {
-      const cartIds = cartItems.map((item) => item.cartId); // Ambil semua cartId dari item keranjang
-      const ongkirValue = shippingCost; // Ongkos kirim yang dihitung
-      const courier = shippingOption; // Kurir yang dipilih
-
-      const response = await checkoutPayment({
-        cartIds,
-        promoId: selectedPromo || null, // Promo yang dipilih, jika ada
-        addressId: selectedAddress, // Alamat yang dipilih
-        ongkirValue, // Ongkir yang telah dihitung
-        courier, // Nama kurir dan estimasi
+      // Tampilkan konfirmasi sebelum membuat transaksi
+      const confirmation = await Swal.fire({
+        title: 'Konfirmasi Transaksi',
+        text: 'Apakah Anda ingin melanjutkan pembayaran?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, lanjutkan',
       });
 
-      if (response.status === 200 && response.data.token) {
-        window.snap.pay(response.data.token, {
-          onSuccess: function (result) {
-            console.log('Pembayaran Berhasil:', result);
-            // Tambahkan aksi setelah pembayaran berhasil, seperti redirect
-          },
-          onPending: function (result) {
-            console.log('Pembayaran Tertunda:', result);
-          },
-          onError: function (result) {
-            console.log('Terjadi Kesalahan Pembayaran:', result);
-          },
-          onClose: function () {
-            console.log('Popup Pembayaran Ditutup');
-          },
+      if (confirmation.isConfirmed) {
+        // Ambil data yang diperlukan dari state atau props
+        const cartIds = cartItems.map((item) => item.cartId); // Pastikan cartItems sudah didefinisikan di state atau props
+        const ongkirValue = shippingCost; // Pastikan shippingCost sudah didefinisikan di state atau props
+        const courier = shippingOption; // Pastikan shippingOption sudah didefinisikan di state atau props
+        const promoId = selectedPromo || null; // Pastikan selectedPromo sudah didefinisikan di state atau props
+        const addressId = selectedAddress; // Pastikan selectedAddress sudah didefinisikan di state atau props
+
+        // Panggil fungsi checkoutPayment untuk membuat transaksi
+        const response = await checkoutPayment({
+          cartIds,
+          promoId,
+          addressId,
+          ongkirValue,
+          courier,
         });
-      } else {
-        console.log('Checkout gagal:', response.message);
+
+        // Periksa apakah transaksi berhasil
+        if (response && response.success && response.data.token) {
+          // Menyimpan URL pembayaran dan token di state
+          setPaymentUrl(response.data.paymentUrl);
+          setShowPaymentPopup(true);
+
+          // Menampilkan Midtrans Snap menggunakan token yang diterima dari backend
+          window.snap.pay(response.data.token, {
+            onSuccess: function (result) {
+              Swal.fire(
+                'Pembayaran Sukses',
+                'Transaksi Anda berhasil.',
+                'success',
+              );
+              console.log('Pembayaran Sukses:', result);
+            },
+            onPending: function (result) {
+              Swal.fire(
+                'Pembayaran Tertunda',
+                'Pembayaran Anda sedang diproses, silakan selesaikan nanti.',
+                'info',
+              );
+              console.log('Pembayaran Tertunda:', result);
+            },
+            onError: function (result) {
+              Swal.fire(
+                'Kesalahan Pembayaran',
+                'Terjadi kesalahan dalam transaksi Anda.',
+                'error',
+              );
+              console.log('Kesalahan Pembayaran:', result);
+            },
+            onClose: function () {
+              console.log('Popup pembayaran ditutup');
+            },
+          });
+        } else {
+          // Jika respons tidak sesuai, tampilkan pesan sukses dan tetap menampilkan popup
+          console.log('Checkout berhasil:', response.message);
+          Swal.fire('Sukses', 'Transaksi berhasil dibuat', 'success').then(
+            () => {
+              window.snap.pay(response.data.token, {
+                onSuccess: function (result) {
+                  Swal.fire(
+                    'Pembayaran Sukses',
+                    'Transaksi Anda berhasil.',
+                    'success',
+                  );
+                  console.log('Pembayaran Sukses:', result);
+                },
+                onPending: function (result) {
+                  Swal.fire(
+                    'Pembayaran Tertunda',
+                    'Pembayaran Anda sedang diproses, silakan selesaikan nanti.',
+                    'info',
+                  );
+                  console.log('Pembayaran Tertunda:', result);
+                },
+                onError: function (result) {
+                  Swal.fire(
+                    'Kesalahan Pembayaran',
+                    'Terjadi kesalahan dalam transaksi Anda.',
+                    'error',
+                  );
+                  console.log('Kesalahan Pembayaran:', result);
+                },
+                onClose: function () {
+                  console.log('Popup pembayaran ditutup');
+                },
+              });
+            },
+          );
+        }
       }
     } catch (error) {
       console.error('Terjadi kesalahan saat checkout:', error);
+      Swal.fire('Error', 'Terjadi kesalahan saat memproses transaksi', 'error');
     }
   };
-
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
@@ -361,21 +416,6 @@ const PaymentsMe = () => {
         {discount > 0 && <p>Discount Applied: {formatRupiah(discount)}</p>}
       </div>
 
-      {/* Payment Method Section */}
-      {/* <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-        <select
-          className="w-full border border-gray-300 rounded-md p-2"
-          value={paymentMethod}
-          onChange={(e) => setPaymentMethod(e.target.value)}
-        >
-          <option value="">Select Payment Method</option>
-          <option value="credit_card">Credit Card</option>
-          <option value="bank_transfer">Bank Transfer</option>
-          <option value="cod">Cash on Delivery</option>
-        </select>
-      </div> */}
-
       {/* Checkout Button */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <div className="bg-white rounded-lg p-6 mb-6">
@@ -406,10 +446,34 @@ const PaymentsMe = () => {
             onClick={handleCheckout}
             className="bg-primary text-white rounded-lg p-3 mt-4 w-full transition duration-300 ease-in-out hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-opacity-50"
           >
-            Proceed to Checkout
+            Checkout
           </button>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      {showPaymentPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Proceed to Payment</h2>
+            <a
+              href={paymentUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+            >
+              Go to Payment
+            </a>
+            <button
+              onClick={() => setShowPaymentPopup(false)}
+              className="mt-4 bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400 transition duration-300"
+            >
+              Close
+            </button>
+          </div>
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+        </div>
+      )}
     </div>
   );
 };

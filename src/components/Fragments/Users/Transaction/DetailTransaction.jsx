@@ -9,29 +9,26 @@ import {
 import Swal from 'sweetalert2';
 
 // Modal Component
-const Modal = ({ isOpen, onClose, paymentUrl }) => {
+const PaymentModal = ({ isOpen, onClose, paymentUrl }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg relative w-96">
-        <h2 className="text-2xl font-semibold mb-4">Proceed to Payment</h2>
-        <p className="text-gray-700 mb-6">
-          Click the button below to complete your payment.
-        </p>
+      <div className="bg-white p-6 rounded shadow-lg">
+        <h2 className="text-lg font-bold mb-4">Proceed to Payment</h2>
         <a
           href={paymentUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300 w-full text-center"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
         >
           Go to Payment
         </a>
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          className="mt-4 bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400 transition duration-300"
         >
-          X
+          Close
         </button>
       </div>
       <div className="fixed inset-0 bg-black opacity-50"></div>
@@ -67,16 +64,28 @@ const DetailTransactionMe = () => {
   }, [transactionId]);
 
   const handlePaymentClick = () => {
-    if (transactionDetail) {
-      const paymentUrl = transactionDetail.paymentUrl;
-      if (paymentUrl) {
-        setPaymentUrl(paymentUrl);
-        setShowPaymentPopup(true); // Show popup
-      } else {
-        console.error('Payment URL not found');
-      }
+    if (transactionDetail?.token) {
+      window.snap.pay(transactionDetail.token, {
+        onSuccess: function (result) {
+          Swal.fire('Success!', 'Payment successful!', 'success');
+          // Update transaction status if needed
+        },
+        onPending: function (result) {
+          Swal.fire('Pending!', 'Payment is pending.', 'info');
+        },
+        onError: function (result) {
+          Swal.fire('Error!', 'Payment failed.', 'error');
+        },
+        onClose: function () {
+          Swal.fire('Closed!', 'Payment popup closed.', 'info');
+        },
+      });
     } else {
-      console.error('Transaction details not loaded');
+      Swal.fire(
+        'Error!',
+        'Payment token not found or transaction details not loaded',
+        'error',
+      );
     }
   };
 
@@ -445,12 +454,6 @@ const DetailTransactionMe = () => {
             <Skeleton count={3} />
           )}
         </div>
-        {/* Payment Modal */}
-        <Modal
-          isOpen={showPaymentPopup}
-          onClose={() => setShowPaymentPopup(false)}
-          paymentUrl={paymentUrl}
-        />
         <div className="mt-6 flex gap-4">
           {transactionDetail &&
             transactionDetail.status_payment === 'Pending' &&
@@ -497,6 +500,12 @@ const DetailTransactionMe = () => {
             )}
         </div>
       </div>
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentPopup}
+        onClose={() => setShowPaymentPopup(false)}
+        paymentUrl={paymentUrl}
+      />
     </div>
   );
 };
