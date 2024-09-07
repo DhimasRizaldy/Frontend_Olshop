@@ -33,3 +33,22 @@ export const checkoutPayment = async (data) => {
     );
   }
 };
+
+// notification transaction
+export const checkoutPaymentNotification = async (data) => {
+  try {
+    const response = await http.post(
+      API_ENDPOINT.CHECKOUT_PAYMENT_NOTIFICATION,
+      data,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Error fetching Payment:',
+      error.response?.data?.message || 'Unknown error',
+    );
+    throw new Error(
+      error.response?.data?.message || 'Error fetching Payment',
+    );
+  }
+}

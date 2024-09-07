@@ -74,26 +74,30 @@ const CategorySlider = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-4 overflow-x-auto">
-      <h2 className="text-xl font-bold mb-4">Kategori Produk</h2>
-      {/* Gunakan ref untuk menghubungkan div ini ke sliderRef */}
-      <div className="flex space-x-4" ref={sliderRef}>
-        {isLoading
-          ? Array.from({ length: 6 }, (_, index) => (
-              <CategorySkeleton key={index} /> // Tampilkan skeleton loader jika sedang memuat
-            ))
-          : categories.map((category) => (
-              <div
-                key={category.categoriId} // Gunakan id sebagai key untuk menghindari masalah dengan index
-                className="category-item bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap"
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category.name}{' '}
-                {/* Asumsi nama kategori ada di properti 'name' */}
-              </div>
-            ))}
+    <>
+      <div className="max-w-6xl mx-auto px-4 py-4 overflow-x-auto">
+        <h2 className="text-xl font-bold">Kategori Produk</h2>
       </div>
-    </div>
+      <div className="max-w-6xl mx-auto px-4 py-4 overflow-x-auto">
+        {/* Gunakan ref untuk menghubungkan div ini ke sliderRef */}
+        <div className="flex space-x-4" ref={sliderRef}>
+          {isLoading
+            ? Array.from({ length: 6 }, (_, index) => (
+                <CategorySkeleton key={index} /> // Tampilkan skeleton loader jika sedang memuat
+              ))
+            : categories.map((category) => (
+                <div
+                  key={category.categoriId} // Gunakan id sebagai key untuk menghindari masalah dengan index
+                  className="category-item bg-white rounded-full px-6 py-3 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer whitespace-nowrap"
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  {category.name}{' '}
+                  {/* Asumsi nama kategori ada di properti 'name' */}
+                </div>
+              ))}
+        </div>
+      </div>
+    </>
   );
 };
 

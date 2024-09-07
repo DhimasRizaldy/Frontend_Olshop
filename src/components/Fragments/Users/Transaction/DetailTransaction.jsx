@@ -122,6 +122,49 @@ const DetailTransactionMe = () => {
     }
   };
 
+  // handle confirmation transaction
+  const handleConfirmOrder = async () => {
+    try {
+      const result = await Swal.fire({
+        title: 'Konfirmasi Pesanan Sampai?',
+        text: 'Apakah Pesanan ini sudah selesai?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Konfirmasi!',
+        cancelButtonText: 'Tidak',
+      });
+
+      if (result.isConfirmed) {
+        const response = await editTransaction(transactionId, {
+          status_payment: 'Success',
+          shippingStatus: 'Accepted',
+          receiptDelivery: transactionDetail.receiptDelivery, // Menggunakan nilai yang sudah ada
+        });
+
+        if (response.success) {
+          Swal.fire('Berhasil!', 'Pesanan telah Sampai.', 'success');
+          setTransactionDetail((prevState) => ({
+            ...prevState,
+            status_payment: 'Success',
+            shippingStatus: 'Accepted',
+          }));
+        } else {
+          Swal.fire(
+            'Gagal!',
+            `Pesanan dengan ID ${transactionId} gagal dikonfirmasi. ${response.message}`,
+            'error',
+          );
+        }
+      }
+    } catch (error) {
+      Swal.fire(
+        'Error!',
+        `Terjadi kesalahan saat konfirmasi pesanan dengan ID ${transactionId}.`,
+        'error',
+      );
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'Success':
@@ -427,7 +470,7 @@ const DetailTransactionMe = () => {
             transactionDetail.shippingStatus !== 'Cancel' && (
               <button
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
-                onClick={() => console.log('Konfirmasi Penerima')}
+                onClick={handleConfirmOrder}
               >
                 Konfirmasi Penerima
               </button>
