@@ -9,7 +9,7 @@ const Transaction = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Transaction" />
 
-      <div className="mb-5">
+      {/* <div className="mb-5">
         <Link to="/add-transaction">
           <Button
             type="submit"
@@ -18,7 +18,7 @@ const Transaction = () => {
             Add Data
           </Button>
         </Link>
-      </div>
+      </div> */}
 
       <div className="flex flex-col gap-10">
         <DataTransaction />

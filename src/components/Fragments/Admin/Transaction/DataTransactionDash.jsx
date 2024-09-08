@@ -271,60 +271,69 @@ const DataTransactionDash = () => {
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6.5 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark">
         <div>
           {/* Filter Header */}
-          <div className="flex justify-around mb-6">
+          <div className="flex justify-around mb-6 flex-wrap">
             <div
-              className="text-center cursor-pointer"
+              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
               onClick={() => handleFilterChangePay('Pending')}
             >
-              <AiOutlineClockCircle className="text-yellow-500 text-2xl mx-auto" />
-              <p>Belum Bayar</p>
-              <span>{countByStatusPay('Pending')}</span>
+              <AiOutlineClockCircle className="text-yellow-500 text-xl sm:text-2xl mx-auto" />
+              <p className="text-xs sm:text-base">Belum Bayar</p>
+              <span className="text-xs sm:text-base">
+                {countByStatusPay('Pending')}
+              </span>
             </div>
             <div
-              className="text-center cursor-pointer"
+              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
               onClick={() => handleFilterChangePay('Success')}
             >
-              <AiOutlineClockCircle className="text-green-500 text-2xl mx-auto" />
-              <p>Sudah Bayar</p>
-              <span>{countByStatusPay('Success')}</span>
+              <AiOutlineClockCircle className="text-green-500 text-xl sm:text-2xl mx-auto" />
+              <p className="text-xs sm:text-base">Sudah Bayar</p>
+              <span className="text-xs sm:text-base">
+                {countByStatusPay('Success')}
+              </span>
             </div>
             <div
-              className="text-center cursor-pointer"
+              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
               onClick={() => handleFilterChange('On Process')}
             >
-              <AiOutlineClockCircle className="text-yellow-500 text-2xl mx-auto" />
-              <p>Dikemas</p>
-              <span>{countByStatus('On Process')}</span>
+              <AiOutlineClockCircle className="text-yellow-500 text-xl sm:text-2xl mx-auto" />
+              <p className="text-xs sm:text-base">Dikemas</p>
+              <span className="text-xs sm:text-base">
+                {countByStatus('On Process')}
+              </span>
             </div>
             <div
-              className="text-center cursor-pointer"
+              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
               onClick={() => handleFilterChange('Delivered')}
             >
-              <AiOutlineCar className="text-green-500 text-2xl mx-auto" />
-              <p>Dikirim</p>
-              <span>{countByStatus('Delivered')}</span>
+              <AiOutlineCar className="text-green-500 text-xl sm:text-2xl mx-auto" />
+              <p className="text-xs sm:text-base">Dikirim</p>
+              <span className="text-xs sm:text-base">
+                {countByStatus('Delivered')}
+              </span>
             </div>
             <div
-              className="text-center cursor-pointer"
+              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
               onClick={() => handleFilterChange('Accepted')}
             >
-              <AiOutlineCheckCircle className="text-blue-500 text-2xl mx-auto" />
-              <p>Diterima</p>
-              <span>{countByStatus('Accepted')}</span>
+              <AiOutlineCheckCircle className="text-blue-500 text-xl sm:text-2xl mx-auto" />
+              <p className="text-xs sm:text-base">Diterima</p>
+              <span className="text-xs sm:text-base">
+                {countByStatus('Accepted')}
+              </span>
             </div>
             <div
-              className="text-center cursor-pointer"
+              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
               onClick={() => handleFilterChange('Cancel')}
             >
-              <AiOutlineCloseCircle className="text-red-500 text-2xl mx-auto" />
-              <p>Dibatalkan</p>
-              <span>{countByStatus('Cancel')}</span>
+              <AiOutlineCloseCircle className="text-red-500 text-xl sm:text-2xl mx-auto" />
+              <p className="text-xs sm:text-base">Dibatalkan</p>
+              <span className="text-xs sm:text-base">
+                {countByStatus('Cancel')}
+              </span>
             </div>
           </div>
         </div>
-        <div className="flex mb-4 space-x-4">
-        </div>
-
         <div className="max-w-full overflow-x-auto">
           <DataTable columns={columns} data={filteredTransactions} pagination />
         </div>
