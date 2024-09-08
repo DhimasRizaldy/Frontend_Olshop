@@ -63,12 +63,44 @@ const DetailTransactionMe = () => {
     }
   }, [transactionId]);
 
+// Bisa digunakan
+  // const handlePaymentClick = () => {
+  //   if (transactionDetail?.token) {
+  //     window.snap.pay(transactionDetail.token, {
+  //       onSuccess: function (result) {
+  //         Swal.fire('Success!', 'Payment successful!', 'success');
+  //         // Update transaction status if needed
+  //       },
+  //       onPending: function (result) {
+  //         Swal.fire('Pending!', 'Payment is pending.', 'info');
+  //       },
+  //       onError: function (result) {
+  //         Swal.fire('Error!', 'Payment failed.', 'error');
+  //       },
+  //       onClose: function () {
+  //         Swal.fire('Closed!', 'Payment popup closed.', 'info');
+  //       },
+  //     });
+  //   } else {
+  //     Swal.fire(
+  //       'Error!',
+  //       'Payment token not found or transaction details not loaded',
+  //       'error',
+  //     );
+  //   }
+  // };
+
+  // handle payment
   const handlePaymentClick = () => {
     if (transactionDetail?.token) {
       window.snap.pay(transactionDetail.token, {
         onSuccess: function (result) {
+          // Menyimpan transactionId atau data penting lainnya ke localStorage atau state untuk digunakan di halaman berikutnya
+          localStorage.setItem('transactionId', result.transaction_id);
           Swal.fire('Success!', 'Payment successful!', 'success');
-          // Update transaction status if needed
+
+          // Arahkan pengguna ke halaman /transaction-me/payment-success
+          window.location.href = '/transaction-me/payment-success';
         },
         onPending: function (result) {
           Swal.fire('Pending!', 'Payment is pending.', 'info');
@@ -89,6 +121,7 @@ const DetailTransactionMe = () => {
     }
   };
 
+
   const handleCancelOrder = async () => {
     try {
       const result = await Swal.fire({
@@ -102,7 +135,7 @@ const DetailTransactionMe = () => {
 
       if (result.isConfirmed) {
         const response = await editTransaction(transactionId, {
-          status_payment: 'Expired',
+          status_payment: 'Cancelled',
           shippingStatus: 'Cancel',
           receiptDelivery: '-',
         });
@@ -111,7 +144,7 @@ const DetailTransactionMe = () => {
           Swal.fire('Berhasil!', 'Pesanan telah dibatalkan.', 'success');
           setTransactionDetail((prevState) => ({
             ...prevState,
-            status_payment: 'Expired',
+            status_payment: 'Cancelled',
             shippingStatus: 'Cancel',
           }));
         } else {
@@ -179,7 +212,7 @@ const DetailTransactionMe = () => {
       case 'Success':
       case 'Completed':
         return 'bg-green-500 text-white';
-      case 'Expired':
+      case 'Cancelled':
       case 'Failed':
       case 'Cancel':
         return 'bg-red-500 text-white';
@@ -205,7 +238,7 @@ const DetailTransactionMe = () => {
 
         <div className="flex justify-end mb-6 gap-4">
           {transactionDetail &&
-            transactionDetail.status_payment !== 'Exired' &&
+            transactionDetail.status_payment !== 'Cancelled' &&
             transactionDetail.status_payment === 'Success' && (
               <a
                 onClick={() => window.print()}
@@ -228,17 +261,15 @@ const DetailTransactionMe = () => {
           </p>
           <p className="text-gray-600 mb-2">
             <strong>Date:</strong>{' '}
-            {transactionDetail ? (
-              new Date(transactionDetail.transaction_time).toLocaleString(
-                'id-ID',
-                {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                },
-              )
-            ) : (
-              <Skeleton width={150} />
-            )}
+            {transactionDetail && transactionDetail.transaction_time
+              ? new Date(transactionDetail.transaction_time).toLocaleString(
+                  'id-ID',
+                  {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  },
+                )
+              : '-'}
           </p>
 
           <p className="text-gray-600 mb-2">

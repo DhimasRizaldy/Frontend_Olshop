@@ -41,14 +41,14 @@ export const checkoutPaymentNotification = async (data) => {
       API_ENDPOINT.CHECKOUT_PAYMENT_NOTIFICATION,
       data,
     );
-    return response.data;
+    return response.data; // Mengembalikan response dari backend
   } catch (error) {
+    // Error handling yang lebih aman, dengan fallback jika error response tidak tersedia
     console.error(
       'Error fetching Payment:',
-      error.response?.data?.message || 'Unknown error',
+      error?.response?.data?.message || error.message || 'Unknown error',
     );
-    throw new Error(
-      error.response?.data?.message || 'Error fetching Payment',
-    );
+    throw new Error(error?.response?.data?.message || 'Error fetching Payment');
   }
-}
+};
+

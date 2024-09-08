@@ -41,35 +41,35 @@ const HandleSuccessPay = () => {
     fetchTransaction();
   }, []);
 
-  // Send Payment Notification to Backend
-  useEffect(() => {
-    const handlePaymentNotification = async () => {
-      if (transaction && transaction.transaction_status === 'settlement') {
-        try {
-          await checkoutPaymentNotification({
-            transactionId: transaction.transactionId, // Gunakan ID dari data transaksi
-            transaction_status: transaction.transaction_status,
-            payment_type: transaction.payment_type,
-          });
+  // Fungsi untuk mengirim notifikasi pembayaran
+  const handleSendNotification = async () => {
+    try {
+      if (transaction) {
+        await checkoutPaymentNotification({
+          transactionId: transaction.transactionId,
+          transaction_status: transaction.transaction_status,
+          payment_type: transaction.payment_type,
+        });
 
-          Swal.fire({
-            title: 'Payment Success',
-            text: 'Your payment has been successfully processed.',
-            icon: 'success',
-            confirmButtonText: 'OK',
-          }).then(() => {
-            navigate('/'); // Redirect to Home or another page
-          });
-        } catch (error) {
-          console.error('Failed to send payment notification:', error);
-        }
+        Swal.fire({
+          title: 'Success!',
+          text: 'Payment notification sent successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          navigate('/'); // Redirect to Home atau halaman lain setelah sukses
+        });
       }
-    };
-
-    if (transaction) {
-      handlePaymentNotification();
+    } catch (error) {
+      console.error('Failed to send payment notification:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to send payment notification.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     }
-  }, [transaction, navigate]);
+  };
 
   if (loading) {
     return (
@@ -114,10 +114,10 @@ const HandleSuccessPay = () => {
             <p className="text-lg font-semibold mb-2">Payment Type:</p>
             <p className="mb-4 text-gray-700">{transaction.payment_type}</p>
             <button
-              onClick={() => navigate('/')}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+              onClick={handleSendNotification} // Fungsi untuk mengirim notifikasi ketika tombol diklik
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
             >
-              Go to Home
+              Confirm Payment Success
             </button>
           </div>
         ) : (
