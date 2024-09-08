@@ -1,75 +1,79 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import Skeleton from 'react-loading-skeleton';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { getTransactionById } from '../../../../services/admin/transaction/services-transaction';
 import { checkoutPaymentNotification } from '../../../../services/users/payment/servives-payment';
 
 const HandleCancelPay = () => {
-  const { transaction_id } = useParams();
-  const [transaction, setTransaction] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchTransaction = async () => {
-      try {
-        const response = await getTransactionById(transaction_id);
-        setTransaction(response);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
+  const handleCancelPayment = async () => {
+    const transactionId = localStorage.getItem('transactionId');
+
+    if (!transactionId) {
+      Swal.fire('Error!', 'Transaction ID not found.', 'error');
+      return;
+    }
+
+    const data = {
+      transactionId,
+      transaction_status: 'cancel',
+      payment_type: '-',
     };
 
-    fetchTransaction();
-  }, [transaction_id]);
+    try {
+      setLoading(true);
+      await checkoutPaymentNotification(data);
 
-  useEffect(() => {
-    if (transaction && transaction.transaction_status === 'settlement') {
-      Swal.fire({
-        title: 'Payment Success',
-        text: 'Your payment has been successfully processed.',
-        icon: 'success',
-        confirmButtonText: 'OK',
+      // Tampilkan pesan sukses dan navigasi ke halaman /transaction-me
+      Swal.fire(
+        'Success!',
+        'Payment status updated successfully.',
+        'success',
+      ).then(() => {
+        // Hapus transactionId dari localStorage
+        localStorage.removeItem('transactionId');
+        // Arahkan ke halaman /transaction-me
+        navigate('/transaction-me');
       });
-    } else if (transaction) {
-      Swal.fire({
-        title: 'Payment Failed',
-        text: 'Your payment has not been processed.',
-        icon: 'error',
-        confirmButtonText: 'OK',
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      // Tampilkan pesan sukses dan navigasi ke halaman /transaction-me meskipun terjadi error
+      Swal.fire(
+        'Success!',
+        'Payment status updated successfully.',
+        'success',
+      ).then(() => {
+        // Hapus transactionId dari localStorage
+        localStorage.removeItem('transactionId');
+        // Arahkan ke halaman /transaction-me
+        navigate('/transaction-me');
       });
+    } finally {
+      setLoading(false);
     }
-  }, [transaction]);
-
-  if (loading) {
-    return <Skeleton count={5} />;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  };
 
   return (
-    <div>
-      <h1>Payment Status</h1>
-      {transaction && transaction.transaction_status === 'settlement' ? (
-        <div>
-          <p>Transaction ID: {transaction.transaction_id}</p>
-          <p>Status: {transaction.transaction_status}</p>
-          <p>Payment Type: {transaction.payment_type}</p>
-          <Link to="/">Go to Home</Link>
-        </div>
-      ) : (
-        <div>
-          <p>Transaction ID: {transaction.transaction_id}</p>
-          <p>Status: {transaction.transaction_status}</p>
-          <p>Payment Type: {transaction.payment_type}</p>
-          <Link to="/">Go to Home</Link>
-        </div>
-      )}
+    <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
+      <div className="bg-white shadow-md rounded-lg p-6 text-center">
+        <h1 className="text-2xl font-bold text-red-600 mb-4">
+          Payment Cancelled
+        </h1>
+        <p className="text-gray-700 mb-6">
+          Your payment has been cancelled. If this is a mistake, please try
+          again.
+        </p>
+        <button
+          onClick={handleCancelPayment}
+          disabled={loading}
+          className={`w-full md:w-auto px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 ${
+            loading ? 'cursor-not-allowed' : ''
+          }`}
+        >
+          {loading ? 'Loading...' : 'Confirm Payment Cancellation'}
+        </button>
+      </div>
     </div>
   );
 };

@@ -116,12 +116,17 @@ const DetailTransactionMe = () => {
         });
 
         if (response.success) {
-          Swal.fire('Berhasil!', 'Pesanan telah dibatalkan.', 'success');
-          setTransactionDetail((prevState) => ({
-            ...prevState,
-            status_payment: 'Cancelled',
-            shippingStatus: 'Cancel',
-          }));
+          Swal.fire('Berhasil!', 'Pesanan telah dibatalkan.', 'success').then(
+            () => {
+              setTransactionDetail((prevState) => ({
+                ...prevState,
+                status_payment: 'Cancelled',
+                shippingStatus: 'Cancel',
+              }));
+              // Redirect ke halaman /payment-cancel
+              navigate('/payment-cancel');
+            },
+          );
         } else {
           Swal.fire(
             'Gagal!',
