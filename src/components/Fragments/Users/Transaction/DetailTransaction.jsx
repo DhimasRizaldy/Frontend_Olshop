@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import { formatRupiah } from '../../../../utils/constants/function';
 import {
@@ -63,57 +63,21 @@ const DetailTransactionMe = () => {
     }
   }, [transactionId]);
 
-  // const handlePaymentClick = () => {
-  //   if (transactionDetail?.token) {
-  //     window.snap.pay(transactionDetail.token, {
-
-  //       onSuccess: function (result) {
-  //         Swal.fire('Success!', 'Payment successful!', 'success');
-  //         // Update transaction status if needed
-  //       },
-  //       onPending: function (result) {
-  //         Swal.fire('Pending!', 'Payment is pending.', 'info');
-  //       },
-  //       onError: function (result) {
-  //         Swal.fire('Error!', 'Payment failed.', 'error');
-  //       },
-  //       onClose: function () {
-  //         Swal.fire('Closed!', 'Payment popup closed.', 'info');
-  //       },
-  //     });
-  //   } else {
-  //     Swal.fire(
-  //       'Error!',
-  //       'Payment token not found or transaction details not loaded',
-  //       'error',
-  //     );
-  //   }
-  // };
-
   const handlePaymentClick = () => {
-    const navigate = useNavigate(); // Gunakan navigate untuk melakukan redirect
-
     if (transactionDetail?.token) {
       window.snap.pay(transactionDetail.token, {
         onSuccess: function (result) {
-          Swal.fire('Success!', 'Payment successful!', 'success').then(() => {
-            // Redirect ke halaman setelah pembayaran berhasil
-            navigate('/transaction-me/payment-success');
-          });
+          Swal.fire('Success!', 'Payment successful!', 'success');
           // Update transaction status if needed
-          console.log('Payment Success:', result);
         },
         onPending: function (result) {
           Swal.fire('Pending!', 'Payment is pending.', 'info');
-          console.log('Payment Pending:', result);
         },
         onError: function (result) {
           Swal.fire('Error!', 'Payment failed.', 'error');
-          console.log('Payment Error:', result);
         },
         onClose: function () {
           Swal.fire('Closed!', 'Payment popup closed.', 'info');
-          console.log('Payment Popup Closed');
         },
       });
     } else {
@@ -124,6 +88,7 @@ const DetailTransactionMe = () => {
       );
     }
   };
+
   const handleCancelOrder = async () => {
     try {
       const result = await Swal.fire({
@@ -137,7 +102,7 @@ const DetailTransactionMe = () => {
 
       if (result.isConfirmed) {
         const response = await editTransaction(transactionId, {
-          status_payment: 'Cancelled',
+          status_payment: 'Expired',
           shippingStatus: 'Cancel',
           receiptDelivery: '-',
         });
@@ -146,7 +111,7 @@ const DetailTransactionMe = () => {
           Swal.fire('Berhasil!', 'Pesanan telah dibatalkan.', 'success');
           setTransactionDetail((prevState) => ({
             ...prevState,
-            status_payment: 'Cancelled',
+            status_payment: 'Expired',
             shippingStatus: 'Cancel',
           }));
         } else {
@@ -214,8 +179,8 @@ const DetailTransactionMe = () => {
       case 'Success':
       case 'Completed':
         return 'bg-green-500 text-white';
-      case 'Cancelled':
       case 'Expired':
+      case 'Failed':
       case 'Cancel':
         return 'bg-red-500 text-white';
       case 'Pending':
@@ -263,15 +228,17 @@ const DetailTransactionMe = () => {
           </p>
           <p className="text-gray-600 mb-2">
             <strong>Date:</strong>{' '}
-            {transactionDetail && transactionDetail.transaction_time
-              ? new Date(transactionDetail.transaction_time).toLocaleString(
-                  'id-ID',
-                  {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  },
-                )
-              : '-'}
+            {transactionDetail ? (
+              new Date(transactionDetail.transaction_time).toLocaleString(
+                'id-ID',
+                {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                },
+              )
+            ) : (
+              <Skeleton width={150} />
+            )}
           </p>
 
           <p className="text-gray-600 mb-2">

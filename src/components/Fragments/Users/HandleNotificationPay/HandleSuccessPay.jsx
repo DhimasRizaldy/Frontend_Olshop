@@ -14,10 +14,19 @@ const HandleSuccessPay = () => {
 
   // Fetch Transaction Data
   useEffect(() => {
+    console.log('Transaction ID from URL:', transaction_id); // Debug log
     const fetchTransaction = async () => {
       try {
-        const response = await getTransactionById(transaction_id);
-        setTransaction(response);
+        if (transaction_id) {
+          const response = await getTransactionById(transaction_id);
+          if (response) {
+            setTransaction(response);
+          } else {
+            throw new Error('Transaction not found');
+          }
+        } else {
+          throw new Error('Transaction ID is missing');
+        }
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -63,7 +72,13 @@ const HandleSuccessPay = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error}</p>
+        <button onClick={() => navigate('/')}>Go to Home</button>
+      </div>
+    );
   }
 
   return (
