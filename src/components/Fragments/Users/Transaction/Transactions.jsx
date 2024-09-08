@@ -67,7 +67,7 @@ const TransactionsMe = () => {
     fetchTransactions();
   }, []);
 
-  // Fungsi untuk mengubah filter
+  // Fungsi untuk mengubah filter shipping status
   const handleFilterChange = (status) => {
     setFilter(status);
     if (status === 'All') {
@@ -81,6 +81,7 @@ const TransactionsMe = () => {
     }
   };
 
+  // Fungsi untuk mengubah filter payment status
   const handleFilterChangePay = (status) => {
     setFilter(status);
     if (status === 'All') {
@@ -94,18 +95,20 @@ const TransactionsMe = () => {
     }
   };
 
-  // Hitung total untuk setiap status
+  // Hitung total untuk setiap status shipping
   const countByStatus = (status) => {
     return transactions.filter(
       (transaction) => transaction.shippingStatus === status,
     ).length;
   };
 
+  // Hitung total untuk setiap status payment
   const countByStatusPay = (status) => {
     return transactions.filter(
       (transaction) => transaction.status_payment === status,
     ).length;
   };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-14">
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-8">
@@ -121,6 +124,14 @@ const TransactionsMe = () => {
           <AiOutlineClockCircle className="text-yellow-500 text-2xl mx-auto" />
           <p>Belum Bayar</p>
           <span>{countByStatusPay('Pending')}</span>
+        </div>
+        <div
+          className="text-center cursor-pointer"
+          onClick={() => handleFilterChangePay('Success')}
+        >
+          <AiOutlineClockCircle className="text-green-500 text-2xl mx-auto" />
+          <p>Sudah Bayar</p>
+          <span>{countByStatusPay('Success')}</span>
         </div>
         <div
           className="text-center cursor-pointer"

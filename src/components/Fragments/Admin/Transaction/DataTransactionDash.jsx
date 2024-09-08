@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  faPenToSquare,
-  faEye,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faEye } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
@@ -19,7 +16,7 @@ import {
   AiOutlineCloseCircle,
 } from 'react-icons/ai';
 
-const DataTransaction = () => {
+const DataTransactionDash = () => {
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,14 +48,23 @@ const DataTransaction = () => {
         } else if (role === 'ADMIN') {
           response = await getTransaction();
         }
-        setTransactions(response.data || []);
-        setFilteredTransactions(response.data || []);
+
+        // Filter transaksi dengan status pembayaran "Success" dan status pengiriman "Pending"
+        const filteredData = response.data.filter(
+          (transaction) =>
+            transaction.status_payment === 'Success' &&
+            transaction.shippingStatus === 'Pending',
+        );
+
+        setTransactions(filteredData || []);
+        setFilteredTransactions(filteredData || []);
       } catch (error) {
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
+
     if (role) {
       fetchTransactions();
     }
@@ -317,47 +323,6 @@ const DataTransaction = () => {
           </div>
         </div>
         <div className="flex mb-4 space-x-4">
-          <div>
-            <label
-              htmlFor="statusPaymentFilter"
-              className="mr-2 text-black dark:text-white"
-            >
-              Filter by Payment Status:
-            </label>
-            <select
-              id="statusPaymentFilter"
-              value={statusPaymentFilter}
-              onChange={(e) => setStatusPaymentFilter(e.target.value)}
-              className="border border-gray-300 rounded-md p-2"
-            >
-              <option value="All">All</option>
-              <option value="Pending">Pending</option>
-              <option value="Success">Success</option>
-              <option value="Expired">Expired</option>
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="statusShippingFilter"
-              className="mr-2 text-black dark:text-white"
-            >
-              Filter by Shipping Status:
-            </label>
-            <select
-              id="statusShippingFilter"
-              value={statusShippingFilter}
-              onChange={(e) => setStatusShippingFilter(e.target.value)}
-              className="border border-gray-300 rounded-md p-2"
-            >
-              <option value="All">All</option>
-              <option value="Pending">Pending</option>
-              <option value="On Process">On Process</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Cancel">Cancel</option>
-            </select>
-          </div>
         </div>
 
         <div className="max-w-full overflow-x-auto">
@@ -368,4 +333,4 @@ const DataTransaction = () => {
   );
 };
 
-export default DataTransaction;
+export default DataTransactionDash;

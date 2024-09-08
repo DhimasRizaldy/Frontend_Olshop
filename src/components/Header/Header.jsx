@@ -6,6 +6,8 @@ import { getWHOAMI } from '../../services/auth/admin/getDataUser';
 import { getNotification } from '../../services/admin/notification/services-notification.js';
 import { getCarts } from '../../services/users/carts/services-carts';
 import Button from '../Elements/Button/Index.jsx';
+import { PiShoppingCartSimpleBold } from 'react-icons/pi';
+import { IoMdNotificationsOutline } from 'react-icons/io';
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -168,20 +170,7 @@ const Header = () => {
             to={'/notification-me'}
             className="relative text-black hover:text-blue-500"
           >
-            <svg
-              className="w-8 h-7"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
+            <IoMdNotificationsOutline size={25} />
             {unreadNotificationsCount > 0 && (
               <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
                 {unreadNotificationsCount}
@@ -194,20 +183,7 @@ const Header = () => {
             to={'/carts'}
             className="relative text-black hover:text-blue-500"
           >
-            <svg
-              className="w-8 h-7"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m5-9v9m4-9v9m4-9l2 9M5 21h14"
-              />
-            </svg>
+            <PiShoppingCartSimpleBold size={25} />
             {cartItemsCount > 0 && (
               <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
                 {cartItemsCount}
@@ -229,52 +205,20 @@ const Header = () => {
         {/* Mobile Icons and Links */}
         <div className="md:hidden flex items-center space-x-4">
           {/* Search Icon */}
-          <button
-            className="text-black hover:text-blue-500"
-            onClick={() => document.getElementById('mobile-search').focus()}
-          ></button>
-          {/* User Icon */}
-          <button
-            className="text-black hover:text-blue-500"
-            onClick={() =>
-              document.getElementById('mobile-menu').classList.toggle('hidden')
-            }
-          >
-            <svg
-              className="w-6 h-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <div
-        id="mobile-menu"
-        className="absolute top-16 left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg hidden"
-      >
-        <div className="flex flex-col p-4 space-y-2">
+          {/* Cart Icon */}
           <Link
             to={'/carts'}
-            className="text-black hover:text-blue-500 flex items-center"
+            className="relative text-black hover:text-blue-500"
           >
-            Cart
+            <PiShoppingCartSimpleBold size={30} />
             {cartItemsCount > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
                 {cartItemsCount}
               </span>
             )}
           </Link>
+
+          {/* User Icon */}
           {isUserLoggedIn ? (
             <DropdownUser userData={userData} />
           ) : (
@@ -286,6 +230,47 @@ const Header = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile Search Bar */}
+      {/* <div className="md:hidden px-4 py-2">
+        <input
+          id="mobile-search"
+          type="text"
+          placeholder="Search Product"
+          className="w-full px-4 py-2 rounded-full border border-gray-300"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {searchResults.length > 0 && (
+          <div className="absolute top-full left-0 w-full bg-white border border-gray-300 mt-2 rounded-lg shadow-lg z-50">
+            <div className="flex flex-col divide-y divide-gray-200">
+              {searchResults.map((product) => (
+                <Link
+                  key={product.productId}
+                  to={`/details-products/${product.productId}`}
+                  className="flex items-center p-3 hover:bg-gray-100"
+                >
+                  <img
+                    src={product.image || 'https://via.placeholder.com/80'}
+                    alt={product.name}
+                    className="w-16 h-16 object-cover rounded-md"
+                  />
+                  <div className="ml-3 flex-1">
+                    <h4 className="text-sm font-semibold text-gray-800">
+                      {product.name}
+                    </h4>
+                    <p className="text-xs text-gray-600">
+                      {product.price
+                        ? `Rp ${product.price.toLocaleString('id-ID')}`
+                        : 'Harga tidak tersedia'}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div> */}
     </header>
   );
 };

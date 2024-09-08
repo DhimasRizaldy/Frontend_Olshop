@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import { formatRupiah } from '../../../../utils/constants/function';
 import {
@@ -487,6 +487,20 @@ const DetailTransactionMe = () => {
               >
                 Kasih Review
               </button>
+            )}
+
+          {transactionDetail &&
+            transactionDetail.shippingStatus !== 'Pending' &&
+            transactionDetail.shippingStatus !== 'Cancel' &&
+            transactionDetail.shippingStatus !== 'On Process' && (
+              <Link to="/order-tracking">
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300"
+                  onClick={() => console.log('Lacak Paket')}
+                >
+                  Lacak Paket
+                </button>
+              </Link>
             )}
 
           {transactionDetail &&

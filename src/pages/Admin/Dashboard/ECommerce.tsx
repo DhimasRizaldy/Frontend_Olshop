@@ -9,7 +9,7 @@ import {
   faMoneyBill1,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import DataTransaction from '../../../components/Fragments/Admin/Transaction/DataTransaction.jsx';
+import DataTransactionDash from '../../../components/Fragments/Admin/Transaction/DataTransactionDash.jsx';
 import { getUser } from '../../../services/admin/user/services-user';
 import { getProduct } from '../../../services/admin/product/services-product';
 import {
@@ -135,7 +135,7 @@ const ECommerce: React.FC = () => {
         </CardDataStats>
       </div>
       <div className="mt-4 flex flex-col gap-10">
-        <DataTransaction />
+        <DataTransactionDash />
       </div>
     </DefaultLayout>
   );
