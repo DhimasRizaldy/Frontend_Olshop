@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getTransactionById } from '../../../../services/admin/transaction/services-transaction';
 import { checkoutPaymentNotification } from '../../../../services/users/payment/servives-payment';
@@ -7,19 +7,22 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 const HandleSuccessPay = () => {
-  const { transaction_id } = useParams();
   const [transaction, setTransaction] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch Transaction Data
+  // Get query parameter from URL
   useEffect(() => {
-    console.log('Transaction ID from URL:', transaction_id); // Debug log
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('order_id'); // Ambil order_id dari query string
+
+    console.log('Order ID from URL:', orderId); // Debug log
+
     const fetchTransaction = async () => {
       try {
-        if (transaction_id) {
-          const response = await getTransactionById(transaction_id);
+        if (orderId) {
+          const response = await getTransactionById(orderId);
           if (response) {
             setTransaction(response);
           } else {
@@ -36,7 +39,7 @@ const HandleSuccessPay = () => {
     };
 
     fetchTransaction();
-  }, [transaction_id]);
+  }, []);
 
   // Send Payment Notification to Backend
   useEffect(() => {
@@ -44,8 +47,8 @@ const HandleSuccessPay = () => {
       if (transaction && transaction.transaction_status === 'settlement') {
         try {
           await checkoutPaymentNotification({
-            transaction_id: transaction.transaction_id,
-            transaction_status: 'settlement',
+            transactionId: transaction.transactionId, // Gunakan ID dari data transaksi
+            transaction_status: transaction.transaction_status,
             payment_type: transaction.payment_type,
           });
 
@@ -103,7 +106,7 @@ const HandleSuccessPay = () => {
         {transaction && transaction.transaction_status === 'settlement' ? (
           <div>
             <p className="text-lg font-semibold mb-2">Transaction ID:</p>
-            <p className="mb-4 text-gray-700">{transaction.transaction_id}</p>
+            <p className="mb-4 text-gray-700">{transaction.transactionId}</p>
             <p className="text-lg font-semibold mb-2">Status:</p>
             <p className="mb-4 text-gray-700">
               {transaction.transaction_status}
@@ -120,7 +123,7 @@ const HandleSuccessPay = () => {
         ) : (
           <div>
             <p className="text-lg font-semibold mb-2">Transaction ID:</p>
-            <p className="mb-4 text-gray-700">{transaction.transaction_id}</p>
+            <p className="mb-4 text-gray-700">{transaction.transactionId}</p>
             <p className="text-lg font-semibold mb-2">Status:</p>
             <p className="mb-4 text-gray-700">
               {transaction.transaction_status}
