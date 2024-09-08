@@ -30,6 +30,43 @@
   }
 }
 
+/* print */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .printable, .printable * {
+    visibility: visible;
+  }
+  .printable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    font-size: 12px; /* Ukuran font lebih kecil */
+    padding: 10px; /* Padding lebih kecil */
+  }
+  .printable h1 {
+    font-size: 18px; /* Ukuran font judul lebih kecil */
+  }
+  .printable h2 {
+    font-size: 16px; /* Ukuran font subjudul lebih kecil */
+  }
+  .printable p {
+    margin: 2px 0; /* Margin lebih kecil */
+  }
+  .printable .border-b {
+    border-bottom-width: 1px; /* Lebar border lebih kecil */
+  }
+  .printable .border-t {
+    border-top-width: 1px; /* Lebar border lebih kecil */
+  }
+  .printable img {
+    width: 50px; /* Ukuran gambar lebih kecil */
+    height: 50px; /* Ukuran gambar lebih kecil */
+  }
+}
+
 /* third-party libraries CSS */
 
 .tableCheckbox:checked ~ div span {

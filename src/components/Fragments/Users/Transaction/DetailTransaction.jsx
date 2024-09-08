@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import { formatRupiah } from '../../../../utils/constants/function';
 import {
@@ -63,21 +63,57 @@ const DetailTransactionMe = () => {
     }
   }, [transactionId]);
 
+  // const handlePaymentClick = () => {
+  //   if (transactionDetail?.token) {
+  //     window.snap.pay(transactionDetail.token, {
+
+  //       onSuccess: function (result) {
+  //         Swal.fire('Success!', 'Payment successful!', 'success');
+  //         // Update transaction status if needed
+  //       },
+  //       onPending: function (result) {
+  //         Swal.fire('Pending!', 'Payment is pending.', 'info');
+  //       },
+  //       onError: function (result) {
+  //         Swal.fire('Error!', 'Payment failed.', 'error');
+  //       },
+  //       onClose: function () {
+  //         Swal.fire('Closed!', 'Payment popup closed.', 'info');
+  //       },
+  //     });
+  //   } else {
+  //     Swal.fire(
+  //       'Error!',
+  //       'Payment token not found or transaction details not loaded',
+  //       'error',
+  //     );
+  //   }
+  // };
+
   const handlePaymentClick = () => {
+    const navigate = useNavigate(); // Gunakan navigate untuk melakukan redirect
+
     if (transactionDetail?.token) {
       window.snap.pay(transactionDetail.token, {
         onSuccess: function (result) {
-          Swal.fire('Success!', 'Payment successful!', 'success');
+          Swal.fire('Success!', 'Payment successful!', 'success').then(() => {
+            // Redirect ke halaman setelah pembayaran berhasil
+            navigate('/transaction-me/payment-success');
+          });
           // Update transaction status if needed
+          console.log('Payment Success:', result);
         },
         onPending: function (result) {
           Swal.fire('Pending!', 'Payment is pending.', 'info');
+          console.log('Payment Pending:', result);
         },
         onError: function (result) {
           Swal.fire('Error!', 'Payment failed.', 'error');
+          console.log('Payment Error:', result);
         },
         onClose: function () {
           Swal.fire('Closed!', 'Payment popup closed.', 'info');
+          console.log('Payment Popup Closed');
         },
       });
     } else {
@@ -88,7 +124,6 @@ const DetailTransactionMe = () => {
       );
     }
   };
-
   const handleCancelOrder = async () => {
     try {
       const result = await Swal.fire({

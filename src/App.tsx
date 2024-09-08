@@ -88,6 +88,8 @@ import ProductCategory from './pages/Users/Product/ProductCategory.jsx';
 import DataProfileUsers from './components/Fragments/Users/Profile/DataProfileUsers.jsx';
 import Payments from './pages/Users/Transaksi/Payment.jsx';
 import DetailTransactionMes from './pages/Users/Transaksi/DetailTransactionMe.jsx';
+import PaymentSuccess from './pages/Users/Transaksi/PaymentSuccess.jsx';
+import PaymentCancel from './pages/Users/Transaksi/PaymentCancel.jsx';
 
 // CRUD Address Users
 import AddAddressUsers from './pages/Users/Address/AddAddress.jsx';
@@ -540,44 +542,6 @@ function App() {
           }
         />
 
-        {/* Admin Settings */}
-        {/* <Route
-          path="/settings"
-          element={
-            <>
-              <PageTitle title="Settings | Putra Komputer" />
-              <Settings />
-            </>
-          }
-        />
-        <Route
-          path="/chart"
-          element={
-            <>
-              <PageTitle title="Basic Chart | Putra Komputer" />
-              <Chart />
-            </>
-          }
-        />
-        <Route
-          path="/ui/alerts"
-          element={
-            <>
-              <PageTitle title="Alerts | Putra Komputer" />
-              <Alerts />
-            </>
-          }
-        />
-        <Route
-          path="/ui/buttons"
-          element={
-            <>
-              <PageTitle title="Buttons | Putra Komputer" />
-              <Buttons />
-            </>
-          }
-        /> */}
-
         {/* Auth Route */}
         <Route
           path="/login"
@@ -740,6 +704,26 @@ function App() {
             <>
               <PageTitle title="Payment | Putra Komputer" />
               <Payments />
+            </>
+          }
+        />
+        {/* notification success pay */}
+        <Route
+          path="/transaction-me/payment-success"
+          element={
+            <>
+              <PageTitle title="Payment Success | Putra Komputer" />
+              <PaymentSuccess />
+            </>
+          }
+        />
+        {/* notification cancel pay */}
+        <Route
+          path="/transaction-me/payment-cancel"
+          element={
+            <>
+              <PageTitle title="Payment Cancel | Putra Komputer" />
+              <PaymentCancel />
             </>
           }
         />

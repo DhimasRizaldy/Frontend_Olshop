@@ -53,21 +53,21 @@ const DetailTransaction = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 mt-10">
-      <div className="bg-white shadow-md rounded-lg p-6">
+      <div className="bg-white shadow-md rounded-lg p-6 printable">
         <h1 className="text-3xl font-bold text-center mb-8">
           Transaction Details
         </h1>
 
         <div className="flex justify-end mb-6 gap-4">
           {transactionDetail &&
-            transactionDetail.status_payment !== 'Exired' &&
+            transactionDetail.status_payment !== 'Expired' &&
             transactionDetail.status_payment === 'Success' && (
-              <a
+              <button
                 onClick={() => window.print()}
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
               >
                 Print
-              </a>
+              </button>
             )}
         </div>
 
