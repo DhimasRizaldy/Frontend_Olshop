@@ -63,44 +63,20 @@ const DetailTransactionMe = () => {
     }
   }, [transactionId]);
 
-// Bisa digunakan
-  // const handlePaymentClick = () => {
-  //   if (transactionDetail?.token) {
-  //     window.snap.pay(transactionDetail.token, {
-  //       onSuccess: function (result) {
-  //         Swal.fire('Success!', 'Payment successful!', 'success');
-  //         // Update transaction status if needed
-  //       },
-  //       onPending: function (result) {
-  //         Swal.fire('Pending!', 'Payment is pending.', 'info');
-  //       },
-  //       onError: function (result) {
-  //         Swal.fire('Error!', 'Payment failed.', 'error');
-  //       },
-  //       onClose: function () {
-  //         Swal.fire('Closed!', 'Payment popup closed.', 'info');
-  //       },
-  //     });
-  //   } else {
-  //     Swal.fire(
-  //       'Error!',
-  //       'Payment token not found or transaction details not loaded',
-  //       'error',
-  //     );
-  //   }
-  // };
+  useEffect(() => {
+    // Simpan transactionId dari URL ke localStorage
+    localStorage.setItem('transactionId', transactionId);
+  }, [transactionId]);
 
-  // handle payment
+  // Bisa digunakan
   const handlePaymentClick = () => {
     if (transactionDetail?.token) {
       window.snap.pay(transactionDetail.token, {
         onSuccess: function (result) {
-          // Menyimpan transactionId atau data penting lainnya ke localStorage atau state untuk digunakan di halaman berikutnya
-          localStorage.setItem('transactionId', result.transaction_id);
-          Swal.fire('Success!', 'Payment successful!', 'success');
-
-          // Arahkan pengguna ke halaman /transaction-me/payment-success
-          window.location.href = '/transaction-me/payment-success';
+          Swal.fire('Success!', 'Payment successful!', 'success').then(() => {
+            // Arahkan ke halaman payment success
+            window.location.href = '/payment-success';
+          });
         },
         onPending: function (result) {
           Swal.fire('Pending!', 'Payment is pending.', 'info');
@@ -120,8 +96,7 @@ const DetailTransactionMe = () => {
       );
     }
   };
-
-
+  // handle payment
   const handleCancelOrder = async () => {
     try {
       const result = await Swal.fire({

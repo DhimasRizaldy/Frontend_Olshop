@@ -167,6 +167,115 @@ const PaymentsMe = () => {
   };
 
   // handle checkout
+  // const handleCheckout = async () => {
+  //   try {
+  //     // Tampilkan konfirmasi sebelum membuat transaksi
+  //     const confirmation = await Swal.fire({
+  //       title: 'Konfirmasi Transaksi',
+  //       text: 'Apakah Anda ingin melanjutkan pembayaran?',
+  //       icon: 'warning',
+  //       showCancelButton: true,
+  //       confirmButtonColor: '#3085d6',
+  //       cancelButtonColor: '#d33',
+  //       confirmButtonText: 'Ya, lanjutkan',
+  //     });
+
+  //     if (confirmation.isConfirmed) {
+  //       // Ambil data yang diperlukan dari state atau props
+  //       const cartIds = cartItems.map((item) => item.cartId); // Pastikan cartItems sudah didefinisikan di state atau props
+  //       const ongkirValue = shippingCost; // Pastikan shippingCost sudah didefinisikan di state atau props
+  //       const courier = shippingOption; // Pastikan shippingOption sudah didefinisikan di state atau props
+  //       const promoId = selectedPromo || null; // Pastikan selectedPromo sudah didefinisikan di state atau props
+  //       const addressId = selectedAddress; // Pastikan selectedAddress sudah didefinisikan di state atau props
+
+  //       // Panggil fungsi checkoutPayment untuk membuat transaksi
+  //       const response = await checkoutPayment({
+  //         cartIds,
+  //         promoId,
+  //         addressId,
+  //         ongkirValue,
+  //         courier,
+  //       });
+
+  //       // Periksa apakah transaksi berhasil
+  //       if (response && response.success && response.data.token) {
+  //         // Menyimpan URL pembayaran dan token di state
+  //         setPaymentUrl(response.data.paymentUrl);
+  //         setShowPaymentPopup(true);
+
+  //         // Menampilkan Midtrans Snap menggunakan token yang diterima dari backend
+  //         window.snap.pay(response.data.token, {
+  //           onSuccess: function (result) {
+  //             Swal.fire(
+  //               'Pembayaran Sukses',
+  //               'Transaksi Anda berhasil.',
+  //               'success',
+  //             );
+  //             console.log('Pembayaran Sukses:', result);
+  //           },
+  //           onPending: function (result) {
+  //             Swal.fire(
+  //               'Pembayaran Tertunda',
+  //               'Pembayaran Anda sedang diproses, silakan selesaikan nanti.',
+  //               'info',
+  //             );
+  //             console.log('Pembayaran Tertunda:', result);
+  //           },
+  //           onError: function (result) {
+  //             Swal.fire(
+  //               'Kesalahan Pembayaran',
+  //               'Terjadi kesalahan dalam transaksi Anda.',
+  //               'error',
+  //             );
+  //             console.log('Kesalahan Pembayaran:', result);
+  //           },
+  //           onClose: function () {
+  //             console.log('Popup pembayaran ditutup');
+  //           },
+  //         });
+  //       } else {
+  //         // Jika respons tidak sesuai, tampilkan pesan sukses dan tetap menampilkan popup
+  //         console.log('Checkout berhasil:', response.message);
+  //         Swal.fire('Sukses', 'Transaksi berhasil dibuat', 'success').then(
+  //           () => {
+  //             window.snap.pay(response.data.token, {
+  //               onSuccess: function (result) {
+  //                 Swal.fire(
+  //                   'Pembayaran Sukses',
+  //                   'Transaksi Anda berhasil.',
+  //                   'success',
+  //                 );
+  //                 console.log('Pembayaran Sukses:', result);
+  //               },
+  //               onPending: function (result) {
+  //                 Swal.fire(
+  //                   'Pembayaran Tertunda',
+  //                   'Pembayaran Anda sedang diproses, silakan selesaikan nanti.',
+  //                   'info',
+  //                 );
+  //                 console.log('Pembayaran Tertunda:', result);
+  //               },
+  //               onError: function (result) {
+  //                 Swal.fire(
+  //                   'Kesalahan Pembayaran',
+  //                   'Terjadi kesalahan dalam transaksi Anda.',
+  //                   'error',
+  //                 );
+  //                 console.log('Kesalahan Pembayaran:', result);
+  //               },
+  //               onClose: function () {
+  //                 console.log('Popup pembayaran ditutup');
+  //               },
+  //             });
+  //           },
+  //         );
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Terjadi kesalahan saat checkout:', error);
+  //     Swal.fire('Error', 'Terjadi kesalahan saat memproses transaksi', 'error');
+  //   }
+  // };
   const handleCheckout = async () => {
     try {
       // Tampilkan konfirmasi sebelum membuat transaksi
@@ -210,7 +319,15 @@ const PaymentsMe = () => {
                 'Pembayaran Sukses',
                 'Transaksi Anda berhasil.',
                 'success',
-              );
+              ).then(() => {
+                // Simpan order_id atau transaction_id ke localStorage
+                localStorage.setItem(
+                  'transactionId',
+                  result.order_id || result.transaction_id,
+                );
+                // Arahkan ke halaman payment success
+                window.location.href = '/payment-success';
+              });
               console.log('Pembayaran Sukses:', result);
             },
             onPending: function (result) {
@@ -244,7 +361,15 @@ const PaymentsMe = () => {
                     'Pembayaran Sukses',
                     'Transaksi Anda berhasil.',
                     'success',
-                  );
+                  ).then(() => {
+                    // Simpan order_id atau transaction_id ke localStorage
+                    localStorage.setItem(
+                      'transactionId',
+                      result.order_id || result.transaction_id,
+                    );
+                    // Arahkan ke halaman payment success
+                    window.location.href = '/payment-success';
+                  });
                   console.log('Pembayaran Sukses:', result);
                 },
                 onPending: function (result) {

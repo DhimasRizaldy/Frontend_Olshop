@@ -709,7 +709,7 @@ function App() {
         />
         {/* notification success pay */}
         <Route
-          path="/transaction-me/payment-success"
+          path="/payment-success"
           element={
             <>
               <PageTitle title="Payment Success | Putra Komputer" />
@@ -719,7 +719,7 @@ function App() {
         />
         {/* notification cancel pay */}
         <Route
-          path="/transaction-me/payment-cancel"
+          path="/payment-cancel"
           element={
             <>
               <PageTitle title="Payment Cancel | Putra Komputer" />
