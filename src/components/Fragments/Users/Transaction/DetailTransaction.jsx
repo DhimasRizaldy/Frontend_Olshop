@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, navigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import { formatRupiah } from '../../../../utils/constants/function';
 import {
