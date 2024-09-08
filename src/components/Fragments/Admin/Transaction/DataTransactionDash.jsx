@@ -186,7 +186,7 @@ const DataTransactionDash = () => {
               return 'bg-warning';
             case 'Success':
               return 'bg-success';
-            case 'Expired':
+            case 'Cancelled':
               return 'bg-danger';
             default:
               return 'bg-secondary';

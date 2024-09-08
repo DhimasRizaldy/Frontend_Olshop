@@ -102,7 +102,7 @@ const DetailTransactionMe = () => {
 
       if (result.isConfirmed) {
         const response = await editTransaction(transactionId, {
-          status_payment: 'Expired',
+          status_payment: 'Cancelled',
           shippingStatus: 'Cancel',
           receiptDelivery: '-',
         });
@@ -111,7 +111,7 @@ const DetailTransactionMe = () => {
           Swal.fire('Berhasil!', 'Pesanan telah dibatalkan.', 'success');
           setTransactionDetail((prevState) => ({
             ...prevState,
-            status_payment: 'Expired',
+            status_payment: 'Cancelled',
             shippingStatus: 'Cancel',
           }));
         } else {
@@ -179,8 +179,8 @@ const DetailTransactionMe = () => {
       case 'Success':
       case 'Completed':
         return 'bg-green-500 text-white';
+      case 'Cancelled':
       case 'Expired':
-      case 'Failed':
       case 'Cancel':
         return 'bg-red-500 text-white';
       case 'Pending':
@@ -228,17 +228,15 @@ const DetailTransactionMe = () => {
           </p>
           <p className="text-gray-600 mb-2">
             <strong>Date:</strong>{' '}
-            {transactionDetail ? (
-              new Date(transactionDetail.transaction_time).toLocaleString(
-                'id-ID',
-                {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                },
-              )
-            ) : (
-              <Skeleton width={150} />
-            )}
+            {transactionDetail && transactionDetail.transaction_time
+              ? new Date(transactionDetail.transaction_time).toLocaleString(
+                  'id-ID',
+                  {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  },
+                )
+              : '-'}
           </p>
 
           <p className="text-gray-600 mb-2">

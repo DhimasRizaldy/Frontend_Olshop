@@ -14,7 +14,7 @@ const statusColors = {
   Pending: 'bg-yellow-500',
   Expired: 'bg-red-500',
   Failed: 'bg-red-500',
-  Cancel: 'bg-red-500',
+  Cancelled: 'bg-red-500',
 };
 
 const shippingStatusColors = {

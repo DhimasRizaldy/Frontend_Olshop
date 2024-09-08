@@ -74,7 +74,7 @@ const EditTransaction = () => {
                 disabled={isLoading}
               >
                 <option value="Success">Success</option>
-                <option value="Expired">Expired</option>
+                <option value="Cancelled">Cancelled</option>
                 <option value="Pending">Pending</option>
               </select>
             </div>

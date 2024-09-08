@@ -180,7 +180,7 @@ const DataTransaction = () => {
               return 'bg-warning';
             case 'Success':
               return 'bg-success';
-            case 'Expired':
+            case 'Cancelled':
               return 'bg-danger';
             default:
               return 'bg-secondary';
@@ -345,7 +345,7 @@ const DataTransaction = () => {
               <option value="All">All</option>
               <option value="Pending">Pending</option>
               <option value="Success">Success</option>
-              <option value="Expired">Expired</option>
+              <option value="Cancelled">Cancelled</option>
             </select>
           </div>
 

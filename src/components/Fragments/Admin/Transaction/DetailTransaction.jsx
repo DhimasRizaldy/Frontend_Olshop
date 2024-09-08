@@ -14,7 +14,7 @@ const DetailTransaction = () => {
         try {
           const response = await getTransactionById(transactionId);
           if (response.success) {
-            setTransactionDetail(response.data);
+            setTransactionDetail(response.data); // Store the transaction data
           } else {
             console.error(
               'Error fetching transaction detail:',
@@ -34,8 +34,8 @@ const DetailTransaction = () => {
       case 'Success':
       case 'Completed':
         return 'bg-green-500 text-white';
+      case 'Cancelled':
       case 'Expired':
-      case 'Failed':
       case 'Cancel':
         return 'bg-red-500 text-white';
       case 'Pending':
@@ -59,18 +59,16 @@ const DetailTransaction = () => {
         </h1>
 
         <div className="flex justify-end mb-6 gap-4">
-          <button
-            onClick={() => window.print()}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
-          >
-            Print
-          </button>
-          <button
-            onClick={() => console.log('Download PDF')}
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300"
-          >
-            Download PDF
-          </button>
+          {transactionDetail &&
+            transactionDetail.status_payment !== 'Exired' &&
+            transactionDetail.status_payment === 'Success' && (
+              <a
+                onClick={() => window.print()}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+              >
+                Print
+              </a>
+            )}
         </div>
 
         <div className="border-b border-gray-200 pb-4 mb-4">
@@ -85,12 +83,17 @@ const DetailTransaction = () => {
           </p>
           <p className="text-gray-600 mb-2">
             <strong>Date:</strong>{' '}
-            {transactionDetail ? (
-              new Date(transactionDetail.transaction_time).toLocaleDateString()
-            ) : (
-              <Skeleton width={150} />
-            )}
+            {transactionDetail && transactionDetail.transaction_time
+              ? new Date(transactionDetail.transaction_time).toLocaleString(
+                  'id-ID',
+                  {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  },
+                )
+              : '-'}
           </p>
+
           <p className="text-gray-600 mb-2">
             <strong>Status Payment:</strong>{' '}
             <span
@@ -305,11 +308,19 @@ const DetailTransaction = () => {
           )}
         </div>
         <div className="mt-6 flex gap-4">
-          <Link to={`/order-tracking`}>
-            <button className="bg-primary text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300">
-              Lacak Paket
-            </button>
-          </Link>
+          {transactionDetail &&
+            transactionDetail.shippingStatus !== 'Pending' &&
+            transactionDetail.shippingStatus !== 'Cancel' &&
+            transactionDetail.shippingStatus !== 'On Process' && (
+              <Link to="/order-tracking">
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300"
+                  onClick={() => console.log('Lacak Paket')}
+                >
+                  Lacak Paket
+                </button>
+              </Link>
+            )}
         </div>
       </div>
     </div>
