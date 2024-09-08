@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, navigate } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import { formatRupiah } from '../../../../utils/constants/function';
 import {
@@ -41,6 +41,7 @@ const DetailTransactionMe = () => {
   const [transactionDetail, setTransactionDetail] = useState(null);
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (transactionId) {
