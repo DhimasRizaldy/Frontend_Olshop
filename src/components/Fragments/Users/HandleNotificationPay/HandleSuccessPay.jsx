@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { getTransactionById } from '../../../../services/admin/transaction/services-transaction';
 import { checkoutPaymentNotification } from '../../../../services/users/payment/servives-payment';
 import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const HandleSuccessPay = () => {
   const { transaction_id } = useParams();
@@ -68,37 +69,73 @@ const HandleSuccessPay = () => {
   }, [transaction, navigate]);
 
   if (loading) {
-    return <Skeleton count={5} />;
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
+        <Skeleton count={5} />
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div>
-        <h1>Error</h1>
-        <p>{error}</p>
-        <button onClick={() => navigate('/')}>Go to Home</button>
+      <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
+          <strong className="font-bold">Error!</strong>
+          <span className="block sm:inline">{error}</span>
+          <button
+            onClick={() => navigate('/')}
+            className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+          >
+            Go to Home
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
-      <h1>Payment Status</h1>
-      {transaction && transaction.transaction_status === 'settlement' ? (
-        <div>
-          <p>Transaction ID: {transaction.transaction_id}</p>
-          <p>Status: {transaction.transaction_status}</p>
-          <p>Payment Type: {transaction.payment_type}</p>
-          <button onClick={() => navigate('/')}>Go to Home</button>
-        </div>
-      ) : (
-        <div>
-          <p>Transaction ID: {transaction.transaction_id}</p>
-          <p>Status: {transaction.transaction_status}</p>
-          <p>Payment Type: {transaction.payment_type}</p>
-          <button onClick={() => navigate('/')}>Go to Home</button>
-        </div>
-      )}
+    <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h1 className="text-2xl font-bold mb-4">Payment Status</h1>
+        {transaction && transaction.transaction_status === 'settlement' ? (
+          <div>
+            <p className="text-lg font-semibold mb-2">Transaction ID:</p>
+            <p className="mb-4 text-gray-700">{transaction.transaction_id}</p>
+            <p className="text-lg font-semibold mb-2">Status:</p>
+            <p className="mb-4 text-gray-700">
+              {transaction.transaction_status}
+            </p>
+            <p className="text-lg font-semibold mb-2">Payment Type:</p>
+            <p className="mb-4 text-gray-700">{transaction.payment_type}</p>
+            <button
+              onClick={() => navigate('/')}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+            >
+              Go to Home
+            </button>
+          </div>
+        ) : (
+          <div>
+            <p className="text-lg font-semibold mb-2">Transaction ID:</p>
+            <p className="mb-4 text-gray-700">{transaction.transaction_id}</p>
+            <p className="text-lg font-semibold mb-2">Status:</p>
+            <p className="mb-4 text-gray-700">
+              {transaction.transaction_status}
+            </p>
+            <p className="text-lg font-semibold mb-2">Payment Type:</p>
+            <p className="mb-4 text-gray-700">{transaction.payment_type}</p>
+            <button
+              onClick={() => navigate('/')}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+            >
+              Go to Home
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
