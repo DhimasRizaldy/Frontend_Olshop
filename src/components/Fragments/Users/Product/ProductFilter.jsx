@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { formatRupiah } from '../../../../utils/constants/function';
 import { Link } from 'react-router-dom';
+import ProductCardSkeleton from './ProductCardSkeleton'; // Pastikan path ini benar
 
 // Fetch categories from the API
 const fetchCategories = async () => {
@@ -24,10 +25,11 @@ const fetchProducts = async (filters) => {
   if (page) url.searchParams.append('page', page);
   if (limit) url.searchParams.append('limit', limit);
 
-  // console.log('Fetching URL:', url.toString());
-
   const response = await axios.get(url.toString());
-  return response.data.data;
+  return {
+    products: response.data.data,
+    total: response.data.total, // Assuming the API returns the total number of products
+  };
 };
 
 const ProductCard = ({ product }) => (
@@ -85,9 +87,11 @@ const ProductFilter = () => {
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [sort, setSort] = useState(null);
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit] = useState(12); // Set limit to 12
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
+  const [totalProducts, setTotalProducts] = useState(0); // State for total products
+  const [hasMoreProducts, setHasMoreProducts] = useState(true); // State for more products
 
   useEffect(() => {
     const loadData = async () => {
@@ -114,8 +118,10 @@ const ProductFilter = () => {
           page,
           limit,
         };
-        const productsData = await fetchProducts(filters);
+        const { products: productsData, total } = await fetchProducts(filters);
         setProducts(productsData);
+        setTotalProducts(total); // Set total products
+        setHasMoreProducts(productsData.length > 0); // Set has more products
 
         // Set the noData state based on whether productsData is empty
         setNoData(productsData.length === 0);
@@ -156,8 +162,10 @@ const ProductFilter = () => {
       page,
       limit,
     };
-    const productsData = await fetchProducts(filters);
+    const { products: productsData, total } = await fetchProducts(filters);
     setProducts(productsData);
+    setTotalProducts(total); // Set total products
+    setHasMoreProducts(productsData.length > 0); // Set has more products
 
     // Set the noData state based on whether productsData is empty
     setNoData(productsData.length === 0);
@@ -175,7 +183,7 @@ const ProductFilter = () => {
     setPage(pageNumber);
   };
 
-  if (loading) return <p>Loading...</p>;
+  const totalPages = Math.ceil(totalProducts / limit); // Calculate total pages
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
@@ -243,7 +251,13 @@ const ProductFilter = () => {
 
         {/* Products Grid */}
         <div className="w-full md:w-3/4">
-          {noData ? (
+          {loading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 12 }).map((_, index) => (
+                <ProductCardSkeleton key={index} />
+              ))}
+            </div>
+          ) : noData ? (
             <p className="text-center text-gray-500">No products found</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -261,8 +275,10 @@ const ProductFilter = () => {
             >
               Previous
             </button>
+            <span className="px-4 py-2">Page {page}</span>
             <button
               onClick={() => handlePageChange(page + 1)}
+              disabled={page >= totalPages || !hasMoreProducts}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg"
             >
               Next
