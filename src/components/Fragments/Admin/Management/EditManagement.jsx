@@ -9,12 +9,14 @@ import {
 import { getProduct } from '../../../../services/admin/product/services-product';
 import { getSupplier } from '../../../../services/admin/supplier/services-supplier';
 import { formatDate } from '../../../../utils/constants/function';
+import { formatRupiah } from '../../../../utils/constants/function';
 
 const EditManagement = () => {
   const { manageStockId } = useParams();
   const [supplierId, setSupplierId] = useState('');
   const [productId, setProductId] = useState('');
   const [stockIn, setStockIn] = useState('');
+  const [purchasePrice, setPurchasePrice] = useState(''); // Tambahkan state untuk purchasePrice
   const [dateStockIn, setDateStockIn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [productOptions, setProductOptions] = useState([]);
@@ -27,6 +29,11 @@ const EditManagement = () => {
         setSupplierId(response.data.supplierId);
         setProductId(response.data.productId);
         setStockIn(response.data.stockIn);
+        setPurchasePrice(
+          response.data.purchasePrice
+            ? response.data.purchasePrice.toString()
+            : '',
+        ); // Set purchasePrice
         setDateStockIn(formatDate(response.data.dateStockIn));
       } catch (error) {
         toast.error('Failed to fetch manage stok data');
@@ -67,7 +74,13 @@ const EditManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!supplierId || !productId || !stockIn || !dateStockIn) {
+    if (
+      !supplierId ||
+      !productId ||
+      !stockIn ||
+      !dateStockIn ||
+      !purchasePrice
+    ) {
       toast.error('Please fill in all fields');
       return;
     }
@@ -76,6 +89,7 @@ const EditManagement = () => {
       supplierId,
       productId,
       stockIn: parseInt(stockIn, 10),
+      purchasePrice: BigInt(purchasePrice), // Konversi ke BigInt
       dateStockIn,
     };
 
@@ -159,6 +173,24 @@ const EditManagement = () => {
               />
             </div>
           </div>
+          <div className="w-full sm:w-1/2">
+            <label className="mb-3 block font-medium text-black dark:text-white">
+              Purchase Price
+            </label>
+            <div className="relative">
+              <input
+                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                type="text"
+                name="purchasePrice"
+                id="purchasePrice"
+                value={formatRupiah(purchasePrice)}
+                onChange={(e) => setPurchasePrice(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
               Date Stock In

@@ -10,6 +10,7 @@ const AddManagement = () => {
   const [supplierId, setSupplierId] = useState('');
   const [productId, setProductId] = useState('');
   const [stockIn, setStockIn] = useState('');
+  const [purchasePrice, setPurchasePrice] = useState(''); // Tambahkan state untuk purchasePrice
   const [dateStockIn, setDateStockIn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [productOptions, setProductOptions] = useState([]);
@@ -20,9 +21,7 @@ const AddManagement = () => {
     const fetchProductsAndSuppliers = async () => {
       try {
         const productsResponse = await getProduct();
-        // console.log(productsResponse.data);
         const suppliersResponse = await getSupplier();
-        // console.log(suppliersResponse.data);
 
         const productOptions = productsResponse.data.map((product) => ({
           value: product.productId,
@@ -48,7 +47,13 @@ const AddManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!supplierId || !productId || !stockIn || !dateStockIn) {
+    if (
+      !supplierId ||
+      !productId ||
+      !stockIn ||
+      !dateStockIn ||
+      !purchasePrice
+    ) {
       toast.error('Please fill in all fields');
       return;
     }
@@ -57,6 +62,7 @@ const AddManagement = () => {
       supplierId,
       productId,
       stockIn: parseInt(stockIn, 10),
+      purchasePrice: BigInt(purchasePrice), // Konversi ke BigInt
       dateStockIn: new Date(dateStockIn).toISOString(),
     };
 
@@ -68,6 +74,7 @@ const AddManagement = () => {
       setSupplierId('');
       setProductId('');
       setStockIn('');
+      setPurchasePrice(''); // Reset purchasePrice
       setDateStockIn('');
     } catch (error) {
       toast.error('Failed to add manage Stock');
@@ -143,6 +150,24 @@ const AddManagement = () => {
             />
           </div>
         </div>
+        <div className="w-full sm:w-1/2">
+          <label className="mb-3 block font-medium text-black dark:text-white">
+            Purchase Price
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="purchasePrice"
+              id="purchasePrice"
+              value={purchasePrice || ''}
+              onChange={(e) => setPurchasePrice(e.target.value)}
+              placeholder="0"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
             Date Stock In

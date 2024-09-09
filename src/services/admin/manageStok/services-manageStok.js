@@ -25,17 +25,21 @@ export const addManageStok = async (manageStokData) => {
     !manageStokData.supplierId ||
     !manageStokData.productId ||
     !manageStokData.stockIn ||
-    !manageStokData.dateStockIn
+    !manageStokData.dateStockIn ||
+    !manageStokData.purchasePrice // Tambahkan validasi untuk purchasePrice
   ) {
     toast.error('Please fill in all fields');
     return;
   }
 
+  // Konversi purchasePrice ke string
+  const dataToSend = {
+    ...manageStokData,
+    purchasePrice: manageStokData.purchasePrice.toString(),
+  };
+
   try {
-    const response = await http.post(
-      API_ENDPOINT.POST_MANAGE_STOK,
-      manageStokData,
-    );
+    const response = await http.post(API_ENDPOINT.POST_MANAGE_STOK, dataToSend);
     return response.data;
   } catch (error) {
     console.error(
@@ -48,10 +52,28 @@ export const addManageStok = async (manageStokData) => {
 
 // update manage stok
 export const editManageStok = async (manageStockId, manageStokData) => {
+  // Check if manageStokData fields are valid
+  if (
+    !manageStokData.supplierId ||
+    !manageStokData.productId ||
+    !manageStokData.stockIn ||
+    !manageStokData.dateStockIn ||
+    !manageStokData.purchasePrice // Tambahkan validasi untuk purchasePrice
+  ) {
+    toast.error('Please fill in all fields');
+    return;
+  }
+
+  // Konversi purchasePrice ke string
+  const dataToSend = {
+    ...manageStokData,
+    purchasePrice: manageStokData.purchasePrice.toString(),
+  };
+
   try {
     const response = await http.put(
       API_ENDPOINT.UPDATE_MANAGE_STOK(manageStockId),
-      manageStokData,
+      dataToSend,
     );
     // console.log('API Update Manage Stok Response:', response.data);
     return response.data;
@@ -105,5 +127,3 @@ export const deleteManageStok = async (manageStockId) => {
     );
   }
 };
-
-

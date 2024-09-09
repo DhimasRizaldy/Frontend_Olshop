@@ -12,6 +12,7 @@ import {
   getManageStok,
   deleteManageStok,
 } from '../../../../services/admin/manageStok/services-manageStok';
+import { formatRupiah } from '../../../../utils/constants/function';
 
 const DataManagement = () => {
   const [manageStoks, setManageStok] = useState([]);
@@ -95,6 +96,12 @@ const DataManagement = () => {
     {
       name: 'StockIn',
       selector: (row) => row.stockIn,
+      sortable: true,
+    },
+    {
+      name: 'PurchasePrice',
+      selector: (row) =>
+        row.purchasePrice ? formatRupiah(row.purchasePrice.toString()) : 'N/A',
       sortable: true,
     },
     {

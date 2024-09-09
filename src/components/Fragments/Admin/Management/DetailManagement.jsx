@@ -3,12 +3,14 @@ import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getManageStokById } from '../../../../services/admin/manageStok/services-manageStok';
 import { formatDate } from '../../../../utils/constants/function';
+import { formatRupiah } from '../../../../utils/constants/function';
 
 const DetailManagement = () => {
   const { manageStockId } = useParams();
   const [supplierName, setSupplierName] = useState('');
   const [productName, setProductName] = useState('');
   const [stockIn, setStockIn] = useState('');
+  const [purchasePrice, setPurchasePrice] = useState(''); // Tambahkan state untuk purchasePrice
   const [dateStockIn, setDateStockIn] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -17,10 +19,12 @@ const DetailManagement = () => {
       try {
         const response = await getManageStokById(manageStockId);
         if (response && response.data) {
-          const { supplier, product, stockIn, dateStockIn } = response.data;
+          const { supplier, product, stockIn, purchasePrice, dateStockIn } =
+            response.data;
           setSupplierName(supplier.name);
           setProductName(product.name);
           setStockIn(stockIn);
+          setPurchasePrice(purchasePrice ? purchasePrice.toString() : 'N/A'); // Set purchasePrice
           setDateStockIn(formatDate(dateStockIn));
         } else {
           throw new Error('Manage stock not found');
@@ -86,6 +90,23 @@ const DetailManagement = () => {
             />
           </div>
         </div>
+        <div className="w-full sm:w-1/2">
+          <label className="mb-3 block font-medium text-black dark:text-white">
+            Purchase Price
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="purchasePrice"
+              id="purchasePrice"
+              value={formatRupiah(purchasePrice)}
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
             Date Stock In
