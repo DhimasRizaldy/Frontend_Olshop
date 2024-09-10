@@ -434,34 +434,37 @@ const DetailTransactionMe = () => {
         <div className="border-b border-gray-200 pb-4 mb-4">
           <h2 className="text-xl font-semibold mb-2">Cart Details</h2>
           {transactionDetail ? (
-            transactionDetail.cartDetails.map((cartDetails, index) => (
-              <div
-                key={index}
-                className="border-t border-gray-200 pt-2 mt-2 flex items-center"
-              >
-                <img
-                  src={cartDetails.productImage}
-                  alt={cartDetails.productName}
-                  className="w-20 h-20 object-cover mr-4"
-                />
-                <div>
-                  <p className="text-gray-600 mb-2">
-                    <strong>Product Name:</strong> {cartDetails.productName}
-                  </p>
-                  <p className="text-gray-600 mb-2">
-                    <strong>Price:</strong>{' '}
-                    {formatRupiah(cartDetails.productPrice)}
-                  </p>
-                  <p className="text-gray-600 mb-2">
-                    <strong>Quantity:</strong> {cartDetails.productQuantity}
-                  </p>
-                  <p className="text-gray-600 mb-2">
-                    <strong>Total Price:</strong>{' '}
-                    {formatRupiah(cartDetails.totalPricePerProduct)}
-                  </p>
+            transactionDetail.cartDetails.map((cartDetails, index) => {
+              const finalPrice =
+                cartDetails.productPromoPrice || cartDetails.productPrice;
+              return (
+                <div
+                  key={index}
+                  className="border-t border-gray-200 pt-2 mt-2 flex items-center"
+                >
+                  <img
+                    src={cartDetails.productImage}
+                    alt={cartDetails.productName}
+                    className="w-20 h-20 object-cover mr-4"
+                  />
+                  <div>
+                    <p className="text-gray-600 mb-2">
+                      <strong>Product Name:</strong> {cartDetails.productName}
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      <strong>Price:</strong> {formatRupiah(finalPrice)}
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      <strong>Quantity:</strong> {cartDetails.productQuantity}
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      <strong>Total Price:</strong>{' '}
+                      {formatRupiah(finalPrice * cartDetails.productQuantity)}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <Skeleton count={3} />
           )}

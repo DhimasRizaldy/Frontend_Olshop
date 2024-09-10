@@ -101,13 +101,14 @@ const CartsMe = () => {
 
   const handleDelete = async (id) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: 'Apakah Anda yakin?',
+      text: 'Anda tidak akan dapat mengembalikan ini!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -115,7 +116,7 @@ const CartsMe = () => {
           if (response.success) {
             const updatedItems = cartItems.filter((item) => item.cartId !== id);
             setCartItems(updatedItems);
-            Swal.fire('Deleted!', 'Your item has been deleted.', 'success');
+            Swal.fire('Dihapus!', 'Item Anda telah dihapus.', 'success');
           } else {
             throw new Error('Failed to delete cart item');
           }
@@ -134,19 +135,22 @@ const CartsMe = () => {
   const calculateTotalPrice = () => {
     return selectedItems.reduce((total, id) => {
       const item = cartItems.find((item) => item.cartId === id);
-      return total + (item?.products?.price || 0) * (item?.qty || 0);
+      const finalPrice =
+        item?.products?.promoPrice || item?.products?.price || 0;
+      return total + finalPrice * (item?.qty || 0);
     }, 0);
   };
 
   const handleCheckout = () => {
     Swal.fire({
-      title: 'Proceed to Checkout?',
-      text: 'Do you want to proceed to the checkout page?',
+      title: 'Lanjutkan ke Pembayaran?',
+      text: 'Apakah Anda ingin melanjutkan ke halaman pembayaran?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, proceed',
+      confirmButtonText: 'Ya, lanjutkan',
+      cancelButtonText: 'Batal',
     }).then((result) => {
       if (result.isConfirmed) {
         const selectedCartItems = cartItems.filter((item) =>
@@ -239,84 +243,87 @@ const CartsMe = () => {
           />
           <label className="ml-2">Select All</label>
         </div>
-        {cartItems.map((item) => (
-          <div
-            key={item.cartId}
-            className="flex flex-col md:flex-row items-start border-b border-gray-200 pb-4 mb-4"
-          >
-            <div className="flex items-center mb-4 md:mb-0 flex-grow">
-              <input
-                type="checkbox"
-                className="w-6 h-6 mr-4"
-                checked={selectedItems.includes(item.cartId)}
-                onChange={() => handleSelectItem(item.cartId)}
-              />
-              <img
-                src={item.products?.image || 'https://via.placeholder.com/80'}
-                alt={item.products?.name || 'Product'}
-                className="w-20 h-20 object-cover rounded-md mr-4"
-              />
-              <div className="flex-grow">
-                <h2 className="text-sm md:text-base font-semibold">
-                  {item.products?.name || 'Product Name'}
-                </h2>
-                <p className="text-gray-600 text-sm md:text-base">
-                  Price: {formatRupiah(item.products?.price || 0)}
-                </p>
-                <p className="text-gray-600 font-semibold text-sm md:text-base mt-1">
-                  Total: {formatRupiah((item.products?.price || 0) * item.qty)}
-                </p>
-                {item.products?.stock <= 0 && (
-                  <p className="text-red-500 text-sm mt-1">Out of stock</p>
-                )}
+        {cartItems.map((item) => {
+          const finalPrice = item.products.promoPrice || item.products.price;
+          return (
+            <div
+              key={item.cartId}
+              className="flex flex-col md:flex-row items-start border-b border-gray-200 pb-4 mb-4"
+            >
+              <div className="flex items-center mb-4 md:mb-0 flex-grow">
+                <input
+                  type="checkbox"
+                  className="w-6 h-6 mr-4"
+                  checked={selectedItems.includes(item.cartId)}
+                  onChange={() => handleSelectItem(item.cartId)}
+                />
+                <img
+                  src={item.products?.image || 'https://via.placeholder.com/80'}
+                  alt={item.products?.name || 'Product'}
+                  className="w-20 h-20 object-cover rounded-md mr-4"
+                />
+                <div className="flex-grow">
+                  <h2 className="text-sm md:text-base font-semibold">
+                    {item.products?.name || 'Product Name'}
+                  </h2>
+                  <p className="text-gray-600 text-sm md:text-base">
+                    Price: {formatRupiah(finalPrice)}
+                  </p>
+                  <p className="text-gray-600 font-semibold text-sm md:text-base mt-1">
+                    Total: {formatRupiah(finalPrice * item.qty)}
+                  </p>
+                  {item.products?.stock <= 0 && (
+                    <p className="text-red-500 text-sm mt-1">Out of stock</p>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center">
+                <button
+                  className={`bg-gray-200 text-gray-700 px-2 py-1 rounded-md font-semibold ${
+                    item.products?.stock <= 0 ? 'cursor-not-allowed' : ''
+                  }`}
+                  onClick={() =>
+                    handleQuantityChange(
+                      item.cartId,
+                      -1,
+                      item.products?.stock || 0,
+                    )
+                  }
+                  disabled={item.products?.stock <= 0}
+                >
+                  -
+                </button>
+                <input
+                  type="text"
+                  value={item.qty}
+                  readOnly
+                  className="text-center w-12 border border-gray-300 rounded-md"
+                />
+                <button
+                  className={`bg-gray-200 text-gray-700 px-2 py-1 rounded-md font-semibold ml-2 ${
+                    item.products?.stock <= 0 ? 'cursor-not-allowed' : ''
+                  }`}
+                  onClick={() =>
+                    handleQuantityChange(
+                      item.cartId,
+                      1,
+                      item.products?.stock || 0,
+                    )
+                  }
+                  disabled={item.products?.stock <= 0}
+                >
+                  +
+                </button>
+                <button
+                  className="text-red-600 ml-4"
+                  onClick={() => handleDelete(item.cartId)}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
               </div>
             </div>
-            <div className="flex items-center">
-              <button
-                className={`bg-gray-200 text-gray-700 px-2 py-1 rounded-md font-semibold ${
-                  item.products?.stock <= 0 ? 'cursor-not-allowed' : ''
-                }`}
-                onClick={() =>
-                  handleQuantityChange(
-                    item.cartId,
-                    -1,
-                    item.products?.stock || 0,
-                  )
-                }
-                disabled={item.products?.stock <= 0}
-              >
-                -
-              </button>
-              <input
-                type="text"
-                value={item.qty}
-                readOnly
-                className="text-center w-12 border border-gray-300 rounded-md"
-              />
-              <button
-                className={`bg-gray-200 text-gray-700 px-2 py-1 rounded-md font-semibold ml-2 ${
-                  item.products?.stock <= 0 ? 'cursor-not-allowed' : ''
-                }`}
-                onClick={() =>
-                  handleQuantityChange(
-                    item.cartId,
-                    1,
-                    item.products?.stock || 0,
-                  )
-                }
-                disabled={item.products?.stock <= 0}
-              >
-                +
-              </button>
-              <button
-                className="text-red-600 ml-4"
-                onClick={() => handleDelete(item.cartId)}
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="bg-white shadow-md rounded-lg p-4 mt-6 flex justify-between items-center">

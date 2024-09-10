@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { checkoutPayment } from '../../../../services/users/payment/servives-payment';
 import { getAddress } from '../../../../services/admin/address/services-address';
 import { getPromo } from '../../../../services/admin/promo/services-promo';
-import { getCarts } from '../../../../services/users/carts/services-carts';
 import { formatRupiah } from '../../../../utils/constants/function';
 import {
   fetchCities,
@@ -10,10 +9,13 @@ import {
   fetchShippingCost,
 } from '../../../../services/users/rajaongkir/rajaongkir-services';
 import Swal from 'sweetalert2';
-import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 const PaymentsMe = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const location = useLocation();
+  const [cartItems, setCartItems] = useState(
+    location.state?.selectedCartItems || [],
+  );
   const [discountCode, setDiscountCode] = useState('');
   const [address, setAddress] = useState({});
   const [selectedAddress, setSelectedAddress] = useState('');
@@ -36,21 +38,6 @@ const PaymentsMe = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch Cart Data
-        const cartResponse = await getCarts();
-        if (cartResponse.success && Array.isArray(cartResponse.data)) {
-          setCartItems(cartResponse.data);
-          const calculatedSubtotal = cartResponse.data.reduce(
-            (sum, item) => sum + item.products.price * item.qty,
-            0,
-          );
-          setSubtotal(calculatedSubtotal);
-        } else {
-          console.error(
-            'Error: cartResponse is not an array or success is false',
-          );
-        }
-
         // Fetch Address Data
         const addressResponse = await getAddress();
         if (addressResponse.success) {
@@ -157,6 +144,15 @@ const PaymentsMe = () => {
     setTotal(subtotal - discount + shippingCost);
   }, [subtotal, discount, shippingCost]);
 
+  useEffect(() => {
+    // Calculate subtotal whenever cartItems change
+    const calculatedSubtotal = cartItems.reduce((sum, item) => {
+      const finalPrice = item.products.promoPrice || item.products.price;
+      return sum + finalPrice * item.qty;
+    }, 0);
+    setSubtotal(calculatedSubtotal);
+  }, [cartItems]);
+
   const handleApplyDiscount = () => {
     const promo = promos.find((p) => p.promoId === selectedPromo);
     if (promo) {
@@ -216,8 +212,8 @@ const PaymentsMe = () => {
                   'transactionId',
                   result.order_id || result.transaction_id,
                 );
-                // Arahkan ke halaman payment success
-                window.location.href = '/payment-success';
+                // Arahkan ke halaman transaction-me
+                window.location.href = '/transaction-me';
               });
               console.log('Pembayaran Sukses:', result);
             },
@@ -226,7 +222,10 @@ const PaymentsMe = () => {
                 'Pembayaran Tertunda',
                 'Pembayaran Anda sedang diproses, silakan selesaikan nanti.',
                 'info',
-              );
+              ).then(() => {
+                // Arahkan ke halaman transaction-me
+                window.location.href = '/transaction-me';
+              });
               console.log('Pembayaran Tertunda:', result);
             },
             onError: function (result) {
@@ -234,10 +233,21 @@ const PaymentsMe = () => {
                 'Kesalahan Pembayaran',
                 'Terjadi kesalahan dalam transaksi Anda.',
                 'error',
-              );
+              ).then(() => {
+                // Arahkan ke halaman transaction-me
+                window.location.href = '/transaction-me';
+              });
               console.log('Kesalahan Pembayaran:', result);
             },
             onClose: function () {
+              Swal.fire(
+                'Pembayaran Ditutup',
+                'Popup pembayaran ditutup.',
+                'info',
+              ).then(() => {
+                // Arahkan ke halaman transaction-me
+                window.location.href = '/transaction-me';
+              });
               console.log('Popup pembayaran ditutup');
             },
           });
@@ -258,8 +268,8 @@ const PaymentsMe = () => {
                       'transactionId',
                       result.order_id || result.transaction_id,
                     );
-                    // Arahkan ke halaman payment success
-                    window.location.href = '/payment-success';
+                    // Arahkan ke halaman transaction-me
+                    window.location.href = '/transaction-me';
                   });
                   console.log('Pembayaran Sukses:', result);
                 },
@@ -268,7 +278,10 @@ const PaymentsMe = () => {
                     'Pembayaran Tertunda',
                     'Pembayaran Anda sedang diproses, silakan selesaikan nanti.',
                     'info',
-                  );
+                  ).then(() => {
+                    // Arahkan ke halaman transaction-me
+                    window.location.href = '/transaction-me';
+                  });
                   console.log('Pembayaran Tertunda:', result);
                 },
                 onError: function (result) {
@@ -276,10 +289,21 @@ const PaymentsMe = () => {
                     'Kesalahan Pembayaran',
                     'Terjadi kesalahan dalam transaksi Anda.',
                     'error',
-                  );
+                  ).then(() => {
+                    // Arahkan ke halaman transaction-me
+                    window.location.href = '/transaction-me';
+                  });
                   console.log('Kesalahan Pembayaran:', result);
                 },
                 onClose: function () {
+                  Swal.fire(
+                    'Pembayaran Ditutup',
+                    'Popup pembayaran ditutup.',
+                    'info',
+                  ).then(() => {
+                    // Arahkan ke halaman transaction-me
+                    window.location.href = '/transaction-me';
+                  });
                   console.log('Popup pembayaran ditutup');
                 },
               });
@@ -377,7 +401,7 @@ const PaymentsMe = () => {
               <option key={index} value={option.cost[0].value}>
                 {option.service} - {option.description} - ( Estimasi{' '}
                 {option.cost[0].etd} Hari) - (
-                {formatRupiah(option.cost[0].value)})
+                {formatRupiah(option.cost[0].value)} )
               </option>
             ))}
           </select>
@@ -388,21 +412,26 @@ const PaymentsMe = () => {
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
         {cartItems.length > 0 ? (
-          cartItems.map((item) => (
-            <div key={item.cartId} className="flex items-center mb-4">
-              <img
-                src={item.products.image}
-                alt={item.products.name}
-                className="w-20 h-20 mr-4"
-              />
-              <div>
-                <h3 className="text-lg font-semibold">{item.products.name}</h3>
-                <p className="text-gray-600">
-                  {formatRupiah(item.products.price)} x {item.qty}
-                </p>
+          cartItems.map((item) => {
+            const finalPrice = item.products.promoPrice || item.products.price;
+            return (
+              <div key={item.cartId} className="flex items-center mb-4">
+                <img
+                  src={item.products.image}
+                  alt={item.products.name}
+                  className="w-20 h-20 mr-4"
+                />
+                <div>
+                  <h3 className="text-lg font-semibold">
+                    {item.products.name}
+                  </h3>
+                  <p className="text-gray-600">
+                    {formatRupiah(finalPrice)} x {item.qty}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <p>No items in the cart.</p>
         )}

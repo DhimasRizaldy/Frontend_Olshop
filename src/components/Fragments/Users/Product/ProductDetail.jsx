@@ -29,32 +29,32 @@ const ProductDetails = () => {
 
   const handleAddToCart = async () => {
     try {
-      // Assuming user ID is available in the current session or can be retrieved
-      const response = await createCarts({ productId }); // qty will default to 1
+      // Mengasumsikan ID pengguna tersedia di sesi saat ini atau dapat diambil
+      const response = await createCarts({ productId }); // qty akan default ke 1
       if (response.success) {
         Swal.fire({
-          title: 'Added to Cart',
-          text: 'The product has been added to your cart.',
+          title: 'Ditambahkan ke Keranjang',
+          text: 'Produk telah ditambahkan ke keranjang Anda.',
           icon: 'success',
           confirmButtonText: 'OK',
         }).then((result) => {
           if (result.isConfirmed) {
-            window.location.reload(); // Reload the page after SweetAlert confirmation
+            window.location.href = '/carts'; // Redirect ke halaman keranjang setelah konfirmasi SweetAlert
           }
         });
       } else {
         Swal.fire({
-          title: 'Error',
-          text: 'Failed to add the product to the cart.',
+          title: 'Kesalahan',
+          text: 'Gagal menambahkan produk ke keranjang.',
           icon: 'error',
           confirmButtonText: 'OK',
         });
       }
     } catch (error) {
-      console.error('Error adding product to cart:', error);
+      console.error('Kesalahan saat menambahkan produk ke keranjang:', error);
       Swal.fire({
-        title: 'Error',
-        text: 'An error occurred while adding the product to the cart.',
+        title: 'Kesalahan',
+        text: 'Terjadi kesalahan saat menambahkan produk ke keranjang.',
         icon: 'error',
         confirmButtonText: 'OK',
       });

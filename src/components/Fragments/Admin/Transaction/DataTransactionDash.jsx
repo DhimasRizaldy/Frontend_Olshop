@@ -274,7 +274,7 @@ const DataTransactionDash = () => {
           <div className="flex justify-around mb-6 flex-wrap">
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChangePay('Pending')}
+              // onClick={() => handleFilterChangePay('Pending')}
             >
               <AiOutlineClockCircle className="text-yellow-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Belum Bayar</p>
@@ -284,7 +284,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChangePay('Success')}
+              // onClick={() => handleFilterChangePay('Success')}
             >
               <AiOutlineClockCircle className="text-green-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Sudah Bayar</p>
@@ -294,7 +294,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChange('On Process')}
+              // onClick={() => handleFilterChange('On Process')}
             >
               <AiOutlineClockCircle className="text-yellow-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dikemas</p>
@@ -304,7 +304,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChange('Delivered')}
+              // onClick={() => handleFilterChange('Delivered')}
             >
               <AiOutlineCar className="text-green-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dikirim</p>
@@ -314,7 +314,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChange('Accepted')}
+              // onClick={() => handleFilterChange('Accepted')}
             >
               <AiOutlineCheckCircle className="text-blue-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Diterima</p>
@@ -324,7 +324,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChange('Cancel')}
+              // onClick={() => handleFilterChange('Cancel')}
             >
               <AiOutlineCloseCircle className="text-red-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dibatalkan</p>

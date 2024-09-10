@@ -86,6 +86,14 @@ const TransactionsMe = () => {
     setFilter(status);
     if (status === 'All') {
       setFilteredTransactions(transactions);
+    } else if (status === 'Success') {
+      setFilteredTransactions(
+        transactions.filter(
+          (transaction) =>
+            transaction.status_payment === 'Success' &&
+            transaction.shippingStatus === 'Pending',
+        ),
+      );
     } else {
       setFilteredTransactions(
         transactions.filter(
@@ -104,6 +112,13 @@ const TransactionsMe = () => {
 
   // Hitung total untuk setiap status payment
   const countByStatusPay = (status) => {
+    if (status === 'Success') {
+      return transactions.filter(
+        (transaction) =>
+          transaction.status_payment === 'Success' &&
+          transaction.shippingStatus === 'Pending',
+      ).length;
+    }
     return transactions.filter(
       (transaction) => transaction.status_payment === status,
     ).length;

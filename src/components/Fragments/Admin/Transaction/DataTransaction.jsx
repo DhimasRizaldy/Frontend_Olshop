@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  faPenToSquare,
-  faEye,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faEye } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
@@ -27,6 +24,7 @@ const DataTransaction = () => {
   const [role, setRole] = useState('');
   const [statusPaymentFilter, setStatusPaymentFilter] = useState('All');
   const [statusShippingFilter, setStatusShippingFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -66,30 +64,12 @@ const DataTransaction = () => {
 
   // Fungsi untuk mengubah filter shipping status
   const handleFilterChange = (status) => {
-    setFilter(status);
-    if (status === 'All') {
-      setFilteredTransactions(transactions);
-    } else {
-      setFilteredTransactions(
-        transactions.filter(
-          (transaction) => transaction.shippingStatus === status,
-        ),
-      );
-    }
+    setStatusShippingFilter(status);
   };
 
   // Fungsi untuk mengubah filter payment status
   const handleFilterChangePay = (status) => {
-    setFilter(status);
-    if (status === 'All') {
-      setFilteredTransactions(transactions);
-    } else {
-      setFilteredTransactions(
-        transactions.filter(
-          (transaction) => transaction.status_payment === status,
-        ),
-      );
-    }
+    setStatusPaymentFilter(status);
   };
 
   // Hitung total untuk setiap status shipping
@@ -101,6 +81,13 @@ const DataTransaction = () => {
 
   // Hitung total untuk setiap status payment
   const countByStatusPay = (status) => {
+    if (status === 'Success') {
+      return transactions.filter(
+        (transaction) =>
+          transaction.status_payment === 'Success' &&
+          transaction.shippingStatus === 'Pending',
+      ).length;
+    }
     return transactions.filter(
       (transaction) => transaction.status_payment === status,
     ).length;
@@ -121,12 +108,24 @@ const DataTransaction = () => {
       );
     }
 
+    if (searchTerm) {
+      filteredData = filteredData.filter(
+        (transaction) =>
+          transaction.transactionId
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          (transaction.users?.username || 'N/A')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()),
+      );
+    }
+
     setFilteredTransactions(filteredData);
   };
 
   useEffect(() => {
     handleFilter();
-  }, [statusPaymentFilter, statusShippingFilter, transactions]);
+  }, [statusPaymentFilter, statusShippingFilter, searchTerm, transactions]);
 
   const columns = [
     { name: 'No', selector: (row, index) => index + 1, sortable: true },
@@ -266,60 +265,42 @@ const DataTransaction = () => {
         <div>
           {/* Filter Header */}
           <div className="flex justify-around mb-6 flex-wrap">
-            <div
-              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChangePay('Pending')}
-            >
+            <div className="text-center w-1/6 sm:w-1/6 mb-4">
               <AiOutlineClockCircle className="text-yellow-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Belum Bayar</p>
               <span className="text-xs sm:text-base">
                 {countByStatusPay('Pending')}
               </span>
             </div>
-            <div
-              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChangePay('Success')}
-            >
+            <div className="text-center w-1/6 sm:w-1/6 mb-4">
               <AiOutlineClockCircle className="text-green-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Sudah Bayar</p>
               <span className="text-xs sm:text-base">
                 {countByStatusPay('Success')}
               </span>
             </div>
-            <div
-              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChange('On Process')}
-            >
+            <div className="text-center w-1/6 sm:w-1/6 mb-4">
               <AiOutlineClockCircle className="text-yellow-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dikemas</p>
               <span className="text-xs sm:text-base">
                 {countByStatus('On Process')}
               </span>
             </div>
-            <div
-              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChange('Delivered')}
-            >
+            <div className="text-center w-1/6 sm:w-1/6 mb-4">
               <AiOutlineCar className="text-green-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dikirim</p>
               <span className="text-xs sm:text-base">
                 {countByStatus('Delivered')}
               </span>
             </div>
-            <div
-              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChange('Accepted')}
-            >
+            <div className="text-center w-1/6 sm:w-1/6 mb-4">
               <AiOutlineCheckCircle className="text-blue-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Diterima</p>
               <span className="text-xs sm:text-base">
                 {countByStatus('Accepted')}
               </span>
             </div>
-            <div
-              className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              onClick={() => handleFilterChange('Cancel')}
-            >
+            <div className="text-center w-1/6 sm:w-1/6 mb-4">
               <AiOutlineCloseCircle className="text-red-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dibatalkan</p>
               <span className="text-xs sm:text-base">
@@ -339,7 +320,7 @@ const DataTransaction = () => {
             <select
               id="statusPaymentFilter"
               value={statusPaymentFilter}
-              onChange={(e) => setStatusPaymentFilter(e.target.value)}
+              onChange={(e) => handleFilterChangePay(e.target.value)}
               className="border border-gray-300 rounded-md p-2"
             >
               <option value="All">All</option>
@@ -359,7 +340,7 @@ const DataTransaction = () => {
             <select
               id="statusShippingFilter"
               value={statusShippingFilter}
-              onChange={(e) => setStatusShippingFilter(e.target.value)}
+              onChange={(e) => handleFilterChange(e.target.value)}
               className="border border-gray-300 rounded-md p-2"
             >
               <option value="All">All</option>
@@ -369,6 +350,23 @@ const DataTransaction = () => {
               <option value="Accepted">Accepted</option>
               <option value="Cancel">Cancel</option>
             </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="searchTerm"
+              className="mr-2 text-black dark:text-white"
+            >
+              Search:
+            </label>
+            <input
+              type="text"
+              id="searchTerm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border border-gray-300 rounded-md p-2"
+              placeholder="Search by TransactionId or Username"
+            />
           </div>
         </div>
 
