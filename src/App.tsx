@@ -82,6 +82,7 @@ import ProductsFilter from './pages/Users/Product/ProductFilter.jsx';
 import VocPromo from './pages/Users/VcPromo/VocPromo.jsx';
 import Transactions from './pages/Users/Transaksi/Transactions.jsx';
 import Notifications from './pages/Users/Notifications/Notifications.jsx';
+import DetailsNotifications from './pages/Users/Notifications/DetailNotifications.jsx';
 import Carts from './pages/Users/Carts/Carts.jsx';
 import ProductsDetail from './pages/Users/Product/ProductDetail.jsx';
 import ProductCategory from './pages/Users/Product/ProductCategory.jsx';
@@ -95,6 +96,10 @@ import PaymentCancel from './pages/Users/Transaksi/PaymentCancel.jsx';
 import AddAddressUsers from './pages/Users/Address/AddAddress.jsx';
 import EditAddressUsers from './pages/Users/Address/EditAddress.jsx';
 import DetailAddressUsers from './pages/Users/Address/DetailAddress.jsx';
+
+// Notification
+import DetailNotificationAdmin from './pages/Admin/Notifications/DetailNotifications.jsx';
+import NotificationAdmin from './pages/Admin/Notifications/Notifications.jsx';
 
 // Service User
 import About from './pages/Users/Service/AboutUs.jsx';
@@ -685,6 +690,33 @@ function App() {
             <>
               <PageTitle title="Notifications | Putra Komputer" />
               <Notifications />
+            </>
+          }
+        />
+        <Route
+          path="/notification-me/:notificationId"
+          element={
+            <>
+              <PageTitle title="Notifications Detail | Putra Komputer" />
+              <DetailsNotifications />
+            </>
+          }
+        />
+        <Route
+          path="/notification-all"
+          element={
+            <>
+              <PageTitle title="Notifications | Putra Komputer" />
+              <NotificationAdmin />
+            </>
+          }
+        />
+        <Route
+          path="/notification-all/:notificationId"
+          element={
+            <>
+              <PageTitle title="Notifications Detail | Putra Komputer" />
+              <DetailNotificationAdmin />
             </>
           }
         />

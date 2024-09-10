@@ -416,7 +416,7 @@ const DetailTransactionMe = () => {
           <p className="text-gray-600 mb-2">
             <strong>Promo Code:</strong>{' '}
             {transactionDetail ? (
-              transactionDetail.promo.codePromo
+              transactionDetail.promo?.codePromo || '-'
             ) : (
               <Skeleton width={150} />
             )}
@@ -424,7 +424,11 @@ const DetailTransactionMe = () => {
           <p className="text-gray-600 mb-2">
             <strong>Promo Discount:</strong>{' '}
             {transactionDetail ? (
-              `${transactionDetail.promo.discount}%`
+              transactionDetail.promo?.discount ? (
+                `${transactionDetail.promo.discount}%`
+              ) : (
+                '-'
+              )
             ) : (
               <Skeleton width={150} />
             )}

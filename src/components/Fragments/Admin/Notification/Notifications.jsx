@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
 import {
-  getNotification,
+  getAllNotification,
   updateNotification,
 } from '../../../../services/admin/notification/services-notification';
 
@@ -31,15 +31,15 @@ const NotificationsMe = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await getNotification();
+        const response = await getAllNotification();
         if (response.status && response.data) {
           setNotifications(response.data);
         } else {
-          // setError('Failed to fetch notifications.');
+          setError('Failed to fetch notifications.');
         }
       } catch (error) {
-        // console.error('Error fetching notifications:', error);
-        // setError('Error fetching notifications.');
+        console.error('Error fetching notifications:', error);
+        setError('Error fetching notifications.');
       } finally {
         setLoading(false);
       }
@@ -55,11 +55,11 @@ const NotificationsMe = () => {
         // Trigger reload by toggling the `reload` state
         setReload((prev) => !prev);
       } else {
-        // setError('Failed to mark notification as read.');
+        setError('Failed to mark notification as read.');
       }
     } catch (error) {
-      // console.error('Error updating notification:', error);
-      // setError('Error updating notification.');
+      console.error('Error updating notification:', error);
+      setError('Error updating notification.');
     }
   };
 
@@ -95,7 +95,7 @@ const NotificationsMe = () => {
             }`}
           >
             <Link
-              to={`/notification-me/${notification.transactionId}`}
+              to={`/notification-all/${notification.transactionId}`}
               className="flex-1 mb-4 md:mb-0"
             >
               <h2 className="text-lg md:text-lg font-semibold">
@@ -110,7 +110,7 @@ const NotificationsMe = () => {
             </Link>
             <div className="flex items-center">
               <Link
-                to={`/notification-me/${notification.notificationId}`}
+                to={`/notification-all/${notification.notificationId}`}
                 className="mr-4 text-blue-500 hover:text-blue-700"
                 onClick={(e) => e.stopPropagation()}
               >

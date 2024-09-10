@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
 import DarkModeSwitcher from './DarkModeSwitcher';
 import { getWHOAMI } from '../../services/auth/admin/getDataUser';
-import Button from '../Elements/Button/Index.jsx';
+import { getAllNotification } from '../../services/admin/notification/services-notification';
+import Button from '../Elements/Button/Index';
+import { IoMdNotificationsOutline } from 'react-icons/io';
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
@@ -12,6 +13,7 @@ const Header = (props: {
 }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -19,13 +21,29 @@ const Header = (props: {
         const response = await getWHOAMI();
         setUserData(response.data); // Adjust based on your actual response structure
       } catch (error) {
-        // console.error('Failed to fetch user data', error);
+        console.error('Failed to fetch user data', error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await getAllNotification();
+        const unreadCount = response.data.filter(
+          (notification) => !notification.isRead,
+        ).length;
+        setUnreadNotificationsCount(unreadCount);
+      } catch (error) {
+        console.error('Failed to fetch notifications', error);
+      }
+    };
+
+    fetchNotifications();
   }, []);
 
   const isUserLoggedIn = userData !== null;
@@ -90,7 +108,17 @@ const Header = (props: {
             <DarkModeSwitcher />
             {/* <!-- Dark Mode Toggler --> */}
             {/* <!-- Notification Menu Area --> */}
-            {isUserLoggedIn && !loading && <DropdownNotification />}
+            <Link
+              to={'/notification-all'}
+              className="relative text-black hover:text-blue-500"
+            >
+              <IoMdNotificationsOutline size={25} />
+              {unreadNotificationsCount > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                  {unreadNotificationsCount}
+                </span>
+              )}
+            </Link>
             {/* <!-- Notification Menu Area --> */}
           </ul>
 
