@@ -22,7 +22,7 @@ const NotificationSkeleton = () => (
   </div>
 );
 
-const NotificationsMe = () => {
+const NotificationsMe = ({ userId }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,7 +33,12 @@ const NotificationsMe = () => {
       try {
         const response = await getAllNotification();
         if (response.status && response.data) {
-          setNotifications(response.data);
+          const filteredNotifications = response.data.filter(
+            (notification) =>
+              notification.title === 'Notification Transaction' ||
+              notification.title === 'Notification Payment',
+          );
+          setNotifications(filteredNotifications);
         } else {
           // setError('Failed to fetch notifications.');
         }
@@ -46,7 +51,7 @@ const NotificationsMe = () => {
     };
 
     fetchNotifications();
-  }, [reload]); // Add `reload` as a dependency to refetch notifications when it changes
+  }, [reload, userId]); // Add `reload` and `userId` as dependencies to refetch notifications when they change
 
   const handleMarkAsRead = async (id) => {
     try {

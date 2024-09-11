@@ -22,54 +22,62 @@ const ProductCardSkeleton = () => (
   </div>
 );
 
-const ProductCard = ({ product }) => (
-  <Link
-    to={`/details-products/${product.productId}`}
-    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-  >
-    <div className="relative">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-48 object-cover"
-      />
-      <div className="absolute bottom-2 left-2">
-        <span className="bg-yellow-500 px-2 py-1 text-xs rounded-full text-white">
-          {product.averageRating}★
-        </span>
+const ProductCard = ({ product }) => {
+  const roundedRating = Math.round(product.averageRating);
+
+  return (
+    <Link
+      to={`/details-products/${product.productId}`}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+    >
+      <div className="relative">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-48 object-cover"
+        />
+        <div className="absolute bottom-2 left-2">
+          <span className="bg-yellow-500 px-2 py-1 text-xs rounded-full text-white">
+            {roundedRating}★
+          </span>
+        </div>
       </div>
-    </div>
-    <div className="p-4">
-      <h2 className="text-lg font-semibold mb-2">
-        {product.name.length > 20
-          ? product.name.substring(0, 20) + '...'
-          : product.name}
-      </h2>
-      {product.promoPrice > 0 ? (
-        <>
-          <p className="text-gray-500 line-through">
+      <div className="p-4">
+        <h2 className="text-lg font-semibold mb-2">
+          {product.name.length > 20
+            ? product.name.substring(0, 20) + '...'
+            : product.name}
+        </h2>
+        {product.promoPrice > 0 ? (
+          <>
+            <p className="text-gray-500 line-through">
+              {formatRupiah(product.price)}
+            </p>
+            <p className="text-red-500 font-bold">
+              {formatRupiah(product.promoPrice)}
+            </p>
+          </>
+        ) : (
+          <p className="text-gray-500 font-bold">
             {formatRupiah(product.price)}
           </p>
-          <p className="text-red-500 font-bold">
-            {formatRupiah(product.promoPrice)}
+        )}
+        <p className="text-sm text-gray-600 mt-1">Stok: {product.stock}</p>
+        <div className="flex mt-1">
+          <p className="text-sm text-gray-600">Terjual : {product.totalSold}</p>{' '}
+          &nbsp;
+          <p className="text-sm text-gray-600">
+            Ulasan : {product.totalReview}
           </p>
-        </>
-      ) : (
-        <p className="text-gray-500 font-bold">{formatRupiah(product.price)}</p>
-      )}
-      <p className="text-sm text-gray-600 mt-1">Stok: {product.stock}</p>
-      <div className="flex mt-1">
-        <p className="text-sm text-gray-600">Terjual : {product.totalSold}</p>{' '}
-        &nbsp;
-        <p className="text-sm text-gray-600">Ulasan : {product.totalReview}</p>
-      </div>
+        </div>
 
-      <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
-        Beli Sekarang
-      </button>
-    </div>
-  </Link>
-);
+        <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
+          Beli Sekarang
+        </button>
+      </div>
+    </Link>
+  );
+};
 
 const ProductNew = ({ searchTerm }) => {
   const [products, setProducts] = useState([]);

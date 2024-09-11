@@ -1,22 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2';
 import { getProductById } from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
-import SkeletonProductDetails from './SkeletonProductDetails'; // import skeleton
+import SkeletonProductDetails from './SkeletonProductDetails';
 import { createCarts } from '../../../../services/users/carts/services-carts';
 import { AiOutlineShareAlt } from 'react-icons/ai';
+import AddReview from '../Review/AddReview';
 
 const ProductDetails = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasPurchased, setHasPurchased] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await getProductById(productId);
         setProduct(response.data);
+
+        // Check if the user has purchased the product
+        const userId = 'e866d701-e4f0-48e6-a103-495be7472643'; // Replace with actual user ID
+        const purchased = response.data.carts.some(
+          (cart) => cart.userId === userId && cart.isCheckout,
+        );
+        setHasPurchased(purchased);
       } catch (error) {
         console.error('Failed to fetch product:', error);
       } finally {
@@ -29,8 +39,7 @@ const ProductDetails = () => {
 
   const handleAddToCart = async () => {
     try {
-      // Mengasumsikan ID pengguna tersedia di sesi saat ini atau dapat diambil
-      const response = await createCarts({ productId }); // qty akan default ke 1
+      const response = await createCarts({ productId });
       if (response.success) {
         Swal.fire({
           title: 'Ditambahkan ke Keranjang',
@@ -39,7 +48,7 @@ const ProductDetails = () => {
           confirmButtonText: 'OK',
         }).then((result) => {
           if (result.isConfirmed) {
-            window.location.href = '/carts'; // Redirect ke halaman keranjang setelah konfirmasi SweetAlert
+            window.location.href = '/carts';
           }
         });
       } else {
@@ -61,22 +70,63 @@ const ProductDetails = () => {
     }
   };
 
-  // handle tanya admin
   const handleContactAdmin = () => {
     const message = `Halo Admin, saya ingin menanyakan tentang produk berikut:\n\nNama Produk: ${product.name}\nHarga: ${formatRupiah(product.promoPrice > 0 ? product.promoPrice : product.price)}\nLink Produk: ${window.location.href}\nGambar Produk: ${product.image}`;
-    const waNumber = '6289521937647'; // Ganti dengan nomor WhatsApp admin
+    const waNumber = '6289521937647';
     const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
 
-    window.open(waLink, '_blank'); // Buka WhatsApp di tab baru
+    window.open(waLink, '_blank');
+  };
+
+  const handleOpenModal = () => {
+    if (hasPurchased) {
+      setIsModalOpen(true);
+    } else {
+      Swal.fire({
+        title: 'Peringatan',
+        text: 'Anda belum membeli produk ini.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleReviewAdded = () => {
+    console.log('Review added successfully');
+  };
+
+  const renderStars = (rating) => {
+    const roundedRating = Math.round(rating);
+    return (
+      <div className="flex items-center">
+        {[...Array(5)].map((_, index) => (
+          <svg
+            key={index}
+            className={`w-6 h-6 ${index < roundedRating ? 'text-yellow-500' : 'text-gray-300'} mr-1`}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        ))}
+      </div>
+    );
   };
 
   if (loading) {
-    return <SkeletonProductDetails />; // tampilkan skeleton saat loading
+    return <SkeletonProductDetails />;
   }
 
   if (!product) {
     return <div>Product not found</div>;
   }
+
+  const roundedAverageRating = Math.round(product.averageRating);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
@@ -108,18 +158,8 @@ const ProductDetails = () => {
             )}
           </div>
           <div className="flex items-center mb-4">
-            {[...Array(5)].map((_, index) => (
-              <svg
-                key={index}
-                className={`w-6 h-6 ${index < (product.ratings[0]?.rating || 0) ? 'text-yellow-500' : 'text-gray-300'} mr-1`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            ))}
-            <p className="text-gray-600">{product.ratings[0]?.rating || 0}/5</p>
+            {renderStars(roundedAverageRating)}
+            <p className="text-gray-600 ml-2">{roundedAverageRating}/5</p>
           </div>
           <div className="mb-4">
             <p className="text-gray-700">
@@ -139,7 +179,7 @@ const ProductDetails = () => {
               <strong>Ulasan:</strong> {product.totalReview}
             </p>
           </div>
-          <div className="mb-4">
+          <div className="mb-4 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
             <button
               className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition duration-300"
               onClick={handleAddToCart}
@@ -147,10 +187,16 @@ const ProductDetails = () => {
               Tambah ke Keranjang
             </button>
             <button
-              className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition duration-300 ml-4"
+              className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition duration-300"
               onClick={handleContactAdmin}
             >
               Tanya Admin
+            </button>
+            <button
+              className="bg-yellow-600 text-white px-6 py-2 rounded-md hover:bg-yellow-700 transition duration-300"
+              onClick={handleOpenModal}
+            >
+              Berikan Ulasan
             </button>
           </div>
 
@@ -191,7 +237,7 @@ const ProductDetails = () => {
                   <img
                     src={review.image}
                     alt={`Review ${index}`}
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-16 h-16 rounded-lg object-cover"
                   />
                   <div className="flex-1">
                     <div className="mb-2">
@@ -200,23 +246,7 @@ const ProductDetails = () => {
                       </p>
                     </div>
                     <div className="flex items-center mb-2">
-                      <div className="flex items-center ml-2 text-yellow-500">
-                        {[...Array(5)].map((_, starIndex) => (
-                          <svg
-                            key={starIndex}
-                            className={`w-5 h-5 ${
-                              starIndex < review.rating
-                                ? 'text-yellow-500'
-                                : 'text-gray-300'
-                            }`}
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
-                          </svg>
-                        ))}
-                      </div>
+                      {renderStars(review.rating)}
                     </div>
                     <p className="text-gray-700">
                       <strong>
@@ -231,6 +261,13 @@ const ProductDetails = () => {
           </div>
         )}
       </div>
+      {isModalOpen && (
+        <AddReview
+          productId={productId}
+          onClose={handleCloseModal}
+          onReviewAdded={handleReviewAdded}
+        />
+      )}
     </div>
   );
 };

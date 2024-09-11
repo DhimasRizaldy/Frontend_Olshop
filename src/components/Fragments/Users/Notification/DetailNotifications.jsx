@@ -62,13 +62,15 @@ const DetailNotifications = () => {
           <p>Created At: {new Date(notification.createdAt).toLocaleString()}</p>
           <p>Updated At: {new Date(notification.updatedAt).toLocaleString()}</p>
         </div>
-        <Link
-          to={`/transaction-me/${notification.transactionId}`}
-          className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          rel="noopener noreferrer"
-        >
-          View Transaction
-        </Link>
+        {notification.transactionId && (
+          <Link
+            to={`/transaction-me/${notification.transactionId}`}
+            className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            rel="noopener noreferrer"
+          >
+            View Transaction
+          </Link>
+        )}
       </div>
     </div>
   );

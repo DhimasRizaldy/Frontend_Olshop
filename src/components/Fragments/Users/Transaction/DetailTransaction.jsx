@@ -500,12 +500,14 @@ const DetailTransactionMe = () => {
 
           {transactionDetail &&
             transactionDetail.shippingStatus === 'Accepted' && (
-              <button
-                className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300"
-                onClick={() => console.log('Kasih Review')}
-              >
-                Kasih Review
-              </button>
+              <Link to="/products">
+                <button
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300"
+                  onClick={() => console.log('Kasih Review')}
+                >
+                  Kasih Review
+                </button>
+              </Link>
             )}
 
           {transactionDetail &&

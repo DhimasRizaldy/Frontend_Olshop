@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { formatRupiah } from '../../../../utils/constants/function';
 import { Link } from 'react-router-dom';
-import ProductCardSkeleton from './ProductCardSkeleton'; // Pastikan path ini benar
+import ProductCardSkeleton from './ProductCardSkeleton';
 
-// Fetch categories from the API
 const fetchCategories = async () => {
   const response = await axios.get(
     'https://backend-olshop.vercel.app/api/v1/category',
@@ -12,7 +11,6 @@ const fetchCategories = async () => {
   return response.data.data;
 };
 
-// Fetch products from the API based on filters
 const fetchProducts = async (filters) => {
   const { search, category, minRating, maxRating, sort, page, limit } = filters;
   const url = new URL('https://backend-olshop.vercel.app/api/v1/product');
@@ -28,57 +26,65 @@ const fetchProducts = async (filters) => {
   const response = await axios.get(url.toString());
   return {
     products: response.data.data,
-    total: response.data.total, // Assuming the API returns the total number of products
+    total: response.data.total,
   };
 };
 
-const ProductCard = ({ product }) => (
-  <Link
-    to={`/details-products/${product.productId}`}
-    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-  >
-    <div className="relative">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-48 object-cover"
-      />
-      <div className="absolute bottom-2 left-2">
-        <span className="bg-yellow-500 px-2 py-1 text-xs rounded-full text-white">
-          {product.averageRating}★
-        </span>
+const ProductCard = ({ product }) => {
+  const roundedRating = Math.round(product.averageRating);
+
+  return (
+    <Link
+      to={`/details-products/${product.productId}`}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+    >
+      <div className="relative">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-48 object-cover"
+        />
+        <div className="absolute bottom-2 left-2">
+          <span className="bg-yellow-500 px-2 py-1 text-xs rounded-full text-white">
+            {roundedRating}★
+          </span>
+        </div>
       </div>
-    </div>
-    <div className="p-4">
-      <h2 className="text-lg font-semibold mb-2">
-        {product.name.length > 20
-          ? product.name.substring(0, 20) + '...'
-          : product.name}
-      </h2>
-      {product.promoPrice > 0 ? (
-        <>
-          <p className="text-gray-500 line-through">
+      <div className="p-4">
+        <h2 className="text-lg font-semibold mb-2">
+          {product.name.length > 20
+            ? product.name.substring(0, 20) + '...'
+            : product.name}
+        </h2>
+        {product.promoPrice > 0 ? (
+          <>
+            <p className="text-gray-500 line-through">
+              {formatRupiah(product.price)}
+            </p>
+            <p className="text-red-500 font-bold">
+              {formatRupiah(product.promoPrice)}
+            </p>
+          </>
+        ) : (
+          <p className="text-gray-500 font-bold">
             {formatRupiah(product.price)}
           </p>
-          <p className="text-red-500 font-bold">
-            {formatRupiah(product.promoPrice)}
+        )}
+        <p className="text-sm text-gray-600 mt-1">Stok: {product.stock}</p>
+        <div className="flex mt-1">
+          <p className="text-sm text-gray-600">Terjual : {product.totalSold}</p>{' '}
+          &nbsp;
+          <p className="text-sm text-gray-600">
+            Ulasan : {product.totalReview}
           </p>
-        </>
-      ) : (
-        <p className="text-gray-500 font-bold">{formatRupiah(product.price)}</p>
-      )}
-      <p className="text-sm text-gray-600 mt-1">Stok: {product.stock}</p>
-      <div className="flex mt-1">
-        <p className="text-sm text-gray-600">Terjual : {product.totalSold}</p>{' '}
-        &nbsp;
-        <p className="text-sm text-gray-600">Ulasan : {product.totalReview}</p>
+        </div>
+        <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
+          Beli Sekarang
+        </button>
       </div>
-      <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
-        Beli Sekarang
-      </button>
-    </div>
-  </Link>
-);
+    </Link>
+  );
+};
 
 const ProductFilter = () => {
   const [categories, setCategories] = useState([]);
@@ -87,11 +93,11 @@ const ProductFilter = () => {
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [sort, setSort] = useState(null);
   const [page, setPage] = useState(1);
-  const [limit] = useState(12); // Set limit to 12
+  const [limit] = useState(12);
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
-  const [totalProducts, setTotalProducts] = useState(0); // State for total products
-  const [hasMoreProducts, setHasMoreProducts] = useState(true); // State for more products
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [hasMoreProducts, setHasMoreProducts] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
@@ -120,10 +126,8 @@ const ProductFilter = () => {
         };
         const { products: productsData, total } = await fetchProducts(filters);
         setProducts(productsData);
-        setTotalProducts(total); // Set total products
-        setHasMoreProducts(productsData.length > 0); // Set has more products
-
-        // Set the noData state based on whether productsData is empty
+        setTotalProducts(total);
+        setHasMoreProducts(productsData.length > 0);
         setNoData(productsData.length === 0);
       } catch (error) {
         console.error('Failed to fetch data', error);
@@ -164,10 +168,8 @@ const ProductFilter = () => {
     };
     const { products: productsData, total } = await fetchProducts(filters);
     setProducts(productsData);
-    setTotalProducts(total); // Set total products
-    setHasMoreProducts(productsData.length > 0); // Set has more products
-
-    // Set the noData state based on whether productsData is empty
+    setTotalProducts(total);
+    setHasMoreProducts(productsData.length > 0);
     setNoData(productsData.length === 0);
   };
 
@@ -183,12 +185,11 @@ const ProductFilter = () => {
     setPage(pageNumber);
   };
 
-  const totalPages = Math.ceil(totalProducts / limit); // Calculate total pages
+  const totalPages = Math.ceil(totalProducts / limit);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
       <div className="flex flex-col md:flex-row">
-        {/* Sidebar Filter */}
         <button
           onClick={() =>
             document.getElementById('filter-section').classList.toggle('hidden')
@@ -198,20 +199,17 @@ const ProductFilter = () => {
           Filter
         </button>
 
-        {/* Sidebar Filter */}
         <div
           id="filter-section"
           className="w-full md:w-1/4 bg-white p-4 rounded-lg shadow-md mb-4 md:mb-0 md:mr-6"
         >
           <h2 className="text-xl font-semibold mb-4">Filter</h2>
-          {/* All Products Button */}
           <button
             onClick={() => handleCategoryChange('all')}
             className="w-full mb-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600"
           >
             All Products
           </button>
-          {/* Filter by Category */}
           <div className="mb-4">
             <h3 className="text-lg font-medium mb-2">Category</h3>
             <div className="space-y-2">
@@ -228,7 +226,6 @@ const ProductFilter = () => {
               ))}
             </div>
           </div>
-          {/* Filter by Rating */}
           <div className="mb-4">
             <h3 className="text-lg font-medium mb-2">Rating</h3>
             <div className="space-y-2">
@@ -249,7 +246,6 @@ const ProductFilter = () => {
           </div>
         </div>
 
-        {/* Products Grid */}
         <div className="w-full md:w-3/4">
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -266,7 +262,6 @@ const ProductFilter = () => {
               ))}
             </div>
           )}
-          {/* Pagination */}
           <div className="flex justify-center mt-6">
             <button
               onClick={() => handlePageChange(page - 1)}
