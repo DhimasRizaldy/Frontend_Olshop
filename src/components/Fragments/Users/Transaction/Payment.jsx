@@ -213,7 +213,7 @@ const PaymentsMe = () => {
                   result.order_id || result.transaction_id,
                 );
                 // Arahkan ke halaman transaction-me
-                window.location.href = '/transaction-me';
+                window.location.href = '/payment-success';
               });
               console.log('Pembayaran Sukses:', result);
             },
@@ -269,7 +269,7 @@ const PaymentsMe = () => {
                       result.order_id || result.transaction_id,
                     );
                     // Arahkan ke halaman transaction-me
-                    window.location.href = '/transaction-me';
+                    window.location.href = '/payment-success';
                   });
                   console.log('Pembayaran Sukses:', result);
                 },
@@ -386,9 +386,7 @@ const PaymentsMe = () => {
           <option value="">Select a Courier</option>
           <option value="jne">JNE</option>
           <option value="pos">Pos Indonesia</option>
-          <option value="tiki">TIKI</option>
           <option value="jnt">JNT</option>
-          <option value="sicepat">SiCepat</option>
         </select>
 
         {shippingOptions.length > 0 && (
