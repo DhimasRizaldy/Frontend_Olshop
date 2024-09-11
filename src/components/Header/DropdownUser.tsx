@@ -83,11 +83,19 @@ const DropdownUser = () => {
 
   // Fungsi untuk logout
   const handleLogout = () => {
-    CookieStorage.remove(CookieKeys.AuthToken); // Hapus token dari cookies
-    localStorage.removeItem(CookieKeys.AuthToken); // Hapus token dari localStorage jika ada
-    navigate('/'); // Arahkan ke halaman login
-    window.location.reload(); // Reload halaman setelah logout
+    // Hapus token dari cookies
+    CookieStorage.remove(CookieKeys.AuthToken);
+
+    // Hapus token, transactionId, dan userId dari localStorage
+    localStorage.removeItem(CookieKeys.AuthToken);
+    localStorage.removeItem('transactionId');
+    localStorage.removeItem('userId');
+
+    // Arahkan ke halaman login dan reload halaman
+    navigate('/');
+    window.location.reload();
   };
+
 
   // Menampilkan konten berdasarkan status loading dan error
   if (isLoading) return <p>Loading...</p>;

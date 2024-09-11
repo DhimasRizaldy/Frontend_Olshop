@@ -5,7 +5,6 @@ import { getProductById } from '../../../../services/admin/product/services-prod
 import { formatRupiah } from '../../../../utils/constants/function';
 import SkeletonProductDetails from './SkeletonProductDetails';
 import { createCarts } from '../../../../services/users/carts/services-carts';
-import { AiOutlineShareAlt } from 'react-icons/ai';
 import AddReview from '../Review/AddReview';
 
 const ProductDetails = () => {
@@ -22,7 +21,7 @@ const ProductDetails = () => {
         setProduct(response.data);
 
         // Check if the user has purchased the product
-        const userId = 'e866d701-e4f0-48e6-a103-495be7472643'; // Replace with actual user ID
+        const userId = localStorage.getItem('userId'); // Mengambil userId dari localStorage
         const purchased = response.data.carts.some(
           (cart) => cart.userId === userId && cart.isCheckout,
         );
@@ -53,7 +52,7 @@ const ProductDetails = () => {
         });
       } else {
         Swal.fire({
-          title: 'Kesalahan',
+          title: 'Gagal',
           text: 'Gagal menambahkan produk ke keranjang.',
           icon: 'error',
           confirmButtonText: 'OK',
@@ -62,8 +61,8 @@ const ProductDetails = () => {
     } catch (error) {
       console.error('Kesalahan saat menambahkan produk ke keranjang:', error);
       Swal.fire({
-        title: 'Kesalahan',
-        text: 'Terjadi kesalahan saat menambahkan produk ke keranjang.',
+        title: 'Gagal',
+        text: 'Anda terdeteksi belum login, silahkan login terlebih dahulu.',
         icon: 'error',
         confirmButtonText: 'OK',
       });

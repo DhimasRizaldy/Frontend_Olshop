@@ -49,7 +49,12 @@ const DetailTransactionMe = () => {
         try {
           const response = await getTransactionById(transactionId);
           if (response.success) {
-            setTransactionDetail(response.data); // Store the transaction data
+            // Store the transaction data
+            setTransactionDetail(response.data);
+
+            // Ambil userId dari response.data dan simpan ke localStorage
+            const userId = response.data.userId;
+            localStorage.setItem('userId', userId);
           } else {
             console.error(
               'Error fetching transaction detail:',
@@ -68,6 +73,7 @@ const DetailTransactionMe = () => {
     // Simpan transactionId dari URL ke localStorage
     localStorage.setItem('transactionId', transactionId);
   }, [transactionId]);
+
 
   // Bisa digunakan
   const handlePaymentClick = () => {
