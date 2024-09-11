@@ -1,6 +1,7 @@
 import http from '../../../utils/constants/http';
 import { API_ENDPOINT } from '../../../utils/constants/endpoint';
-
+ 
+// get notification me
 export const getNotification = async () => {
   try {
     const response = await http.get(API_ENDPOINT.GET_NOTIFICATION);
@@ -51,6 +52,7 @@ export const deleteNotification = async (notificationId) => {
   }
 };
 
+// get all notification (admin)
 export const getAllNotification = async () => {
   try {
     const response = await http.get(API_ENDPOINT.GET_ALL_NOTIFICATION);

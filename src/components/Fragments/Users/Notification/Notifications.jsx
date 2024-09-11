@@ -95,7 +95,7 @@ const NotificationsMe = () => {
             }`}
           >
             <Link
-              to={`/notification-me/${notification.transactionId}`}
+              to={`/notification-me/${notification.notificationId}`}
               className="flex-1 mb-4 md:mb-0"
             >
               <h2 className="text-lg md:text-lg font-semibold">

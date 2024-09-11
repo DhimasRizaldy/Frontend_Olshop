@@ -35,11 +35,11 @@ const NotificationsMe = () => {
         if (response.status && response.data) {
           setNotifications(response.data);
         } else {
-          setError('Failed to fetch notifications.');
+          // setError('Failed to fetch notifications.');
         }
       } catch (error) {
-        console.error('Error fetching notifications:', error);
-        setError('Error fetching notifications.');
+        // console.error('Error fetching notifications:', error);
+        // setError('Error fetching notifications.');
       } finally {
         setLoading(false);
       }
@@ -55,16 +55,16 @@ const NotificationsMe = () => {
         // Trigger reload by toggling the `reload` state
         setReload((prev) => !prev);
       } else {
-        setError('Failed to mark notification as read.');
+        // setError('Failed to mark notification as read.');
       }
     } catch (error) {
-      console.error('Error updating notification:', error);
-      setError('Error updating notification.');
+      // console.error('Error updating notification:', error);
+      // setError('Error updating notification.');
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 mt-12">
+    <div className="max-w-4xl mx-auto px-4 py-6 mt-2">
       <h1 className="text-2xl md:text-3xl font-bold mb-6">Notifications</h1>
       {loading ? (
         <>
@@ -95,7 +95,7 @@ const NotificationsMe = () => {
             }`}
           >
             <Link
-              to={`/notification-all/${notification.transactionId}`}
+              to={`/notification-all/${notification.notificationId}`}
               className="flex-1 mb-4 md:mb-0"
             >
               <h2 className="text-lg md:text-lg font-semibold">
