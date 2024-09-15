@@ -17,32 +17,27 @@ const FormLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // handle login
   const onSubmit = async (event) => {
     event.preventDefault();
     await handleLogin(email, password, navigate, setIsLoading);
   };
 
-  // handle Google login success
   const handleGoogleLoginSuccess = async (response) => {
     const { credential } = response;
-
     try {
       const data = await loginWithGoogle(
         { access_token: credential },
         setIsLoading,
       );
       console.log('Login successful:', data);
-      // Simpan token dan data pengguna ke state atau local storage
       toast.success('Login successful');
-      navigate('/'); // Redirect to home or another page
+      navigate('/');
     } catch (error) {
       console.error('Login failed:', error);
       toast.error('Login failed');
     }
   };
 
-  // handle Google login failure
   const handleGoogleLoginFailure = (error) => {
     console.error('Login failed:', error);
     toast.error('Login failed');
@@ -52,9 +47,7 @@ const FormLogin = () => {
     <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID}>
       <div>
         <form onSubmit={onSubmit}>
-          {/* Toast Container for notifications */}
           <ToastContainer />
-          {/* email */}
           <div className="mb-4">
             <Label classname="mb-2.5 block font-medium text-black dark:text-white">
               Email
@@ -87,7 +80,6 @@ const FormLogin = () => {
               </span>
             </div>
           </div>
-          {/* password */}
           <div className="mb-6">
             <Label classname="mb-2.5 block font-medium text-black dark:text-white">
               Password
@@ -123,7 +115,6 @@ const FormLogin = () => {
               </span>
             </div>
             <div className="relative">
-              {/* forgot password */}
               <div className="mt-5 text-right">
                 <p className="font-medium text-primary">
                   <Link to="/forgot-password">Forgot Password</Link>
@@ -131,7 +122,6 @@ const FormLogin = () => {
               </div>
             </div>
           </div>
-          {/* button login */}
           <div className="mb-5">
             <Button
               type="submit"
@@ -141,7 +131,6 @@ const FormLogin = () => {
               {isLoading ? 'Loading...' : 'Login'}
             </Button>
           </div>
-          {/* Button login google */}
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
             onError={handleGoogleLoginFailure}
@@ -189,7 +178,6 @@ const FormLogin = () => {
               </Button>
             )}
           />
-          {/* dont have account */}
           <div className="mt-5 text-center">
             <p className="font-medium">
               Don't have an account?{' '}
@@ -198,7 +186,6 @@ const FormLogin = () => {
               </Link>
             </p>
           </div>
-          {/* dont verify account */}
           <div className="mt-5 text-center">
             <p className="font-medium">
               Don't activate account?{' '}
@@ -208,7 +195,6 @@ const FormLogin = () => {
             </p>
           </div>
         </form>
-        {/* Button Home */}
         <div className="mb-4 mt-10">
           <Button classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90">
             <Link to={'/'}>
