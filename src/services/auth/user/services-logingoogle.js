@@ -8,12 +8,21 @@ export const loginWithGoogleAction = async (accessToken) => {
   const navigate = useNavigate(); // Ensure navigate is defined
 
   try {
-    const response = await axios.post(
-      'https://backend-olshop.vercel.app/api/v1/auth/google',
-      { access_token: accessToken },
-    );
+    let data = JSON.stringify({
+      access_token: accessToken,
+    });
 
-    // Assuming the response contains the token
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://backend-olshop.vercel.app/api/v1/auth/google',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    const response = await axios.request(config);
     const { token } = response.data;
 
     // Simpan token di dalam Cookie
