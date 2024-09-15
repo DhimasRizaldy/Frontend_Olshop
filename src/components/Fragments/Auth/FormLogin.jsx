@@ -9,9 +9,8 @@ import { handleLogin } from '../../../services/auth/admin/services-login';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { useGoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 import { CookieKeys, CookieStorage } from '../../../utils/constants/cookies';
-import { API_ENDPOINT } from '../../../utils/constants/endpoint';
+import { loginWithGoogle } from '../../../services/auth/user/services-logingoogle';
 
 const FormLogin = () => {
   const [email, setEmail] = useState('');
@@ -28,37 +27,21 @@ const FormLogin = () => {
   // handle Google login action
   const loginWithGoogleAction = async (accessToken) => {
     try {
-      let data = JSON.stringify({
-        access_token: accessToken,
-      });
-
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${import.meta.env.VITE_API_SERVER}${API_ENDPOINT.USER_LOGIN_GOOGLE}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: data,
-      };
-
-      const response = await axios.request(config);
-      const { token } = response.data.data;
+      const userData = { access_token: accessToken };
+      const response = await loginWithGoogle(userData, setIsLoading);
+      const { token } = response.data;
 
       CookieStorage.set(CookieKeys.AuthToken, token);
 
       toast.success('Login successful');
       navigate('/');
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return;
-      }
       toast.error('Login failed');
     }
   };
 
   // initialize Google login
-  const loginWithGoogle = useGoogleLogin({
+  const googleLogin = useGoogleLogin({
     onSuccess: (codeResponse) => {
       loginWithGoogleAction(codeResponse.access_token);
     },
@@ -161,7 +144,7 @@ const FormLogin = () => {
         </div>
         {/* Button login google */}
         <Button
-          onClick={loginWithGoogle}
+          onClick={googleLogin}
           classname="flex w-full items-center justify-center gap-3.5 font-medium rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-70 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-70"
         >
           <span>

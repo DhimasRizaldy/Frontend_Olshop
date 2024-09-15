@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
 import http from '../../../utils/constants/http';
 import { API_ENDPOINT } from '../../../utils/constants/endpoint';
-import Swal from 'sweetalert2';
 
 // handle login with google
 export const loginWithGoogle = async (userData, setIsLoading) => {
