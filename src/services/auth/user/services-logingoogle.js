@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { CookieKeys, CookieStorage } from '../../../utils/constants/cookies';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 // handle Google login action
 export const loginWithGoogleAction = async (accessToken) => {
+  const navigate = useNavigate(); // Ensure navigate is defined
+
   try {
     const response = await axios.post(
       'https://backend-olshop.vercel.app/api/v1/auth/google',
