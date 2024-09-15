@@ -9,8 +9,7 @@ import { handleLogin } from '../../../services/auth/admin/services-login';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { useGoogleLogin } from '@react-oauth/google';
-import { CookieKeys, CookieStorage } from '../../../utils/constants/cookies';
-import { loginWithGoogle } from '../../../services/auth/user/services-logingoogle';
+import { loginWithGoogleAction } from '../../../services/auth/user/services-logingoogle';
 
 const FormLogin = () => {
   const [email, setEmail] = useState('');
@@ -22,22 +21,6 @@ const FormLogin = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     await handleLogin(email, password, navigate, setIsLoading);
-  };
-
-  // handle Google login action
-  const loginWithGoogleAction = async (accessToken) => {
-    try {
-      const userData = { access_token: accessToken };
-      const response = await loginWithGoogle(userData, setIsLoading);
-      const { token } = response.data;
-
-      CookieStorage.set(CookieKeys.AuthToken, token);
-
-      toast.success('Login successful');
-      navigate('/');
-    } catch (error) {
-      toast.error('Login failed');
-    }
   };
 
   // initialize Google login

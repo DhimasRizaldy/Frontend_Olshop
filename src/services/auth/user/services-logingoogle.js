@@ -1,25 +1,23 @@
-import { toast } from 'react-toastify';
-import http from '../../../utils/constants/http';
-import { API_ENDPOINT } from '../../../utils/constants/endpoint';
+import axios from 'axios';
+import { CookieKeys, CookieStorage } from '../../../utils/constants/cookies';
 
-// handle login with google
-export const loginWithGoogle = async (userData, setIsLoading) => {
-  setIsLoading(true);
+// handle Google login action
+export const loginWithGoogleAction = async (accessToken) => {
   try {
-    const response = await http.post(API_ENDPOINT.USER_LOGIN_GOOGLE, userData);
-    return response.data;
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.message || 'Error login with Google';
-    console.error(
-      'Error login with Google:',
-      error.response?.data || errorMessage,
+    const response = await axios.post(
+      'https://backend-olshop.vercel.app/api/v1/auth/google',
+      { access_token: accessToken },
     );
-    toast.error(errorMessage);
-    throw new Error(errorMessage);
-  } finally {
-    setIsLoading(false);
+
+    // Assuming the response contains the token
+    const { token } = response.data;
+
+    // Simpan token di dalam Cookie
+    CookieStorage.set(CookieKeys.AuthToken, token);
+
+    toast.success('Login successful');
+    navigate('/'); // Redirect setelah login sukses
+  } catch (error) {
+    toast.error('Login failed');
   }
 };
-
-export default loginWithGoogle;
