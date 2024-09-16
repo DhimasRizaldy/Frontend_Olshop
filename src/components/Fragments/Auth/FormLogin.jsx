@@ -23,7 +23,7 @@ const FormLogin = () => {
   };
 
   const handleGoogleLoginSuccess = async (response) => {
-    const accessToken = response.access_token;
+    const accessToken = response.credential; // Use response.credential to get the token
     await loginWithGoogle(accessToken, navigate);
   };
 
