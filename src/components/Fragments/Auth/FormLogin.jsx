@@ -24,7 +24,7 @@ const FormLogin = () => {
 
   const handleGoogleLoginSuccess = async (response) => {
     const accessToken = response.access_token;
-    await loginWithGoogle(accessToken);
+    await loginWithGoogle(accessToken, navigate);
   };
 
   const handleGoogleLoginFailure = (error) => {
