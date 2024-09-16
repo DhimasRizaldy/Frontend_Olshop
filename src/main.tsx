@@ -7,17 +7,14 @@ import './css/satoshi.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import { Provider } from 'react-redux'; // Import Provider dari react-redux
 import store from './redux/store/store'; // Import Redux store Anda
-import { GoogleOAuthProvider } from '@react-oauth/google'; // Import GoogleOAuthProvider
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID}>
-      <Provider store={store}>
-        {/* Bungkus Router dengan Provider */}
-        <Router>
-          <App />
-        </Router>
-      </Provider>
-    </GoogleOAuthProvider>
+    <Provider store={store}>
+      {/* Bungkus Router dengan Provider */}
+      <Router>
+        <App />
+      </Router>
+    </Provider>
   </React.StrictMode>,
 );
