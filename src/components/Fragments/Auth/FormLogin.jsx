@@ -23,24 +23,12 @@ const FormLogin = () => {
   };
 
   const handleGoogleLoginSuccess = async (response) => {
-    const { credential } = response;
-    try {
-      const data = await loginWithGoogle(
-        { access_token: credential },
-        setIsLoading,
-      );
-      console.log('Login successful:', data);
-      toast.success('Login successful');
-      navigate('/');
-    } catch (error) {
-      console.error('Login failed:', error);
-      toast.error('Login failed');
-    }
+    const accessToken = response.access_token;
+    await loginWithGoogle(accessToken);
   };
 
   const handleGoogleLoginFailure = (error) => {
-    console.error('Login failed:', error);
-    toast.error('Login failed');
+    toast.error('Google login failed. Please try again.');
   };
 
   return (

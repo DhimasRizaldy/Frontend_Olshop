@@ -1,38 +1,37 @@
 import axios from 'axios';
 import { CookieKeys, CookieStorage } from '../../../utils/constants/cookies';
 import { toast } from 'react-toastify';
+import { API_ENDPOINT } from '../../../utils/constants/endpoint';
+import { useNavigate } from 'react-router-dom';
 
 // handle Google login action
-export const loginWithGoogle = async (accessToken, navigate) => {
+export const loginWithGoogle = async (accessToken) => {
+  const navigate = useNavigate();
+
   try {
-    // Konversi data menjadi JSON string
-    const data = JSON.stringify({
-      access_token: accessToken,
-    });
+    let data = JSON.stringify({ access_token: accessToken });
 
-    // Lakukan request dengan axios
-    const response = await axios.post(
-      'https://backend-olshop.vercel.app/api/v1/auth/google',
-      data,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${import.meta.env.VITE_API_SERVER}${API_ENDPOINT.USER_LOGIN_GOOGLE}`,
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      data: data,
+    };
 
-    const { token } = response.data;
-
-    // Simpan token di dalam Cookie
+    const response = await axios.request(config);
+    const { token } = response.data.data;
     CookieStorage.set(CookieKeys.AuthToken, token);
-
-    toast.success('Login successful');
-    navigate('/'); // Redirect setelah login sukses
+    toast.success('Login successful!');
+    navigate('/');
+    return response.data;
   } catch (error) {
-    // Cetak error ke console untuk debugging
-    console.error('Login failed', error);
-
-    // Pesan kesalahan untuk pengguna
-    toast.error('Login failed');
+    if (error.response) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error(error.message);
+    }
   }
 };
