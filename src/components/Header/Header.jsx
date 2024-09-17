@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import DropdownUser from './DropdownUser';
 import { getWHOAMI } from '../../services/auth/admin/getDataUser';
@@ -16,6 +16,8 @@ const Header = () => {
   const [loading, setLoading] = useState(true);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
   const [cartItemsCount, setCartItemsCount] = useState(0);
+  const location = useLocation();
+  const [activeMenu, setActiveMenu] = useState(location.pathname);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -87,6 +89,10 @@ const Header = () => {
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
+  useEffect(() => {
+    setActiveMenu(location.pathname);
+  }, [location.pathname]);
+
   return (
     <header className="bg-white shadow-md fixed w-full top-0 z-50">
       <div className="container mx-auto px-4 py-2 flex flex-wrap justify-between items-center">
@@ -146,21 +152,39 @@ const Header = () => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center space-x-4">
-          <Link to={'/'} className="text-black hover:text-blue-500">
+          <Link
+            to={'/'}
+            className={`text-black hover:text-blue-500 ${
+              activeMenu === '/' ? 'border-b-2 border-blue-500' : ''
+            }`}
+          >
             Home
           </Link>
-          <Link to={'/products'} className="text-black hover:text-blue-500">
+          <Link
+            to={'/products'}
+            className={`text-black hover:text-blue-500 ${
+              activeMenu === '/products' ? 'border-b-2 border-blue-500' : ''
+            }`}
+          >
             Product
           </Link>
           <Link
             to={'/promo-voucher'}
-            className="text-black hover:text-blue-500"
+            className={`text-black hover:text-blue-500 ${
+              activeMenu === '/promo-voucher'
+                ? 'border-b-2 border-blue-500'
+                : ''
+            }`}
           >
             Promo
           </Link>
           <Link
             to={'/transaction-me'}
-            className="text-black hover:text-blue-500"
+            className={`text-black hover:text-blue-500 ${
+              activeMenu === '/transaction-me'
+                ? 'border-b-2 border-blue-500'
+                : ''
+            }`}
           >
             Transaksi
           </Link>
@@ -230,47 +254,6 @@ const Header = () => {
           )}
         </div>
       </div>
-
-      {/* Mobile Search Bar */}
-      {/* <div className="md:hidden px-4 py-2">
-        <input
-          id="mobile-search"
-          type="text"
-          placeholder="Search Product"
-          className="w-full px-4 py-2 rounded-full border border-gray-300"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        {searchResults.length > 0 && (
-          <div className="absolute top-full left-0 w-full bg-white border border-gray-300 mt-2 rounded-lg shadow-lg z-50">
-            <div className="flex flex-col divide-y divide-gray-200">
-              {searchResults.map((product) => (
-                <Link
-                  key={product.productId}
-                  to={`/details-products/${product.productId}`}
-                  className="flex items-center p-3 hover:bg-gray-100"
-                >
-                  <img
-                    src={product.image || 'https://via.placeholder.com/80'}
-                    alt={product.name}
-                    className="w-16 h-16 object-cover rounded-md"
-                  />
-                  <div className="ml-3 flex-1">
-                    <h4 className="text-sm font-semibold text-gray-800">
-                      {product.name}
-                    </h4>
-                    <p className="text-xs text-gray-600">
-                      {product.price
-                        ? `Rp ${product.price.toLocaleString('id-ID')}`
-                        : 'Harga tidak tersedia'}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-      </div> */}
     </header>
   );
 };

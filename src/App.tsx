@@ -18,13 +18,7 @@ import ResetPage from './pages/Authentication/reset-password.jsx';
 import ECommerce from './pages/Admin/Dashboard/ECommerce';
 import DataProfileAdmin from './components/Fragments/Admin/Profile/DataProfileAdmin.jsx';
 
-// CRUD Rating
-import Rating from './pages/Admin/Rating/Rating';
-import AddRatings from './pages/Admin/Rating/AddRating.jsx';
-import EditRatings from './pages/Admin/Rating/EditRating.jsx';
-import DetailRatings from './pages/Admin/Rating/DetailRating.jsx';
-
-// CRUD Management Product
+// CRUD Management Product 
 import ManagementProduct from './pages/Admin/Management/ManagementProduct';
 import AddManagementProduct from './pages/Admin/Management/AddManagementProduct.jsx';
 import EditManagementProduct from './pages/Admin/Management/EditManagementProduct.jsx';
@@ -395,44 +389,6 @@ function App() {
             <>
               <PageTitle title="Detail Transaction | Putra Komputer" />
               <DetailTransactions />
-            </>
-          }
-        />
-
-        {/* Admin Rating */}
-        <Route
-          path="/rating"
-          element={
-            <>
-              <PageTitle title="Rating | Putra Komputer" />
-              <Rating />
-            </>
-          }
-        />
-        <Route
-          path="/add-rating"
-          element={
-            <>
-              <PageTitle title="Add Rating | Putra Komputer" />
-              <AddRatings />
-            </>
-          }
-        />
-        <Route
-          path="/edit-rating"
-          element={
-            <>
-              <PageTitle title="Edit Rating | Putra Komputer" />
-              <EditRatings />
-            </>
-          }
-        />
-        <Route
-          path="/detail-rating"
-          element={
-            <>
-              <PageTitle title="Detail Rating | Putra Komputer" />
-              <DetailRatings />
             </>
           }
         />

@@ -12,7 +12,16 @@ const fetchCategories = async () => {
 };
 
 const fetchProducts = async (filters) => {
-  const { search, category, minRating, maxRating, sort, page, limit } = filters;
+  const {
+    search,
+    category,
+    minRating,
+    maxRating,
+    sort,
+    page,
+    limit,
+    discount,
+  } = filters;
   const url = new URL('https://backend-olshop.vercel.app/api/v1/product');
 
   if (search) url.searchParams.append('search', search);
@@ -22,6 +31,7 @@ const fetchProducts = async (filters) => {
   if (sort) url.searchParams.append('filter', sort);
   if (page) url.searchParams.append('page', page);
   if (limit) url.searchParams.append('limit', limit);
+  if (discount) url.searchParams.append('discount', discount);
 
   const response = await axios.get(url.toString());
   return {
@@ -98,6 +108,7 @@ const ProductFilter = () => {
   const [noData, setNoData] = useState(false);
   const [totalProducts, setTotalProducts] = useState(0);
   const [hasMoreProducts, setHasMoreProducts] = useState(true);
+  const [discount, setDiscount] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -123,8 +134,10 @@ const ProductFilter = () => {
           sort,
           page,
           limit,
+          discount,
         };
         const { products: productsData, total } = await fetchProducts(filters);
+
         setProducts(productsData);
         setTotalProducts(total);
         setHasMoreProducts(productsData.length > 0);
@@ -137,7 +150,7 @@ const ProductFilter = () => {
     };
 
     loadData();
-  }, [selectedCategories, selectedRatings, sort, page, limit]);
+  }, [selectedCategories, selectedRatings, sort, page, limit, discount]);
 
   const handleCategoryChange = async (category) => {
     let newSelectedCategories;
@@ -165,8 +178,10 @@ const ProductFilter = () => {
       sort,
       page,
       limit,
+      discount,
     };
     const { products: productsData, total } = await fetchProducts(filters);
+
     setProducts(productsData);
     setTotalProducts(total);
     setHasMoreProducts(productsData.length > 0);
@@ -183,6 +198,10 @@ const ProductFilter = () => {
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
+  };
+
+  const handleDiscountChange = () => {
+    setDiscount((prevDiscount) => !prevDiscount);
   };
 
   const totalPages = Math.ceil(totalProducts / limit);
@@ -243,6 +262,18 @@ const ProductFilter = () => {
                 </label>
               ))}
             </div>
+          </div>
+          <div className="mb-4">
+            <h3 className="text-lg font-medium mb-2">Discount</h3>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={discount}
+                onChange={handleDiscountChange}
+                className="form-checkbox h-4 w-4 text-red-500"
+              />
+              <span className="ml-2 text-gray-700">Product Discount</span>
+            </label>
           </div>
         </div>
 

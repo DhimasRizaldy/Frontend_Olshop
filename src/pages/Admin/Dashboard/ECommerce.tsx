@@ -17,6 +17,8 @@ import {
   getTransactionMe,
 } from '../../../services/admin/transaction/services-transaction';
 import { getWHOAMI } from '../../../services/auth/admin/getDataUser';
+import Skeleton from 'react-loading-skeleton'; // Import Skeleton
+import 'react-loading-skeleton/dist/skeleton.css'; // Import CSS
 
 const ECommerce: React.FC = () => {
   const [users, setUsers] = useState([]);
@@ -107,6 +109,26 @@ const ECommerce: React.FC = () => {
   const totalPayment = transactions
     .filter((transaction) => transaction.status_payment === 'Success')
     .reduce((sum, transaction) => sum + transaction.total, 0); // Assuming each transaction has a total field
+
+  if (loading) {
+    return (
+      <DefaultLayout>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+          <Skeleton height={150} />
+          <Skeleton height={150} />
+          <Skeleton height={150} />
+          <Skeleton height={150} />
+        </div>
+        <div className="mt-4 flex flex-col gap-10">
+          <Skeleton height={300} />
+        </div>
+      </DefaultLayout>
+    );
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <DefaultLayout>

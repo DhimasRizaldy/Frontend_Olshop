@@ -6,7 +6,7 @@ import { getWHOAMI } from '../../auth/admin/getDataUser';
 
 export const handleLogin = async (email, password, navigate, setIsLoading) => {
   if (!email || !password) {
-    console.error('Email and password are required');
+    toast.error('Harap isi semua kolom dengan lengkap');
     return;
   }
 

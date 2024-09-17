@@ -26,7 +26,6 @@ const NotificationsMe = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -46,14 +45,14 @@ const NotificationsMe = () => {
     };
 
     fetchNotifications();
-  }, [reload]); // Add `reload` as a dependency to refetch notifications when it changes
+  }, []);
 
   const handleMarkAsRead = async (id) => {
     try {
       const response = await updateNotification(id);
       if (response.status) {
-        // Trigger reload by toggling the `reload` state
-        setReload((prev) => !prev);
+        // Reload the page
+        window.location.reload();
       } else {
         // setError('Failed to mark notification as read.');
       }
@@ -63,9 +62,35 @@ const NotificationsMe = () => {
     }
   };
 
+  const handleMarkAllAsRead = async () => {
+    try {
+      const unreadNotifications = notifications.filter(
+        (notification) => !notification.isRead,
+      );
+      await Promise.all(
+        unreadNotifications.map((notification) =>
+          updateNotification(notification.notificationId),
+        ),
+      );
+      // Reload the page
+      window.location.reload();
+    } catch (error) {
+      // console.error('Error updating notifications:', error);
+      // setError('Error updating notifications.');
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 mt-12">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6">Notifications</h1>
+    <div className="max-w-4xl mx-auto px-4 py-6 mt-18">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold">Notifications</h1>
+        <button
+          className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600"
+          onClick={handleMarkAllAsRead}
+        >
+          Read All
+        </button>
+      </div>
       {loading ? (
         <>
           <NotificationSkeleton />

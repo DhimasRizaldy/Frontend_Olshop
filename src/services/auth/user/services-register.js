@@ -10,12 +10,12 @@ export const register = async (userData, setIsLoading) => {
     !userData.password ||
     !userData.confirmPassword
   ) {
-    toast.error('Please fill in all fields');
+    toast.error('Harap isi semua kolom dengan lengkap');
     return;
   }
 
   if (userData.password !== userData.confirmPassword) {
-    toast.error('Passwords do not match');
+    toast.error('Kata sandi tidak cocok');
     return;
   }
 
@@ -30,8 +30,7 @@ export const register = async (userData, setIsLoading) => {
     });
     return response.data;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || 'Error adding User';
-    console.error('Error adding User:', error.response?.data || errorMessage);
+    const errorMessage = error.response?.data?.err || 'Error adding User';
     toast.error(errorMessage);
     throw new Error(errorMessage);
   } finally {

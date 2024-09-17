@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHouse,
@@ -12,6 +12,8 @@ import { getNotification } from '../../services/admin/notification/services-noti
 
 const BottomNavBar = () => {
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+  const location = useLocation();
+  const [activeMenu, setActiveMenu] = useState(location.pathname);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -29,13 +31,21 @@ const BottomNavBar = () => {
     fetchNotifications();
   }, []);
 
+  useEffect(() => {
+    setActiveMenu(location.pathname);
+  }, [location.pathname]);
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-boxdark shadow-md md:hidden z-50">
       <div className="flex justify-around items-center py-2">
         {/* Home Icon */}
         <Link
           to={'/'}
-          className="text-white hover:text-yellow-400 flex flex-col items-center"
+          className={`text-white flex flex-col items-center ${
+            activeMenu === '/'
+              ? 'text-blue-400 border-t-2 border-blue-400'
+              : 'hover:text-blue-400'
+          }`}
         >
           <FontAwesomeIcon icon={faHouse} />
           <span className="text-xs">Home</span>
@@ -44,7 +54,11 @@ const BottomNavBar = () => {
         {/* Product Icon */}
         <Link
           to={'/products'}
-          className="text-white hover:text-yellow-400 flex flex-col items-center"
+          className={`text-white flex flex-col items-center ${
+            activeMenu === '/products'
+              ? 'text-blue-400 border-t-2 border-blue-400'
+              : 'hover:text-blue-400'
+          }`}
         >
           <FontAwesomeIcon icon={faBox} />
           <span className="text-xs">Product</span>
@@ -53,7 +67,11 @@ const BottomNavBar = () => {
         {/* Promo Icon */}
         <Link
           to={'/promo-voucher'}
-          className="text-white hover:text-yellow-400 flex flex-col items-center"
+          className={`text-white flex flex-col items-center ${
+            activeMenu === '/promo-voucher'
+              ? 'text-blue-400 border-t-2 border-blue-400'
+              : 'hover:text-blue-400'
+          }`}
         >
           <FontAwesomeIcon icon={faTag} />
           <span className="text-xs">Promo</span>
@@ -62,7 +80,11 @@ const BottomNavBar = () => {
         {/* Transaction Icon */}
         <Link
           to={'/transaction-me'}
-          className="text-white hover:text-yellow-400 flex flex-col items-center"
+          className={`text-white flex flex-col items-center ${
+            activeMenu === '/transaction-me'
+              ? 'text-blue-400 border-t-2 border-blue-400'
+              : 'hover:text-blue-400'
+          }`}
         >
           <FontAwesomeIcon icon={faFileInvoice} />
           <span className="text-xs">Transaction</span>
@@ -71,7 +93,11 @@ const BottomNavBar = () => {
         {/* Notification Icon */}
         <Link
           to={'/notification-me'}
-          className="text-white hover:text-yellow-400 flex flex-col items-center relative"
+          className={`text-white flex flex-col items-center relative ${
+            activeMenu === '/notification-me'
+              ? 'text-blue-400 border-t-2 border-blue-400'
+              : 'hover:text-blue-400'
+          }`}
         >
           <FontAwesomeIcon icon={faBell} />
           <span className="text-xs">Notifications</span>

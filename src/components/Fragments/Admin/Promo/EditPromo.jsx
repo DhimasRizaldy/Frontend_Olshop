@@ -37,7 +37,7 @@ const EditPromo = () => {
     e.preventDefault();
 
     if (!codePromo || !discount || !activeAt || !expiresAt) {
-      toast.error('Please fill in all fields');
+      toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
 

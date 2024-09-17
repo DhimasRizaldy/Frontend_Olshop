@@ -18,12 +18,12 @@ const AddUser = () => {
 
     // Validate the inputs
     if (!username || !email || !password || !confirmPassword) {
-      toast.error('Please fill in all fields');
+      toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error('Kata sandi tidak cocok');
       return;
     }
 

@@ -33,7 +33,7 @@ const AddAddress = () => {
     e.preventDefault();
 
     if (!nameAddress || !address || !city || !country || !postalCode) {
-      toast.error('Please fill in all fields');
+      toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
 

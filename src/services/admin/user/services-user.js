@@ -10,9 +10,9 @@ export const getUser = async () => {
   } catch (error) {
     console.error(
       'Error fetching Users:',
-      error.response?.data?.message || 'Unknown error',
+      error.response?.data?.err || 'Unknown error',
     );
-    throw new Error(error.response?.data?.message || 'Error fetching Users');
+    throw new Error(error.response?.data?.err || 'Error fetching Users');
   }
 };
 
@@ -25,13 +25,13 @@ export const addUser = async (userData, setIsLoading) => {
     !userData.password ||
     !userData.confirmPassword
   ) {
-    toast.error('Please fill in all fields');
+    toast.error('Harap isi semua kolom dengan lengkap');
     return;
   }
 
   // Check if password and confirmPassword match
   if (userData.password !== userData.confirmPassword) {
-    toast.error('Passwords do not match');
+    toast.error('Kata sandi tidak cocok');
     return;
   }
 
@@ -42,8 +42,8 @@ export const addUser = async (userData, setIsLoading) => {
     toast.success('Admin add successfully!');
     return response.data;
   } catch (error) {
-    console.error('Error adding User:', error.response?.data || error.message);
-    toast.error(error.response?.data?.message || 'Error adding User');
+    console.error('Error adding User:', error.response?.data || error.err);
+    toast.error(error.response?.data?.err || 'Error adding User');
   } finally {
     setIsLoading(false); // Set loading to false after the request completes
   }
@@ -58,10 +58,7 @@ export const editUser = async (userId, userData) => {
     );
     return response.data;
   } catch (error) {
-    console.error(
-      'Error updating User:',
-      error.response?.data || error.message,
-    );
+    console.error('Error updating User:', error.response?.data || error.err);
 
     // Menampilkan notifikasi error kepada pengguna
     toast.error('Failed to update user. Please try again.');
@@ -78,10 +75,7 @@ export const deleteUser = async (userId) => {
     // console.log('API Delete User Response:', response.data);
     return response.data;
   } catch (error) {
-    console.error(
-      'Error deleting User:',
-      error.response?.data || error.message,
-    );
+    console.error('Error deleting User:', error.response?.data || error.err);
     throw error; // Propagate the error to be handled by the caller
   }
 };
@@ -95,8 +89,8 @@ export const getUserById = async (userId) => {
   } catch (error) {
     console.error(
       'Error fetching User:',
-      error.response?.data?.message || 'Unknown error',
+      error.response?.data?.err || 'Unknown error',
     );
-    throw new Error(error.response?.data?.message || 'Error fetching User');
+    throw new Error(error.response?.data?.err || 'Error fetching User');
   }
 };

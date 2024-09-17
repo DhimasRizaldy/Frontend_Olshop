@@ -17,6 +17,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import defaultUser from '../../../../images/user/default-user.png';
 import { ToastContainer, toast } from 'react-toastify';
+import Skeleton from 'react-loading-skeleton'; // Import Skeleton
+import 'react-loading-skeleton/dist/skeleton.css'; // Import CSS
 
 const genderOptions = [
   { value: 'Laki-Laki', label: 'Laki-Laki' },
@@ -93,7 +95,56 @@ const DataProfileAdmin = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <DefaultLayout>
+        <div className="mx-auto max-w-270">
+          <Breadcrumb pageName="Profile" />
+          <ToastContainer />
+          <div className="grid grid-cols-5 gap-8">
+            <div className="col-span-5 xl:col-span-3">
+              <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+                  <Skeleton height={30} width={150} />
+                </div>
+                <div className="p-7">
+                  <form>
+                    <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                      <div className="relative z-30 mx-auto my-5 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
+                        <Skeleton circle height={150} width={150} />
+                      </div>
+                    </div>
+                    <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                      <div className="w-full sm:w-1/2">
+                        <Skeleton height={40} width={300} />
+                      </div>
+                      <div className="w-full sm:w-1/2">
+                        <Skeleton height={40} width={300} />
+                      </div>
+                    </div>
+                    <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                      <div className="w-full sm:w-1/2">
+                        <Skeleton height={40} width={300} />
+                      </div>
+                      <div className="w-full sm:w-1/2">
+                        <Skeleton height={40} width={300} />
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-4.5">
+                      <Skeleton height={40} width={100} />
+                      <Skeleton height={40} width={100} />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mb-5 mt-4 flex space-x-4">
+            <Skeleton height={40} width={120} />
+            <Skeleton height={40} width={120} />
+          </div>
+        </div>
+      </DefaultLayout>
+    );
   }
 
   if (error) {

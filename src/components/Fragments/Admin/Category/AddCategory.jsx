@@ -12,7 +12,7 @@ const AddCategory = () => {
     e.preventDefault();
 
     if (!name) {
-      toast.error('Please fill in all fields');
+      toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
 
@@ -30,9 +30,19 @@ const AddCategory = () => {
       setName('');
     } catch (error) {
       toast.error('Failed to add category');
-      console.error('Error:', error);
+      // console.error('Error:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    const regex = /^[A-Za-z\s]*$/; // Only allows letters and spaces
+    if (regex.test(value)) {
+      setName(value);
+    } else {
+      toast.error('Input hanya boleh berisi huruf dan spasi');
     }
   };
 
@@ -57,7 +67,7 @@ const AddCategory = () => {
               id="name"
               placeholder="Category Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleNameChange}
             />
           </div>
         </div>

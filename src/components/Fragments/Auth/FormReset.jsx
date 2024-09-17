@@ -7,12 +7,16 @@ import Input from '../../Elements/Input/Inputs';
 import Button from '../../Elements/Button/Index';
 import { userResetPassword } from '../../../services/auth/user/userAuthServices';
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const FormReset = () => {
   const [password, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -62,6 +66,14 @@ const FormReset = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prevState) => !prevState);
+  };
+
   return (
     <form onSubmit={handleResetPassword}>
       <ToastContainer />
@@ -72,13 +84,19 @@ const FormReset = () => {
         </Label>
         <div className="relative">
           <Input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Enter your new password"
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={password}
             onChange={(e) => setNewPassword(e.target.value)}
             autoComplete="new-password"
           />
+          <span
+            className="absolute right-4 top-4 cursor-pointer"
+            onClick={togglePasswordVisibility}
+          >
+            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+          </span>
         </div>
       </div>
       {/* Confirm Password */}
@@ -88,13 +106,19 @@ const FormReset = () => {
         </Label>
         <div className="relative">
           <Input
-            type="password"
+            type={showConfirmPassword ? 'text' : 'password'}
             placeholder="Enter your confirm password"
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             autoComplete="new-password"
           />
+          <span
+            className="absolute right-4 top-4 cursor-pointer"
+            onClick={toggleConfirmPasswordVisibility}
+          >
+            <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+          </span>
         </div>
       </div>
       {/* Change Password Button */}

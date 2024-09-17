@@ -34,7 +34,7 @@ const EditTransaction = () => {
     e.preventDefault();
 
     if (!statusPayment || !shippingStatus || !receiptDelivery) {
-      toast.error('Please fill in all fields');
+      toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
 
