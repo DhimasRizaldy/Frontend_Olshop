@@ -47,3 +47,39 @@ export const handleLogin = async (email, password, navigate, setIsLoading) => {
     setIsLoading(false);
   }
 };
+
+export const handleGoogleLogin = async (tokenId, navigate, setIsLoading) => {
+  setIsLoading(true);
+  try {
+    const response = await http.post(API_ENDPOINT.LOGIN_GOOGLE, {
+      access_token: tokenId,
+    });
+
+    const token = response.data.data.token;
+    CookieStorage.set(CookieKeys.AuthToken, token);
+
+    toast.success('Login successful!');
+
+    // Panggil getWHOAMI setelah token tersimpan untuk mendapatkan data pengguna
+    const userResponse = await getWHOAMI();
+    const userRole = userResponse.data.user.role;
+
+    // Arahkan pengguna berdasarkan peran mereka
+    if (userRole === 'ADMIN') {
+      navigate('/dashboard', { state: { fromLogin: true } });
+    } else if (userRole === 'USER') {
+      navigate('/', { state: { fromLogin: true } });
+    } else {
+      console.error('Unknown user role:', userRole);
+      toast.error('Unknown user role');
+    }
+  } catch (error) {
+    console.error(
+      'Google login failed:',
+      error.response?.data || error.message,
+    );
+    toast.error('Google login failed');
+  } finally {
+    setIsLoading(false);
+  }
+};

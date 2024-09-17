@@ -2,7 +2,7 @@ export const API_ENDPOINT = {
   // User Auth
   USER_WHOAMI: '/auth/whoami',
   USER_LOGIN: '/auth/login',
-  USER_LOGIN_GOOGLE: '/auth/google',
+  LOGIN_GOOGLE: '/auth/google',
   USER_REGISTER: '/auth/register',
   USER_LOGOUT: 'user/logout',
   USER_RESEND_OTP: '/auth/resend-otp',

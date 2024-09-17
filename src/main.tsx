@@ -7,7 +7,9 @@ import './css/satoshi.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import { Provider } from 'react-redux'; // Import Provider dari react-redux
 import store from './redux/store/store'; // Import Redux store Anda
-import { GoogleOAuthProvider } from '@react-oauth/google'; // Import GoogleOAuthProvider
+import { GoogleOAuthProvider } from '@react-oauth/google'; // Import GoogleOAuthProvider dari @react-oauth/google
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -16,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         {/* Bungkus Router dengan Provider */}
         <Router>
           <App />
+          <ToastContainer />
         </Router>
       </GoogleOAuthProvider>
     </Provider>
