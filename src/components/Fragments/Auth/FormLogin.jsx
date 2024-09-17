@@ -121,7 +121,7 @@ const FormLogin = () => {
           <p className="font-medium">
             Don't activate account?{' '}
             <Link to="/verify-accounts" className="text-primary">
-              Activate Now
+              Activate Account
             </Link>
           </p>
         </div>

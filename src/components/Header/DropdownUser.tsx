@@ -104,7 +104,7 @@ const DropdownUser = () => {
   // Ambil username, email, dan role dari token
   const userDataFromToken = token ? getUserData(token) : {};
   const email = userDataFromToken.email || 'email tidak tersedia';
-  const role = userDataFromToken.role || 'role tidak tersedia';
+  const role = userDataFromToken.role || 'USER';
 
   return (
     <div className="relative">

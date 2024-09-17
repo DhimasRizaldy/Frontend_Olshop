@@ -59,7 +59,7 @@ const LoginGoogle = ({ navigate, setIsLoading }) => {
             </defs>
           </svg>
         </span>
-        Login with Google
+        Register / Login with Google
       </Button>
       <ToastContainer />
     </>
