@@ -26,7 +26,7 @@ const TermCondition = () => {
       },
       {
         heading: '5. Hubungi Kami',
-        content: `Jika Anda memiliki pertanyaan tentang Syarat dan Ketentuan ini, silakan hubungi kami di <a href="mailto:support@putrakomputer.com" class="text-blue-500 hover:underline">support@putrakomputer.com</a>.`,
+        content: `Jika Anda memiliki pertanyaan tentang Syarat dan Ketentuan ini, silakan hubungi kami di <a href="mailto:putrakomputerbdl@gmail.com" class="text-blue-500 hover:underline">putrakomputerbdl@gmail.com</a>.`,
       },
     ],
     backToHomeText: 'Kembali ke Beranda',

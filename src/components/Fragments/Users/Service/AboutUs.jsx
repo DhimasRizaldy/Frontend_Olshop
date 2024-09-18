@@ -2,7 +2,7 @@ import React from 'react';
 
 const AboutUs = () => {
   const companyInfo = {
-    logo: 'https://via.placeholder.com/150',
+    logo: 'https://ik.imagekit.io/xnl4hkzkx/putrakom.jpg?updatedAt=1726633748001',
     welcomeMessage: 'Selamat datang di Putra Komputer',
     tagline: 'Solusi satu atap untuk semua kebutuhan komputer Anda.',
     missionTitle: 'Misi Kami',
@@ -15,7 +15,7 @@ const AboutUs = () => {
       di setiap langkah.`,
     contactTitle: 'Hubungi Kami',
     contactDescription: `Ada pertanyaan atau memerlukan bantuan? Jangan ragu untuk menghubungi kami di 
-      <a href="mailto:support@putrakomputer.com" class="text-blue-500 hover:underline">support@putrakomputer.com</a>.`,
+      <a href="mailto:putrakomputerbdl@gmail.com" class="text-blue-500 hover:underline">putrakomputerbdl@gmail.com</a>.`,
     backToHomeText: 'Kembali ke Beranda',
     backToHomeLink: '/',
   };
@@ -31,7 +31,9 @@ const AboutUs = () => {
           <img
             src={companyInfo.logo}
             alt="Logo Putra Komputer"
-            className="mx-auto rounded-full mb-4"
+            className="mx-auto rounded-3xl mb-4"
+            width={300}
+            height={300}
           />
           <h2 className="text-2xl font-semibold text-gray-800">
             {companyInfo.welcomeMessage}

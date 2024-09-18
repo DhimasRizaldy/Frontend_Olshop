@@ -13,10 +13,11 @@ const ContactUsMe = () => {
     },
     contactDetails: {
       title: 'Informasi Kontak Kami',
-      address: '1234 Nama Jalan, Kota, Negara',
-      phone: '(123) 456-7890',
-      email: 'contact@example.com',
-      hours: 'Sen-Jum 9am-5pm',
+      address:
+        'Jl. Teuku Cik Ditiro No.9, Sumber Rejo, Kec. Kemiling, Kota Bandar Lampung, Lampung 35155',
+      phone: '081340670831',
+      email: 'putrakomputerbdl@gmail.com',
+      hours: 'Senin - Sabtu (9 pagi - 5 sore)',
     },
   };
 

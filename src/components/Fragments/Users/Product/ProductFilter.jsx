@@ -34,8 +34,15 @@ const fetchProducts = async (filters) => {
   if (discount) url.searchParams.append('discount', discount);
 
   const response = await axios.get(url.toString());
+  const productsData = response.data.data;
+
+  // Filter produk yang memiliki promoPrice lebih besar dari 0 jika discount diaktifkan
+  const filteredProducts = discount
+    ? productsData.filter((product) => product.promoPrice > 0)
+    : productsData;
+
   return {
-    products: response.data.data,
+    products: filteredProducts,
     total: response.data.total,
   };
 };
@@ -156,6 +163,8 @@ const ProductFilter = () => {
     let newSelectedCategories;
     if (category === 'all') {
       newSelectedCategories = [];
+      setSelectedRatings([]);
+      setDiscount(false);
     } else {
       newSelectedCategories = selectedCategories.includes(category)
         ? selectedCategories.filter((c) => c !== category)
