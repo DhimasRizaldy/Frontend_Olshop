@@ -37,16 +37,7 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !name ||
-      !categoryId ||
-      !price ||
-      !promoPrice ||
-      !weight ||
-      !stock ||
-      !description ||
-      !image
-    ) {
+    if (!name || !categoryId || !price || !weight || !stock || !description) {
       toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }

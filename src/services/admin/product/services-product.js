@@ -22,13 +22,11 @@ export const addProduct = async (productData, setIsloading) => {
     !productData.name ||
     !productData.categoryId ||
     !productData.price ||
-    !productData.promoPrice ||
     !productData.weight ||
     !productData.stock ||
-    !productData.description ||
-    !productData.image
+    !productData.description
   ) {
-    toast.error('Please fill in all fields');
+    toast.error('Harap isi semua kolom dengan lengkap');
     return;
   }
 
