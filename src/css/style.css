@@ -32,40 +32,34 @@
 
 /* print */
 @media print {
-  body * {
-    visibility: hidden;
+  .no-print {
+    display: none !important; /* Elemen dengan class no-print tidak akan dicetak */
   }
-  .printable, .printable * {
-    visibility: visible;
-  }
-  .printable {
-    position: absolute;
+
+  .print-area {
+    visibility: visible; /* Pastikan area cetak terlihat */
+    position: absolute; /* Mengatur posisi print-area */
     left: 0;
     top: 0;
-    width: 100%;
-    font-size: 12px; /* Ukuran font lebih kecil */
-    padding: 10px; /* Padding lebih kecil */
   }
-  .printable h1 {
-    font-size: 18px; /* Ukuran font judul lebih kecil */
+
+  body * {
+    visibility: hidden; /* Sembunyikan semua elemen di body saat cetak */
   }
-  .printable h2 {
-    font-size: 16px; /* Ukuran font subjudul lebih kecil */
+
+  .print-area,
+  .print-area * {
+    visibility: visible; /* Pastikan area cetak dan semua elemennya terlihat */
   }
-  .printable p {
-    margin: 2px 0; /* Margin lebih kecil */
-  }
-  .printable .border-b {
-    border-bottom-width: 1px; /* Lebar border lebih kecil */
-  }
-  .printable .border-t {
-    border-top-width: 1px; /* Lebar border lebih kecil */
-  }
-  .printable img {
-    width: 50px; /* Ukuran gambar lebih kecil */
-    height: 50px; /* Ukuran gambar lebih kecil */
+
+  /* Memastikan warna tetap terlihat saat mencetak */
+  * {
+    -webkit-print-color-adjust: exact !important; /* Untuk Chrome/Safari */
+    print-color-adjust: exact !important; /* Untuk Firefox dan browser lain yang mendukung */
   }
 }
+
+
 
 /* third-party libraries CSS */
 
