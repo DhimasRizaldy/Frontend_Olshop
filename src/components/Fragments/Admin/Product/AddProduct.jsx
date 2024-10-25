@@ -4,6 +4,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getCategories } from '../../../../services/admin/category/services-category';
 import { addProduct } from '../../../../services/admin/product/services-product';
+import Select from 'react-select'; // Library untuk combobox dengan pencarian
+
+// Fungsi untuk format ribuan
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
 
 const AddProduct = () => {
   const [name, setName] = useState('');
@@ -42,6 +48,12 @@ const AddProduct = () => {
       return;
     }
 
+    // Validasi harga promo harus lebih kecil dari harga normal
+    if (parseInt(promoPrice) >= parseInt(price)) {
+      toast.error('Harga promo harus lebih kecil dari harga normal');
+      return;
+    }
+
     const productData = {
       name,
       categoryId,
@@ -57,7 +69,7 @@ const AddProduct = () => {
 
     try {
       await addProduct(productData, setIsLoading);
-      toast.success('Product added successfully!');
+      toast.success('Produk berhasil ditambahkan!');
       setName('');
       setCategoryId('');
       setPrice('');
@@ -67,8 +79,11 @@ const AddProduct = () => {
       setDescription('');
       setImage('');
     } catch (error) {
-      console.error('Error adding Product:', error);
-      toast.error(error.response?.data?.message || 'Error adding Product');
+      console.error('Error menambahkan produk:', error);
+      toast.error(
+        error.response?.data?.message ||
+          'Terjadi kesalahan saat menambahkan produk',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +95,7 @@ const AddProduct = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Name
+            Nama Produk
           </label>
           <div className="relative">
             <input
@@ -88,7 +103,7 @@ const AddProduct = () => {
               type="text"
               name="name"
               id="name"
-              placeholder="Product Name"
+              placeholder="Nama Produk"
               value={name || ''}
               onChange={(e) => setName(e.target.value)}
             />
@@ -96,31 +111,26 @@ const AddProduct = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Category
+            Kategori
           </label>
           <div className="relative">
-            <select
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              disabled={isLoading}
-            >
-              <option value="" disabled>
-                Select a category
-              </option>
-              {categoryOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <Select
+              options={categoryOptions}
+              value={categoryOptions.find(
+                (option) => option.value === categoryId,
+              )}
+              onChange={(selectedOption) => setCategoryId(selectedOption.value)}
+              isDisabled={isLoading}
+              placeholder="Pilih Kategori..."
+              isSearchable // Mengaktifkan fitur pencarian
+            />
           </div>
         </div>
       </div>
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Price
+            Harga
           </label>
           <div className="relative">
             <input
@@ -129,14 +139,14 @@ const AddProduct = () => {
               name="price"
               id="price"
               placeholder="0.00"
-              value={price || ''}
-              onChange={(e) => setPrice(e.target.value)}
+              value={formatNumber(price) || ''}
+              onChange={(e) => setPrice(e.target.value.replace(/\./g, ''))}
             />
           </div>
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Promo Price
+            Harga Promo
           </label>
           <div className="relative">
             <input
@@ -145,8 +155,8 @@ const AddProduct = () => {
               name="promoPrice"
               id="promoPrice"
               placeholder="0.00"
-              value={promoPrice || ''}
-              onChange={(e) => setPromoPrice(e.target.value)}
+              value={formatNumber(promoPrice) || ''}
+              onChange={(e) => setPromoPrice(e.target.value.replace(/\./g, ''))}
             />
           </div>
         </div>
@@ -154,23 +164,23 @@ const AddProduct = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Weight
+            Berat (gram)
           </label>
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
               type="number"
-              name="Weight"
-              id="Weight"
-              value={weight || ''}
-              onChange={(e) => setWeight(e.target.value)}
-              placeholder="0.00 gram"
+              name="weight"
+              id="weight"
+              placeholder="0.00"
+              value={formatNumber(weight) || ''}
+              onChange={(e) => setWeight(e.target.value.replace(/\./g, ''))}
             />
           </div>
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Stock
+            Stok
           </label>
           <div className="relative">
             <input
@@ -178,9 +188,9 @@ const AddProduct = () => {
               type="number"
               name="stock"
               id="stock"
-              value={stock || ''}
-              onChange={(e) => setStock(e.target.value)}
               placeholder="0"
+              value={formatNumber(stock) || ''}
+              onChange={(e) => setStock(e.target.value.replace(/\./g, ''))}
             />
           </div>
         </div>
@@ -188,7 +198,7 @@ const AddProduct = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            description
+            Deskripsi
           </label>
           <div className="relative">
             <textarea
@@ -197,7 +207,7 @@ const AddProduct = () => {
               rows={6}
               name="description"
               id="description"
-              placeholder="Product Description"
+              placeholder="Deskripsi Produk..."
               value={description || ''}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -205,7 +215,7 @@ const AddProduct = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Image
+            Foto Produk
           </label>
           <div className="relative">
             <input
@@ -217,14 +227,14 @@ const AddProduct = () => {
           </div>
         </div>
       </div>
-
+      {/* Tombol simpan dan batal */}
       <div className="flex justify-end gap-4.5">
         <Link to="/product">
           <button
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="button"
           >
-            Cancel
+            Batal
           </button>
         </Link>
         <button
@@ -232,7 +242,7 @@ const AddProduct = () => {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? 'Saving...' : 'Save'}
+          {isLoading ? 'Menyimpan...' : 'Simpan'}
         </button>
       </div>
     </form>

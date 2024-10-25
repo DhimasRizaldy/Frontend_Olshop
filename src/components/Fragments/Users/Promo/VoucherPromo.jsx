@@ -14,11 +14,11 @@ const VoucherPromos = () => {
         if (response.success) {
           setPromos(response.data);
         } else {
-          setError('Failed to fetch promotions');
+          setError('Gagal mengambil data promosi');
         }
       } catch (error) {
-        console.error('Error fetching promos:', error);
-        setError('An error occurred while fetching promotions');
+        console.error('Error mengambil data promosi:', error);
+        setError('Terjadi kesalahan saat mengambil data promosi');
       } finally {
         setLoading(false);
       }
@@ -30,7 +30,7 @@ const VoucherPromos = () => {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
-        <h1 className="text-3xl font-bold mb-6">Discounts</h1>
+        <h1 className="text-3xl font-bold mb-6">Diskon</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, index) => (
             <SkeletonPromo key={index} /> // Render skeleton loaders
@@ -47,10 +47,10 @@ const VoucherPromos = () => {
   if (promos.length === 0) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
-        <h1 className="text-3xl font-bold mb-6">No Discounts Available</h1>
+        <h1 className="text-3xl font-bold mb-6">Tidak Ada Diskon Tersedia</h1>
         <p className="text-gray-600">
-          There are no promotions available at the moment. Please check back
-          later.
+          Saat ini tidak ada promosi yang tersedia. Silakan periksa kembali
+          nanti.
         </p>
       </div>
     );
@@ -58,7 +58,7 @@ const VoucherPromos = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
-      <h1 className="text-3xl font-bold mb-6">Discounts</h1>
+      <h1 className="text-3xl font-bold mb-6">Diskon</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {promos.map((promo) => (
           <div
@@ -73,7 +73,7 @@ const VoucherPromos = () => {
               {promo.discount}% Off
             </h2>
             <p className="text-gray-600 mb-4">
-              Use code: <span className="font-bold">{promo.codePromo}</span>
+              Gunakan kode: <span className="font-bold">{promo.codePromo}</span>
               <br />
               <span
                 className={`font-bold ${
@@ -83,8 +83,8 @@ const VoucherPromos = () => {
                 }`}
               >
                 {new Date(promo.expiresAt) < new Date()
-                  ? `Expired on: ${new Date(promo.expiresAt).toLocaleDateString()}`
-                  : `Valid until: ${new Date(promo.expiresAt).toLocaleDateString()}`}
+                  ? `Kedaluwarsa pada: ${new Date(promo.expiresAt).toLocaleDateString()}`
+                  : `Berlaku hingga: ${new Date(promo.expiresAt).toLocaleDateString()}`}
               </span>
             </p>
           </div>

@@ -1,6 +1,7 @@
 import Breadcrumb from '../../../components/Breadcrumbs/Breadcrumb';
 import DetailManagement from '../../../components/Fragments/Admin/Management/DetailManagement.jsx';
 import DefaultLayout from '../../../layout/DefaultLayout';
+import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 
 const DetailManagementProduct = () => {
   return (

@@ -39,11 +39,11 @@ const NotificationsMe = ({ userId }) => {
           );
           setNotifications(filteredNotifications);
         } else {
-          setError('Failed to fetch notifications.');
+          setError('Gagal mengambil notifikasi.');
         }
       } catch (error) {
         console.error('Error fetching notifications:', error);
-        setError('Error fetching notifications.');
+        setError('Error mengambil notifikasi.');
       } finally {
         setLoading(false);
       }
@@ -59,11 +59,11 @@ const NotificationsMe = ({ userId }) => {
         // Reload the page
         window.location.reload();
       } else {
-        setError('Failed to mark notification as read.');
+        setError('Gagal menandai notifikasi sebagai telah dibaca.');
       }
     } catch (error) {
       console.error('Error updating notification:', error);
-      setError('Error updating notification.');
+      setError('Error memperbarui notifikasi.');
     }
   };
 
@@ -81,19 +81,19 @@ const NotificationsMe = ({ userId }) => {
       window.location.reload();
     } catch (error) {
       console.error('Error updating notifications:', error);
-      setError('Error updating notifications.');
+      setError('Error memperbarui notifikasi.');
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 mt-2">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Notifications</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">Notifikasi</h1>
         <button
           className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600"
           onClick={handleMarkAllAsRead}
         >
-          Read All
+          Tandai Semua Dibaca
         </button>
       </div>
       {loading ? (
@@ -109,11 +109,11 @@ const NotificationsMe = ({ userId }) => {
       ) : notifications.length === 0 ? (
         <div className="text-center">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">
-            No Notifications Available
+            Tidak Ada Notifikasi
           </h2>
           <p className="text-base md:text-base text-gray-600">
-            There are no notifications to display at the moment. Please check
-            back later.
+            Tidak ada notifikasi untuk ditampilkan saat ini. Silakan periksa
+            kembali nanti.
           </p>
         </div>
       ) : (
@@ -154,7 +154,7 @@ const NotificationsMe = ({ userId }) => {
                     handleMarkAsRead(notification.notificationId);
                   }}
                 >
-                  Mark as Read
+                  Tandai Dibaca
                 </button>
               )}
             </div>

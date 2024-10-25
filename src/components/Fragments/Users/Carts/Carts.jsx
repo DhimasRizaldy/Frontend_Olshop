@@ -36,7 +36,7 @@ const CartsMe = () => {
   const [updatePending, setUpdatePending] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -50,11 +50,11 @@ const CartsMe = () => {
         } else if (response.status === 401) {
           setUnauthorized(true);
         } else {
-          // setError('Failed to fetch cart items');
+          setError('Gagal mengambil item keranjang');
         }
       } catch (error) {
-        // console.error('Error fetching cart items:', error);
-        // setError('An error occurred while fetching cart items');
+        console.error('Error fetching cart items:', error);
+        setError('Terjadi kesalahan saat mengambil item keranjang');
       } finally {
         setLoading(false);
       }
@@ -118,14 +118,14 @@ const CartsMe = () => {
             setCartItems(updatedItems);
             Swal.fire('Dihapus!', 'Item Anda telah dihapus.', 'success');
           } else {
-            throw new Error('Failed to delete cart item');
+            throw new Error('Gagal menghapus item keranjang');
           }
         } catch (error) {
           console.error('Error deleting cart item:', error);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Failed to delete cart item',
+            text: 'Gagal menghapus item keranjang',
           });
         }
       }
@@ -157,7 +157,6 @@ const CartsMe = () => {
           selectedItems.includes(item.cartId),
         );
 
-        // Redirect to the payment page, passing the selected items as state
         navigate('/payment-me', { state: { selectedCartItems } });
       }
     });
@@ -182,7 +181,9 @@ const CartsMe = () => {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">Shopping Cart</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">
+          Keranjang Belanja
+        </h1>
         {Array(3)
           .fill()
           .map((_, index) => (
@@ -195,11 +196,13 @@ const CartsMe = () => {
   if (unauthorized) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">Unauthorized</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">
+          Tidak Terotorisasi
+        </h1>
         <p className="text-gray-600 text-base">
-          Please log in to view your cart items.{' '}
+          Silakan masuk untuk melihat item keranjang Anda.{' '}
           <a href="/login" className="text-blue-500 underline">
-            Login here
+            Masuk di sini
           </a>
         </p>
       </div>
@@ -209,7 +212,7 @@ const CartsMe = () => {
   if (error) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">Error</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">Kesalahan</h1>
         <p className="text-gray-600 text-base">{error}</p>
       </div>
     );
@@ -219,11 +222,11 @@ const CartsMe = () => {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
         <h1 className="text-2xl md:text-3xl font-bold mb-6">
-          No Items in Cart
+          Tidak Ada Item di Keranjang
         </h1>
         <p className="text-gray-600 text-base">
-          There are no items in your cart at the moment. Please add items to
-          your cart to proceed with checkout.
+          Tidak ada item di keranjang Anda saat ini. Silakan tambahkan item ke
+          keranjang Anda untuk melanjutkan ke pembayaran.
         </p>
       </div>
     );
@@ -231,7 +234,7 @@ const CartsMe = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6">Shopping Cart</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">Keranjang Belanja</h1>
 
       <div className="bg-white shadow-md rounded-lg p-4 mb-4">
         <div className="flex items-center mb-4">
@@ -241,7 +244,7 @@ const CartsMe = () => {
             checked={selectedItems.length === cartItems.length}
             onChange={handleSelectAll}
           />
-          <label className="ml-2">Select All</label>
+          <label className="ml-2">Pilih Semua</label>
         </div>
         {cartItems.map((item) => {
           const finalPrice = item.products.promoPrice || item.products.price;
@@ -264,16 +267,16 @@ const CartsMe = () => {
                 />
                 <div className="flex-grow">
                   <h2 className="text-sm md:text-base font-semibold">
-                    {item.products?.name || 'Product Name'}
+                    {item.products?.name || 'Nama Produk'}
                   </h2>
                   <p className="text-gray-600 text-sm md:text-base">
-                    Price: {formatRupiah(finalPrice)}
+                    Harga: {formatRupiah(finalPrice)}
                   </p>
                   <p className="text-gray-600 font-semibold text-sm md:text-base mt-1">
                     Total: {formatRupiah(finalPrice * item.qty)}
                   </p>
                   {item.products?.stock <= 0 && (
-                    <p className="text-red-500 text-sm mt-1">Out of stock</p>
+                    <p className="text-red-500 text-sm mt-1">Stok habis</p>
                   )}
                 </div>
               </div>

@@ -19,7 +19,7 @@ const DataPromo = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filterStatus, setFilterStatus] = useState('ALL');
-  const [role, setRole] = useState('USER'); 
+  const [role, setRole] = useState('USER');
 
   // Fetch promos
   useEffect(() => {
@@ -28,7 +28,7 @@ const DataPromo = () => {
         const response = await getPromo();
         setPromo(response.data || []);
       } catch (error) {
-        console.error('Fetch promo failed:', error.message);
+        console.error('Gagal mengambil promo:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -44,7 +44,7 @@ const DataPromo = () => {
         const response = await getWHOAMI();
         setRole(response.data.user.role);
       } catch (error) {
-        console.error('Fetch user role failed:', error.message);
+        console.error('Gagal mengambil peran pengguna:', error.message);
         setError(error.message);
       }
     };
@@ -54,28 +54,29 @@ const DataPromo = () => {
   // Handle delete
   const handleDelete = async (promoId, promoName) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete the promo "${promoName}". You won't be able to revert this!`,
+      title: 'Apakah Anda yakin?',
+      text: `Anda akan menghapus promo "${promoName}". Tindakan ini tidak dapat dibatalkan!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await deletePromo(promoId);
           if (response.success) {
             Swal.fire(
-              'Deleted!',
-              `Promo "${promoName}" has been deleted.`,
+              'Dihapus!',
+              `Promo "${promoName}" telah dihapus.`,
               'success',
             );
             setPromo(promo.filter((promo) => promo.promoId !== promoId));
           }
         } catch (error) {
-          console.error('Error deleting promo:', error.message);
-          Swal.fire('Error!', error.message, 'error');
+          console.error('Error menghapus promo:', error.message);
+          Swal.fire('Gagal!', error.message, 'error');
         }
       }
     });
@@ -94,7 +95,7 @@ const DataPromo = () => {
       sortable: true,
     },
     {
-      name: 'Code Promo',
+      name: 'Kode Promo',
       selector: (row) => row.codePromo,
       sortable: true,
       cell: (row) => (
@@ -104,7 +105,7 @@ const DataPromo = () => {
       ),
     },
     {
-      name: 'Discount',
+      name: 'Diskon',
       selector: (row) => `${row.discount} %`,
       sortable: true,
       cell: (row) => (
@@ -114,17 +115,17 @@ const DataPromo = () => {
       ),
     },
     {
-      name: 'Active',
-      selector: (row) => row.activeAt,
+      name: 'Aktif',
+      selector: (row) => new Date(row.activeAt).toLocaleDateString('id-ID'),
       sortable: true,
     },
     {
-      name: 'Expire',
-      selector: (row) => row.expiresAt,
+      name: 'Kadaluarsa',
+      selector: (row) => new Date(row.expiresAt).toLocaleDateString('id-ID'),
       sortable: true,
     },
     {
-      name: 'Action',
+      name: 'Aksi',
       cell: (row) => (
         <div className="flex items-center space-x-3.5">
           <Link to={`/detail-promo/${row.promoId}`}>
@@ -163,10 +164,10 @@ const DataPromo = () => {
   });
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Memuat...</div>;
   }
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Kesalahan: {error}</div>;
   }
 
   return (
@@ -185,7 +186,7 @@ const DataPromo = () => {
               }`}
               onClick={() => setFilterStatus('ALL')}
             >
-              All
+              Semua
             </button>
             <button
               className={`mr-2 px-4 py-2 rounded-md ${
@@ -195,7 +196,7 @@ const DataPromo = () => {
               }`}
               onClick={() => setFilterStatus('ACTIVE')}
             >
-              Active
+              Aktif
             </button>
             <button
               className={`px-4 py-2 rounded-md ${
@@ -205,7 +206,7 @@ const DataPromo = () => {
               }`}
               onClick={() => setFilterStatus('EXPIRED')}
             >
-              Expired
+              Kadaluarsa
             </button>
           </div>
         </div>
@@ -217,7 +218,7 @@ const DataPromo = () => {
           pointerOnHover
           responsive
           striped
-          noDataComponent="No promos available."
+          noDataComponent="Tidak ada promo tersedia."
         />
       </div>
     </div>

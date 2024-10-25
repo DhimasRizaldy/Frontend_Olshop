@@ -24,7 +24,7 @@ const DetailAddress = () => {
         setCountry(response.data.country);
         setPostalCode(response.data.postalCode);
       } catch (error) {
-        console.error('Error fetching address data:', error);
+        console.error('Gagal mengambil data alamat:', error);
       }
     };
 
@@ -33,7 +33,7 @@ const DetailAddress = () => {
         const response = await getWHOAMI();
         setRole(response.data.user.role);
       } catch (error) {
-        toast.error('Failed to fetch user role');
+        toast.error('Gagal mengambil peran pengguna');
         console.error('Error:', error);
       }
     };
@@ -55,7 +55,7 @@ const DetailAddress = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Name Address
+            Nama Alamat
           </label>
           <div className="relative">
             <input
@@ -71,7 +71,7 @@ const DetailAddress = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Address
+            Alamat Lengkap
           </label>
           <div className="relative">
             <input
@@ -89,23 +89,7 @@ const DetailAddress = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            City
-          </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="text"
-              name="city"
-              id="city"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              disabled
-            />
-          </div>
-        </div>
-        <div className="w-full sm:w-1/2">
-          <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Country
+            Provinsi
           </label>
           <div className="relative">
             <input
@@ -119,11 +103,27 @@ const DetailAddress = () => {
             />
           </div>
         </div>
+        <div className="w-full sm:w-1/2">
+          <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+            Kota
+          </label>
+          <div className="relative">
+            <input
+              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+              type="text"
+              name="city"
+              id="city"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              disabled
+            />
+          </div>
+        </div>
       </div>
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Postal Code
+            Kode Pos
           </label>
           <div className="relative">
             <input
@@ -146,7 +146,7 @@ const DetailAddress = () => {
           type="button"
           onClick={handleCancel}
         >
-          Back
+          Kembali
         </button>
       </div>
     </form>

@@ -130,27 +130,27 @@ const DataTransaction = () => {
   const columns = [
     { name: 'No', selector: (row, index) => index + 1, sortable: true },
     {
-      name: 'TransactionId',
+      name: 'ID Transaksi',
       selector: (row) => row.transactionId,
       sortable: true,
     },
     {
-      name: 'Username',
+      name: 'Nama Pengguna',
       selector: (row) => row.users?.username || 'N/A',
       sortable: true,
     },
     {
-      name: 'PromoCode',
+      name: 'Kode Promo',
       selector: (row) => row.promo?.codePromo || 'N/A',
       sortable: true,
     },
     {
-      name: 'Address',
+      name: 'Alamat',
       selector: (row) => row.address?.nameAddress || 'N/A',
       sortable: true,
     },
     {
-      name: 'Discount',
+      name: 'Diskon',
       selector: (row) => formatRupiah(row.discount),
       sortable: true,
     },
@@ -160,18 +160,18 @@ const DataTransaction = () => {
       sortable: true,
     },
     {
-      name: 'PaymentType',
+      name: 'Tipe Pembayaran',
       selector: (row) => row.payment_type,
       sortable: true,
     },
-    { name: 'Courier', selector: (row) => row.courier, sortable: true },
+    { name: 'Kurir', selector: (row) => row.courier, sortable: true },
     {
-      name: 'ReceiptDelivery',
+      name: 'Resi Pengiriman',
       selector: (row) => row.receiptDelivery,
       sortable: true,
     },
     {
-      name: 'StatusPay',
+      name: 'Status Pembayaran',
       selector: (row) => {
         const getColor = (status) => {
           switch (status) {
@@ -196,7 +196,7 @@ const DataTransaction = () => {
       sortable: true,
     },
     {
-      name: 'StatusShip',
+      name: 'Status Pengiriman',
       selector: (row) => {
         const getColor = (status) => {
           switch (status) {
@@ -223,7 +223,7 @@ const DataTransaction = () => {
       sortable: true,
     },
     {
-      name: 'Action',
+      name: 'Aksi',
       selector: (row) => (
         <div className="flex items-center space-x-3.5">
           <Link to={`/detail-transaction/${row.transactionId}`}>
@@ -246,7 +246,7 @@ const DataTransaction = () => {
   ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Memuat...</div>;
   }
 
   if (error) {
@@ -257,7 +257,7 @@ const DataTransaction = () => {
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          {role === 'USER' ? 'My Transactions' : 'All Transactions'}
+          {role === 'USER' ? 'Transaksi Saya' : 'Data Transaksi'}
         </h4>
       </div>
 
@@ -315,7 +315,7 @@ const DataTransaction = () => {
               htmlFor="statusPaymentFilter"
               className="mr-2 text-black dark:text-white"
             >
-              Filter by Payment Status:
+              Filter berdasarkan Status Pembayaran:
             </label>
             <select
               id="statusPaymentFilter"
@@ -323,10 +323,10 @@ const DataTransaction = () => {
               onChange={(e) => handleFilterChangePay(e.target.value)}
               className="border border-gray-300 rounded-md p-2"
             >
-              <option value="All">All</option>
-              <option value="Pending">Pending</option>
-              <option value="Success">Success</option>
-              <option value="Cancelled">Cancelled</option>
+              <option value="All">Semua</option>
+              <option value="Pending">Belum Bayar</option>
+              <option value="Success">Sudah Bayar</option>
+              <option value="Cancelled">Dibatalkan</option>
             </select>
           </div>
 
@@ -335,7 +335,7 @@ const DataTransaction = () => {
               htmlFor="statusShippingFilter"
               className="mr-2 text-black dark:text-white"
             >
-              Filter by Shipping Status:
+              Filter berdasarkan Status Pengiriman:
             </label>
             <select
               id="statusShippingFilter"
@@ -343,12 +343,12 @@ const DataTransaction = () => {
               onChange={(e) => handleFilterChange(e.target.value)}
               className="border border-gray-300 rounded-md p-2"
             >
-              <option value="All">All</option>
+              <option value="All">Semua</option>
               <option value="Pending">Pending</option>
-              <option value="On Process">On Process</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Cancel">Cancel</option>
+              <option value="On Process">Dikemas</option>
+              <option value="Delivered">Dikirim</option>
+              <option value="Accepted">Diterima</option>
+              <option value="Cancel">Dibatalkan</option>
             </select>
           </div>
 
@@ -357,7 +357,7 @@ const DataTransaction = () => {
               htmlFor="searchTerm"
               className="mr-2 text-black dark:text-white"
             >
-              Search:
+              Cari:
             </label>
             <input
               type="text"
@@ -365,7 +365,7 @@ const DataTransaction = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border border-gray-300 rounded-md p-2"
-              placeholder="Search by TransactionId or Username"
+              placeholder="Cari berdasarkan ID Transaksi atau Nama Pengguna"
             />
           </div>
         </div>

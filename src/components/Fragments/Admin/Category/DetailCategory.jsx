@@ -26,7 +26,7 @@ const DetailCategory = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Name
+            Nama Kategori
           </label>
           <div className="relative">
             <input
@@ -48,7 +48,7 @@ const DetailCategory = () => {
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="submit"
           >
-            Back
+            Kembali
           </button>
         </Link>
       </div>

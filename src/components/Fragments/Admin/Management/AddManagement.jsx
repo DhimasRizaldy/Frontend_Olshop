@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Select from 'react-select';
 import { addManageStok } from '../../../../services/admin/manageStok/services-manageStok';
 import { getProduct } from '../../../../services/admin/product/services-product';
 import { getSupplier } from '../../../../services/admin/supplier/services-supplier';
@@ -10,14 +11,13 @@ const AddManagement = () => {
   const [supplierId, setSupplierId] = useState('');
   const [productId, setProductId] = useState('');
   const [stockIn, setStockIn] = useState('');
-  const [purchasePrice, setPurchasePrice] = useState(''); // Tambahkan state untuk purchasePrice
+  const [purchasePrice, setPurchasePrice] = useState('');
   const [dateStockIn, setDateStockIn] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [productOptions, setProductOptions] = useState([]);
   const [supplierOptions, setSupplierOptions] = useState([]);
 
   useEffect(() => {
-    // Fetch products and suppliers when the component mounts
     const fetchProductsAndSuppliers = async () => {
       try {
         const productsResponse = await getProduct();
@@ -25,24 +25,39 @@ const AddManagement = () => {
 
         const productOptions = productsResponse.data.map((product) => ({
           value: product.productId,
-          label: product.name, // assuming productName is the name field
+          label: product.name,
         }));
 
         const supplierOptions = suppliersResponse.data.map((supplier) => ({
           value: supplier.supplierId,
-          label: supplier.name, // assuming supplierName is the name field
+          label: supplier.name,
         }));
 
         setProductOptions(productOptions);
         setSupplierOptions(supplierOptions);
       } catch (error) {
-        toast.error('Failed to fetch products or suppliers');
+        toast.error('Gagal memuat produk atau supplier');
         console.error('Error fetching products or suppliers:', error);
       }
     };
 
     fetchProductsAndSuppliers();
   }, []);
+
+  const formatRupiah = (value) => {
+    if (!value) return '';
+    return value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
+
+  const handleStockInChange = (e) => {
+    const formattedValue = formatRupiah(e.target.value);
+    setStockIn(formattedValue);
+  };
+
+  const handlePurchasePriceChange = (e) => {
+    const formattedValue = formatRupiah(e.target.value);
+    setPurchasePrice(formattedValue);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,8 +76,8 @@ const AddManagement = () => {
     const manageStokData = {
       supplierId,
       productId,
-      stockIn: parseInt(stockIn, 10),
-      purchasePrice: BigInt(purchasePrice), // Konversi ke BigInt
+      stockIn: parseInt(stockIn.replace(/\./g, ''), 10),
+      purchasePrice: BigInt(purchasePrice.replace(/\./g, '')),
       dateStockIn: new Date(dateStockIn).toISOString(),
     };
 
@@ -70,14 +85,14 @@ const AddManagement = () => {
 
     try {
       await addManageStok(manageStokData);
-      toast.success('Manage Stock added successfully!');
+      toast.success('Data stok berhasil ditambahkan!');
       setSupplierId('');
       setProductId('');
       setStockIn('');
-      setPurchasePrice(''); // Reset purchasePrice
+      setPurchasePrice('');
       setDateStockIn('');
     } catch (error) {
-      toast.error('Failed to add manage Stock');
+      toast.error('Gagal menambahkan data stok');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -88,71 +103,69 @@ const AddManagement = () => {
     <form onSubmit={handleSubmit}>
       <ToastContainer />
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+        {/* Supplier Select */}
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
             Supplier
           </label>
           <div className="relative">
-            <select
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              value={supplierId}
-              onChange={(e) => setSupplierId(e.target.value)}
-              disabled={isLoading}
-            >
-              <option value="" disabled>
-                Select a supplier
-              </option>
-              {supplierOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <Select
+              options={supplierOptions}
+              value={supplierOptions.find(
+                (option) => option.value === supplierId,
+              )}
+              onChange={(selectedOption) =>
+                setSupplierId(selectedOption?.value || '')
+              }
+              isDisabled={isLoading}
+              placeholder="Cari dan pilih supplier"
+              className="text-black dark:text-white"
+            />
           </div>
         </div>
+        {/* Product Select */}
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Product
+            Produk
           </label>
           <div className="relative">
-            <select
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              value={productId}
-              onChange={(e) => setProductId(e.target.value)}
-              disabled={isLoading}
-            >
-              <option value="" disabled>
-                Select a product
-              </option>
-              {productOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <Select
+              options={productOptions}
+              value={productOptions.find(
+                (option) => option.value === productId,
+              )}
+              onChange={(selectedOption) =>
+                setProductId(selectedOption?.value || '')
+              }
+              isDisabled={isLoading}
+              placeholder="Cari dan pilih produk"
+              className="text-black dark:text-white"
+            />
           </div>
         </div>
       </div>
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+        {/* Stock Input */}
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Stock In
+            Jumlah Stok Masuk
           </label>
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
+              type="text"
               name="stockIn"
               id="stockIn"
               value={stockIn || ''}
-              onChange={(e) => setStockIn(e.target.value)}
+              onChange={handleStockInChange}
               placeholder="0"
             />
           </div>
         </div>
+        {/* Purchase Price Input */}
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Purchase Price
+            Harga Modal
           </label>
           <div className="relative">
             <input
@@ -161,16 +174,17 @@ const AddManagement = () => {
               name="purchasePrice"
               id="purchasePrice"
               value={purchasePrice || ''}
-              onChange={(e) => setPurchasePrice(e.target.value)}
+              onChange={handlePurchasePriceChange}
               placeholder="0"
             />
           </div>
         </div>
       </div>
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+        {/* Date Input */}
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Date Stock In
+            Tanggal Stok Masuk
           </label>
           <div className="relative">
             <input
@@ -178,7 +192,7 @@ const AddManagement = () => {
               type="date"
               name="dateStockIn"
               id="dateStockIn"
-              placeholder="Date Stock In"
+              placeholder="Pilih tanggal"
               value={dateStockIn || ''}
               onChange={(e) => setDateStockIn(e.target.value)}
             />
@@ -192,7 +206,7 @@ const AddManagement = () => {
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="button"
           >
-            Cancel
+            Batal
           </button>
         </Link>
         <button
@@ -200,7 +214,7 @@ const AddManagement = () => {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? 'Saving...' : 'Save'}
+          {isLoading ? 'Menyimpan...' : 'Simpan'}
         </button>
       </div>
     </form>

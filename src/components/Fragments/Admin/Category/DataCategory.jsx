@@ -25,7 +25,7 @@ const DataCategory = () => {
         const response = await getCategories();
         setCategories(response.data || []);
       } catch (error) {
-        console.error('Fetch categories failed:', error.message);
+        console.error('Gagal mengambil data kategori:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -36,21 +36,22 @@ const DataCategory = () => {
 
   const handleDelete = async (categoryId, categoryName) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete the category "${categoryName}". You won't be able to revert this!`,
+      title: 'Apakah Anda yakin?',
+      text: `Anda akan menghapus kategori "${categoryName}". Tindakan ini tidak bisa dibatalkan!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await deleteCategory(categoryId);
           if (response.success) {
             Swal.fire(
-              'Deleted!',
-              `Category "${categoryName}" has been deleted.`,
+              'Dihapus!',
+              `Kategori "${categoryName}" telah dihapus.`,
               'success',
             );
             setCategories(
@@ -61,8 +62,8 @@ const DataCategory = () => {
           }
         } catch (error) {
           Swal.fire(
-            'Error!',
-            `There was an error deleting the category "${categoryName}".`,
+            'Gagal!',
+            `Terjadi kesalahan saat menghapus kategori "${categoryName}".`,
             'error',
           );
         }
@@ -78,17 +79,17 @@ const DataCategory = () => {
       width: '80px',
     },
     {
-      name: 'CategoryId',
+      name: 'ID Kategori',
       selector: (row) => row.categoryId,
       sortable: true,
     },
     {
-      name: 'Name',
+      name: 'Nama Kategori',
       selector: (row) => row.name,
       sortable: true,
     },
     {
-      name: 'Action',
+      name: 'Aksi',
       cell: (row) => (
         <div className="flex items-center space-x-3.5">
           <Link to={`/detail-category/${row.categoryId}`}>
@@ -123,7 +124,7 @@ const DataCategory = () => {
   );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Memuat data...</div>;
   }
 
   if (error) {
@@ -134,14 +135,14 @@ const DataCategory = () => {
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          Data Category
+          Data Kategori
         </h4>
       </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-end pb-4">
           <input
             type="text"
-            placeholder="Search by name or ID"
+            placeholder="Cari berdasarkan nama atau ID"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -155,7 +156,7 @@ const DataCategory = () => {
           pointerOnHover
           responsive
           striped
-          noDataComponent="No categories available."
+          noDataComponent="Tidak ada kategori yang tersedia."
         />
       </div>
     </div>

@@ -15,20 +15,20 @@ const PaymentModal = ({ isOpen, onClose, paymentUrl }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded shadow-lg">
-        <h2 className="text-lg font-bold mb-4">Proceed to Payment</h2>
+        <h2 className="text-lg font-bold mb-4">Lanjutkan ke Pembayaran</h2>
         <a
           href={paymentUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
         >
-          Go to Payment
+          Pergi ke Pembayaran
         </a>
         <button
           onClick={onClose}
           className="mt-4 bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400 transition duration-300"
         >
-          Close
+          Tutup
         </button>
       </div>
       <div className="fixed inset-0 bg-black opacity-50"></div>
@@ -49,10 +49,7 @@ const DetailTransactionMe = () => {
         try {
           const response = await getTransactionById(transactionId);
           if (response.success) {
-            // Store the transaction data
             setTransactionDetail(response.data);
-
-            // Ambil userId dari response.data dan simpan ke localStorage
             const userId = response.data.userId;
             localStorage.setItem('userId', userId);
           } else {
@@ -70,39 +67,36 @@ const DetailTransactionMe = () => {
   }, [transactionId]);
 
   useEffect(() => {
-    // Simpan transactionId dari URL ke localStorage
     localStorage.setItem('transactionId', transactionId);
   }, [transactionId]);
 
-  // Bisa digunakan
   const handlePaymentClick = () => {
     if (transactionDetail?.token) {
       window.snap.pay(transactionDetail.token, {
         onSuccess: function (result) {
-          Swal.fire('Success!', 'Payment successful!', 'success').then(() => {
-            // Arahkan ke halaman payment success
+          Swal.fire('Berhasil!', 'Pembayaran berhasil!', 'success').then(() => {
             window.location.href = '/payment-success';
           });
         },
         onPending: function (result) {
-          Swal.fire('Pending!', 'Payment is pending.', 'info');
+          Swal.fire('Tertunda!', 'Pembayaran tertunda.', 'info');
         },
         onError: function (result) {
-          Swal.fire('Error!', 'Payment failed.', 'error');
+          Swal.fire('Gagal!', 'Pembayaran gagal.', 'error');
         },
         onClose: function () {
-          Swal.fire('Closed!', 'Payment popup closed.', 'info');
+          Swal.fire('Ditutup!', 'Popup pembayaran ditutup.', 'info');
         },
       });
     } else {
       Swal.fire(
-        'Error!',
-        'Payment token not found or transaction details not loaded',
+        'Gagal!',
+        'Token pembayaran tidak ditemukan atau detail transaksi belum dimuat',
         'error',
       );
     }
   };
-  // handle payment
+
   const handleCancelOrder = async () => {
     try {
       const result = await Swal.fire({
@@ -129,7 +123,6 @@ const DetailTransactionMe = () => {
                 status_payment: 'Cancelled',
                 shippingStatus: 'Cancel',
               }));
-              // Redirect ke halaman /payment-cancel
               navigate('/payment-cancel');
             },
           );
@@ -150,7 +143,6 @@ const DetailTransactionMe = () => {
     }
   };
 
-  // handle confirmation transaction
   const handleConfirmOrder = async () => {
     try {
       const result = await Swal.fire({
@@ -166,7 +158,7 @@ const DetailTransactionMe = () => {
         const response = await editTransaction(transactionId, {
           status_payment: 'Success',
           shippingStatus: 'Accepted',
-          receiptDelivery: transactionDetail.receiptDelivery, // Menggunakan nilai yang sudah ada
+          receiptDelivery: transactionDetail.receiptDelivery,
         });
 
         if (response.success) {
@@ -193,7 +185,6 @@ const DetailTransactionMe = () => {
     }
   };
 
-  // handle print invoice
   const printInvoice = () => {
     window.print();
   };
@@ -225,7 +216,7 @@ const DetailTransactionMe = () => {
       <div className="print-area">
         <div className="bg-white shadow-md rounded-lg p-6">
           <h1 className="text-3xl font-bold text-center mb-8">
-            Transaction Details
+            Detail Transaksi
           </h1>
 
           <div className="flex justify-end mb-6 gap-4">
@@ -236,17 +227,15 @@ const DetailTransactionMe = () => {
                   onClick={printInvoice}
                   className="no-print bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
                 >
-                  Print
+                  Cetak
                 </a>
               )}
           </div>
 
           <div className="border-b border-gray-200 pb-4 mb-4">
-            <h2 className="text-2xl font-semibold mb-2">
-              Transaction Overview
-            </h2>
+            <h2 className="text-2xl font-semibold mb-2">Ringkasan Transaksi</h2>
             <p className="text-gray-600 mb-2">
-              <strong>Transaction ID:</strong>{' '}
+              <strong>ID Transaksi:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.transactionId
               ) : (
@@ -254,7 +243,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Date:</strong>{' '}
+              <strong>Tanggal:</strong>{' '}
               {transactionDetail && transactionDetail.transaction_time
                 ? new Date(transactionDetail.transaction_time).toLocaleString(
                     'id-ID',
@@ -267,7 +256,7 @@ const DetailTransactionMe = () => {
             </p>
 
             <p className="text-gray-600 mb-2">
-              <strong>Status Payment:</strong>{' '}
+              <strong>Status Pembayaran:</strong>{' '}
               <span
                 className={`${
                   transactionDetail
@@ -283,7 +272,7 @@ const DetailTransactionMe = () => {
               </span>
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Payment Method:</strong>{' '}
+              <strong>Metode Pembayaran:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.payment_type
               ) : (
@@ -291,7 +280,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Total Amount:</strong>{' '}
+              <strong>Total:</strong>{' '}
               {transactionDetail ? (
                 formatRupiah(transactionDetail.total)
               ) : (
@@ -299,7 +288,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Discount:</strong>{' '}
+              <strong>Diskon:</strong>{' '}
               {transactionDetail ? (
                 formatRupiah(transactionDetail.discount)
               ) : (
@@ -317,9 +306,9 @@ const DetailTransactionMe = () => {
           </div>
 
           <div className="border-b border-gray-200 pb-4 mb-4">
-            <h2 className="text-xl font-semibold mb-2">User Information</h2>
+            <h2 className="text-xl font-semibold mb-2">Informasi Pengguna</h2>
             <p className="text-gray-600 mb-2">
-              <strong>Name:</strong>{' '}
+              <strong>Nama:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.user.username
               ) : (
@@ -335,7 +324,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Phone:</strong>{' '}
+              <strong>Telepon:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.user.phoneNumber
               ) : (
@@ -345,9 +334,9 @@ const DetailTransactionMe = () => {
           </div>
 
           <div className="border-b border-gray-200 pb-4 mb-4">
-            <h2 className="text-xl font-semibold mb-2">Delivery Address</h2>
+            <h2 className="text-xl font-semibold mb-2">Alamat Pengiriman</h2>
             <p className="text-gray-600 mb-2">
-              <strong>Name Address:</strong>{' '}
+              <strong>Nama Alamat:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.address.nameAddress
               ) : (
@@ -355,7 +344,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Street:</strong>{' '}
+              <strong>Jalan:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.address.address
               ) : (
@@ -363,7 +352,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>City:</strong>{' '}
+              <strong>Kota:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.address.city
               ) : (
@@ -371,7 +360,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Postal Code:</strong>{' '}
+              <strong>Kode Pos:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.address.postalCode
               ) : (
@@ -379,7 +368,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Country:</strong>{' '}
+              <strong>Negara:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.address.country
               ) : (
@@ -389,7 +378,7 @@ const DetailTransactionMe = () => {
           </div>
 
           <div className="border-b border-gray-200 pb-4 mb-4">
-            <h2 className="text-xl font-semibold mb-2">Shipping Information</h2>
+            <h2 className="text-xl font-semibold mb-2">Informasi Pengiriman</h2>
             <p className="text-gray-600 mb-2">
               <strong>Kurir:</strong>{' '}
               {transactionDetail ? (
@@ -399,7 +388,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Shipping Status:</strong>{' '}
+              <strong>Status Pengiriman:</strong>{' '}
               <span
                 className={`${
                   transactionDetail
@@ -425,9 +414,9 @@ const DetailTransactionMe = () => {
           </div>
 
           <div className="border-b border-gray-200 pb-4 mb-4">
-            <h2 className="text-xl font-semibold mb-2">Promo Information</h2>
+            <h2 className="text-xl font-semibold mb-2">Informasi Promo</h2>
             <p className="text-gray-600 mb-2">
-              <strong>Promo Code:</strong>{' '}
+              <strong>Kode Promo:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.promo?.codePromo || '-'
               ) : (
@@ -435,7 +424,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Promo Discount:</strong>{' '}
+              <strong>Diskon Promo:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.promo?.discount ? (
                   `${transactionDetail.promo.discount}%`
@@ -449,7 +438,7 @@ const DetailTransactionMe = () => {
           </div>
 
           <div className="border-b border-gray-200 pb-4 mb-4">
-            <h2 className="text-xl font-semibold mb-2">Cart Details</h2>
+            <h2 className="text-xl font-semibold mb-2">Detail Keranjang</h2>
             {transactionDetail ? (
               transactionDetail.cartDetails.map((cartDetails, index) => {
                 const finalPrice =
@@ -466,16 +455,17 @@ const DetailTransactionMe = () => {
                     />
                     <div>
                       <p className="text-gray-600 mb-2">
-                        <strong>Product Name:</strong> {cartDetails.productName}
+                        <strong>Nama Produk:</strong> {cartDetails.productName}
                       </p>
                       <p className="text-gray-600 mb-2">
-                        <strong>Price:</strong> {formatRupiah(finalPrice)}
+                        <strong>Harga:</strong> {formatRupiah(finalPrice)}
                       </p>
                       <p className="text-gray-600 mb-2">
-                        <strong>Quantity:</strong> {cartDetails.productQuantity}
+                        <strong>Kuantitas:</strong>{' '}
+                        {cartDetails.productQuantity}
                       </p>
                       <p className="text-gray-600 mb-2">
-                        <strong>Total Price:</strong>{' '}
+                        <strong>Total Harga:</strong>{' '}
                         {formatRupiah(finalPrice * cartDetails.productQuantity)}
                       </p>
                     </div>
@@ -549,7 +539,6 @@ const DetailTransactionMe = () => {
           </div>
         </div>
       </div>
-      {/* Payment Modal */}
       <PaymentModal
         isOpen={showPaymentPopup}
         onClose={() => setShowPaymentPopup(false)}

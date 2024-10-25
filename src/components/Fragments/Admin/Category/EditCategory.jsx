@@ -40,9 +40,9 @@ const EditCategory = () => {
 
     try {
       await editCategory(categoryId, categoryData);
-      toast.success('Category updated successfully!');
+      toast.success('kategori berhasil diperbarui!');
     } catch (error) {
-      toast.error('Failed to update category');
+      toast.error('Gagal memperbarui kategori. Silakan coba lagi.');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -56,7 +56,7 @@ const EditCategory = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              Name
+              Nama Kategori
             </label>
             <div className="relative">
               <input
@@ -79,7 +79,7 @@ const EditCategory = () => {
               type="button"
               disabled={isLoading}
             >
-              Cancel
+              Batal
             </button>
           </Link>
           <button
@@ -87,7 +87,7 @@ const EditCategory = () => {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? 'Updating...' : 'Update'}
+            {isLoading ? 'Memperbarui...' : 'Perbarui'}
           </button>
         </div>
       </form>

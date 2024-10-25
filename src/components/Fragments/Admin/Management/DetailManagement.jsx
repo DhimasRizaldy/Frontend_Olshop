@@ -10,7 +10,7 @@ const DetailManagement = () => {
   const [supplierName, setSupplierName] = useState('');
   const [productName, setProductName] = useState('');
   const [stockIn, setStockIn] = useState('');
-  const [purchasePrice, setPurchasePrice] = useState(''); // Tambahkan state untuk purchasePrice
+  const [purchasePrice, setPurchasePrice] = useState('');
   const [dateStockIn, setDateStockIn] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,13 +24,13 @@ const DetailManagement = () => {
           setSupplierName(supplier.name);
           setProductName(product.name);
           setStockIn(stockIn);
-          setPurchasePrice(purchasePrice ? purchasePrice.toString() : 'N/A'); // Set purchasePrice
+          setPurchasePrice(purchasePrice ? purchasePrice.toString() : 'N/A');
           setDateStockIn(formatDate(dateStockIn));
         } else {
-          throw new Error('Manage stock not found');
+          throw new Error('Data stok tidak ditemukan');
         }
       } catch (error) {
-        toast.error('Failed to fetch manage stock data');
+        toast.error('Gagal mengambil data stok');
         console.error('Error fetching manage stock data:', error.message);
       } finally {
         setIsLoading(false);
@@ -39,6 +39,11 @@ const DetailManagement = () => {
 
     fetchManageStokData();
   }, [manageStockId]);
+
+  const formatNumber = (value) => {
+    if (!value) return '';
+    return new Intl.NumberFormat('id-ID').format(value);
+  };
 
   return (
     <form action="#">
@@ -60,7 +65,7 @@ const DetailManagement = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Product
+            Produk
           </label>
           <div className="relative">
             <input
@@ -77,22 +82,18 @@ const DetailManagement = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Stock In
+            Stok Masuk
           </label>
-          <div className="relative">
-            <input
-              className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
-              name="stockIn"
-              id="stockIn"
-              value={stockIn}
-              disabled
-            />
-          </div>
+          <input
+            className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+            type="text"
+            value={formatNumber(stockIn)}
+            disabled
+          />
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Purchase Price
+            Harga Beli
           </label>
           <div className="relative">
             <input
@@ -109,7 +110,7 @@ const DetailManagement = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Date Stock In
+            Tanggal Stok Masuk
           </label>
           <div className="relative">
             <input
@@ -130,7 +131,7 @@ const DetailManagement = () => {
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="button"
           >
-            Back
+            Kembali
           </button>
         </Link>
       </div>

@@ -20,7 +20,7 @@ const AddUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate the inputs
+    // Validasi input
     if (!username || !email || !password || !confirmPassword) {
       toast.error('Harap isi semua kolom dengan lengkap');
       return;
@@ -31,7 +31,7 @@ const AddUser = () => {
       return;
     }
 
-    // Create user data
+    // Buat data pengguna
     const userData = {
       username,
       email,
@@ -42,14 +42,16 @@ const AddUser = () => {
     setIsLoading(true);
 
     try {
-      // Send data to backend
+      // Kirim data ke backend
       await addUser(userData, setIsLoading);
+      toast.success('Pengguna berhasil ditambahkan');
       setUsername('');
       setEmail('');
       setPassword('');
       setConfirmPassword('');
+      navigate('/users'); // Redirect ke halaman pengguna setelah berhasil
     } catch (error) {
-      toast.error('Failed to add user');
+      toast.error('Gagal menambahkan pengguna');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -62,7 +64,7 @@ const AddUser = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Username
+            Nama Pengguna
           </label>
           <div className="relative">
             <input
@@ -70,7 +72,7 @@ const AddUser = () => {
               type="text"
               name="username"
               id="username"
-              placeholder="Enter Username"
+              placeholder="Masukkan Nama Pengguna"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -86,7 +88,7 @@ const AddUser = () => {
               type="email"
               name="email"
               id="email"
-              placeholder="Enter Email"
+              placeholder="Masukkan Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -96,7 +98,7 @@ const AddUser = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Password
+            Kata Sandi
           </label>
           <div className="relative">
             <input
@@ -104,7 +106,7 @@ const AddUser = () => {
               type={showPassword ? 'text' : 'password'}
               name="password"
               id="password"
-              placeholder="Enter Password"
+              placeholder="Masukkan Kata Sandi"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -119,7 +121,7 @@ const AddUser = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block font-medium text-black dark:text-white">
-            Confirm Password
+            Konfirmasi Kata Sandi
           </label>
           <div className="relative">
             <input
@@ -127,7 +129,7 @@ const AddUser = () => {
               type={showConfirmPassword ? 'text' : 'password'}
               name="confirmPassword"
               id="confirmPassword"
-              placeholder="Enter Confirm Password"
+              placeholder="Masukkan Konfirmasi Kata Sandi"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
@@ -149,7 +151,7 @@ const AddUser = () => {
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="button"
           >
-            Cancel
+            Batal
           </button>
         </Link>
         <button
@@ -157,7 +159,7 @@ const AddUser = () => {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? 'Loading...' : 'Save'}
+          {isLoading ? 'Memuat...' : 'Simpan'}
         </button>
       </div>
     </form>

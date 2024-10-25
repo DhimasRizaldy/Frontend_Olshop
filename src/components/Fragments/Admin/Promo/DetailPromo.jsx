@@ -17,10 +17,10 @@ const DetailPromo = () => {
         const response = await getPromoById(promoId);
         setCodePromo(response.data.codePromo);
         setDiscount(response.data.discount);
-        setActiveAt(formatDate(response.data.activeAt)); // Format date
-        setExpiresAt(formatDate(response.data.expiresAt)); // Format date
+        setActiveAt(formatDate(response.data.activeAt)); // Format tanggal
+        setExpiresAt(formatDate(response.data.expiresAt)); // Format tanggal
       } catch (error) {
-        toast.error('Failed to fetch promo data');
+        toast.error('Gagal mengambil data promo');
         console.error('Error:', error);
       }
     };
@@ -33,7 +33,7 @@ const DetailPromo = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Code Promo
+            Kode Promo
           </label>
           <div className="relative">
             <input
@@ -49,7 +49,7 @@ const DetailPromo = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Discount
+            Diskon (%)
           </label>
           <div className="relative">
             <input
@@ -67,7 +67,7 @@ const DetailPromo = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Tanggal Active
+            Tanggal Aktif
           </label>
           <div className="relative">
             <input
@@ -83,7 +83,7 @@ const DetailPromo = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Tanggal Expires
+            Tanggal Kadaluarsa
           </label>
           <div className="relative">
             <input
@@ -105,7 +105,7 @@ const DetailPromo = () => {
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="submit"
           >
-            Back
+            Kembali
           </button>
         </Link>
       </div>

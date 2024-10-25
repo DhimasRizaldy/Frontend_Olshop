@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getSupplierById } from '../../../../services/admin/supplier/services-supplier';
+import { toast } from 'react-toastify';
 
 const DetailSupplier = () => {
   const { supplierId } = useParams();
@@ -19,7 +20,7 @@ const DetailSupplier = () => {
         setAddress(response.data.address);
         setPhoneNumber(response.data.phoneNumber);
       } catch (error) {
-        toast.error('Failed to fetch supplier data');
+        toast.error('Gagal mengambil data supplier');
         console.error('Error:', error);
       }
     };
@@ -33,9 +34,9 @@ const DetailSupplier = () => {
         <div className="w-full sm:w-1/2">
           <label
             className="mb-3 block text-sm font-medium text-black dark:text-white"
-            htmlFor="codePromo"
+            htmlFor="name"
           >
-            Name Toko
+            Nama Toko
           </label>
           <div className="relative">
             <input
@@ -69,7 +70,7 @@ const DetailSupplier = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Address
+            Alamat
           </label>
           <div className="relative">
             <input
@@ -85,7 +86,7 @@ const DetailSupplier = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Phone Number
+            Nomor Telepon
           </label>
           <div className="relative">
             <input
@@ -105,9 +106,9 @@ const DetailSupplier = () => {
         <Link to="/supplier">
           <button
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-            type="submit"
+            type="button"
           >
-            Back
+            Kembali
           </button>
         </Link>
       </div>

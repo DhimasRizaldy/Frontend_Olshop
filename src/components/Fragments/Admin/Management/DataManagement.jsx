@@ -20,14 +20,25 @@ const DataManagement = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Format tanggal ke MM/DD/YYYY
+  const formatTanggal = (tanggal) => {
+    const date = new Date(tanggal);
+    return date.toLocaleDateString('en-US'); // Mengubah ke format MM/DD/YYYY
+  };
+
+  // Format number with thousands separator
+  const formatNumber = (value) => {
+    return new Intl.NumberFormat('id-ID').format(value);
+  };
+
   // get manage stok
   useEffect(() => {
     const fetchManageStok = async () => {
       try {
         const response = await getManageStok();
-        setManageStok(response.data || []); // Simpan data kategori dalam state
+        setManageStok(response.data || []); // Simpan data stok dalam state
       } catch (error) {
-        console.error('Fetch manage stok failed:', error.message);
+        console.error('Fetch manage stok gagal:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -39,24 +50,25 @@ const DataManagement = () => {
   // handle delete
   const handleDelete = async (manageStockId, manageStokName) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete the manage stok "${manageStokName}". You won't be able to revert this!`,
+      title: 'Apakah Anda yakin?',
+      text: `Anda akan menghapus stok produk "${manageStokName}". Data yang dihapus tidak bisa dikembalikan!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await deleteManageStok(manageStockId);
           if (response.success) {
             Swal.fire(
-              'Deleted!',
-              `Manage stok "${manageStokName}" has been deleted.`,
+              'Terhapus!',
+              `Stok produk "${manageStokName}" berhasil dihapus.`,
               'success',
             );
-            // Update state to remove the deleted manage stok
+            // Update state untuk menghapus data yang dihapus
             setManageStok(
               manageStoks.filter(
                 (manageStok) => manageStok.manageStockId !== manageStockId,
@@ -64,11 +76,17 @@ const DataManagement = () => {
             );
           }
         } catch (error) {
-          console.error('Error deleting manage stok:', error.message);
+          console.error('Gagal menghapus stok produk:', error.message);
           Swal.fire('Error', error.message, 'error');
         }
       }
     });
+  };
+
+  // Format Rupiah with "Rp" and dot separator for thousands
+  const formatRupiah = (value) => {
+    if (!value) return '';
+    return `Rp ${value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
   };
 
   const columns = [
@@ -79,38 +97,38 @@ const DataManagement = () => {
       width: '80px',
     },
     {
-      name: 'MProductId',
+      name: 'ID MProduk',
       selector: (row) => row.manageStockId,
       sortable: true,
     },
     {
-      name: 'SupplierId',
+      name: 'ID Suplier',
       selector: (row) => row.supplier.name,
       sortable: true,
     },
     {
-      name: 'ProductId',
+      name: 'ID Produk',
       selector: (row) => row.product.name,
       sortable: true,
     },
     {
-      name: 'StockIn',
-      selector: (row) => row.stockIn,
+      name: 'Stok Masuk',
+      selector: (row) => formatNumber(row.stockIn), // Use thousands separator for stockIn
       sortable: true,
     },
     {
-      name: 'PurchasePrice',
+      name: 'Harga Modal',
       selector: (row) =>
         row.purchasePrice ? formatRupiah(row.purchasePrice.toString()) : 'N/A',
       sortable: true,
     },
     {
-      name: 'DateStockIn',
-      selector: (row) => row.dateStockIn,
+      name: 'Tanggal Stok Masuk',
+      selector: (row) => formatTanggal(row.dateStockIn), // Format tanggal ke MM/DD/YYYY
       sortable: true,
     },
     {
-      name: 'Action',
+      name: 'Aksi',
       cell: (row) => (
         <div className="flex items-center space-x-3.5">
           <Link to={`/detail-management/${row.manageStockId}`}>
@@ -134,7 +152,7 @@ const DataManagement = () => {
     },
   ];
 
-  // Filter manage stoks based on search term
+  // Filter manage stok berdasarkan search term
   const filteredManageStoks = manageStoks.filter(
     (manageStok) =>
       manageStok.product.name
@@ -161,14 +179,14 @@ const DataManagement = () => {
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          Data Management Product
+          Data Management Produk
         </h4>
       </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-end pb-4">
           <input
             type="text"
-            placeholder="Search by product, supplier or ID"
+            placeholder="Cari berdasarkan produk, supplier, atau ID"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -182,7 +200,7 @@ const DataManagement = () => {
           pointerOnHover
           responsive
           striped
-          noDataComponent="No manage stok available."
+          noDataComponent="Data stok produk tidak tersedia."
         />
       </div>
     </div>

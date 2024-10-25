@@ -162,13 +162,13 @@ const DetailProducts = () => {
           </div>
           <div className="mb-4">
             <p className="text-gray-700">
-              <strong>Stock:</strong> {product.stock}
+              <strong>Stok:</strong> {product.stock}
             </p>
             <p className="text-gray-700">
-              <strong>Weight:</strong> {product.weight} grams
+              <strong>Berat:</strong> {product.weight} grams
             </p>
             <p className="text-gray-700">
-              <strong>Category:</strong>{' '}
+              <strong>Kategori:</strong>{' '}
               {product.category?.name || 'Unknown Category'}
             </p>
             <p className="text-gray-700">
@@ -199,26 +199,6 @@ const DetailProducts = () => {
             </button> */}
           </div>
 
-          <div className="border-t mt-6">
-            <ul className="flex border-b">
-              <li className="mr-6">
-                <a
-                  href="#product-details"
-                  className="py-2 px-4 text-blue-600 hover:text-blue-800 border-b-2 border-transparent hover:border-blue-600"
-                >
-                  Detail Produk
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#product-reviews"
-                  className="py-2 px-4 text-gray-600 hover:text-gray-800 border-b-2 border-transparent hover:border-gray-600"
-                >
-                  Ulasan
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
       <div className="mt-6" id="product-reviews">

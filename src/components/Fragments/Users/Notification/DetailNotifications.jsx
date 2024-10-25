@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; // To get the dynamic route parameter
+import { useParams, Link } from 'react-router-dom'; // Untuk mendapatkan parameter rute dinamis
 import { getNotificationById } from '../../../../services/admin/notification/services-notification';
 
 const DetailNotifications = () => {
-  const { notificationId } = useParams(); // Extract the notificationId from the URL
+  const { notificationId } = useParams(); // Ekstrak notificationId dari URL
   const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchNotification = async () => {
       try {
-        const response = await getNotificationById(notificationId); // Use the dynamic notificationId
+        const response = await getNotificationById(notificationId); // Gunakan notificationId dinamis
         if (response.status === true) {
           setNotification(response.data);
         } else {
-          console.error('Failed to retrieve notification:', response.message);
+          console.error('Gagal mengambil notifikasi:', response.message);
         }
       } catch (error) {
-        console.error('Error fetching notification:', error);
+        console.error('Terjadi kesalahan saat mengambil notifikasi:', error);
       } finally {
         setLoading(false);
       }
     };
 
     if (notificationId) {
-      fetchNotification(); // Fetch only if notificationId exists
+      fetchNotification(); // Ambil hanya jika notificationId ada
     }
-  }, [notificationId]); // Re-run if notificationId changes
+  }, [notificationId]); // Jalankan ulang jika notificationId berubah
 
   if (loading) {
     return (
@@ -47,7 +47,7 @@ const DetailNotifications = () => {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
         <div className="bg-white shadow-md rounded-lg p-6">
-          <p className="text-gray-700">Notification not found.</p>
+          <p className="text-gray-700">Notifikasi tidak ditemukan.</p>
         </div>
       </div>
     );
@@ -59,8 +59,12 @@ const DetailNotifications = () => {
         <p className="text-gray-700 mb-2">{notification.body}</p>
         <p className="text-gray-500 mb-4">{notification.description}</p>
         <div className="text-sm text-gray-400">
-          <p>Created At: {new Date(notification.createdAt).toLocaleString()}</p>
-          <p>Updated At: {new Date(notification.updatedAt).toLocaleString()}</p>
+          <p>
+            Dibuat Pada: {new Date(notification.createdAt).toLocaleString()}
+          </p>
+          <p>
+            Diperbarui Pada: {new Date(notification.updatedAt).toLocaleString()}
+          </p>
         </div>
         {notification.transactionId && (
           <Link
@@ -68,7 +72,7 @@ const DetailNotifications = () => {
             className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
             rel="noopener noreferrer"
           >
-            View Transaction
+            Lihat Transaksi
           </Link>
         )}
       </div>

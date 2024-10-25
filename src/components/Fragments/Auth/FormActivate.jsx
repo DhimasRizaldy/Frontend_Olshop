@@ -34,7 +34,7 @@ const FormActivate = () => {
           <div className="relative">
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Masukkan email anda"
               classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -66,7 +66,7 @@ const FormActivate = () => {
             classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
             disabled={isLoading}
           >
-            {isLoading ? 'Sending...' : 'Send Activate Account Link'}
+            {isLoading ? 'Proses...' : 'Konfirmasi Aktivasi Akun'}
           </Button>
         </div>
       </form>
@@ -75,7 +75,7 @@ const FormActivate = () => {
         <Button classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90">
           <Link to={'/'}>
             <FontAwesomeIcon icon={faHome} className="mr-2" />
-            <span>Home</span>
+            <span>Beranda</span>
           </Link>
         </Button>
       </div>

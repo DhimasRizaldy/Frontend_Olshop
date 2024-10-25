@@ -37,7 +37,7 @@ const FormLogin = () => {
           <div className="relative">
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Masukkan email Anda"
               classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -64,12 +64,12 @@ const FormLogin = () => {
         </div>
         <div className="mb-6">
           <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-            Password
+            Kata Sandi
           </Label>
           <div className="relative">
             <Input
               type={showPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
+              placeholder="Masukkan kata sandi Anda"
               classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -84,7 +84,7 @@ const FormLogin = () => {
           <div className="relative">
             <div className="mt-5 text-right">
               <p className="font-medium text-primary">
-                <Link to="/forgot-password">Forgot Password</Link>
+                <Link to="/forgot-password">Lupa Kata Sandi</Link>
               </p>
             </div>
           </div>
@@ -95,23 +95,23 @@ const FormLogin = () => {
             classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
             disabled={isLoading}
           >
-            {isLoading ? 'Loading...' : 'Login'}
+            {isLoading ? 'Memuat...' : 'Masuk'}
           </Button>
         </div>
         <LoginGoogle navigate={navigate} setIsLoading={setIsLoading} />
         <div className="mt-5 text-center">
           <p className="font-medium">
-            Don't have an account?{' '}
+            Belum punya akun?{' '}
             <Link to="/register" className="text-primary">
-              Register
+              Daftar
             </Link>
           </p>
         </div>
         <div className="mt-5 text-center">
           <p className="font-medium">
-            Don't activate account?{' '}
+            Belum aktivasi akun?{' '}
             <Link to="/verify-accounts" className="text-primary">
-              Activate Account
+              Aktivasi Akun
             </Link>
           </p>
         </div>
@@ -120,7 +120,7 @@ const FormLogin = () => {
         <Button classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90">
           <Link to={'/'}>
             <FontAwesomeIcon icon={faHome} className="mr-2" />
-            <span>Home</span>
+            <span>Beranda</span>
           </Link>
         </Button>
       </div>

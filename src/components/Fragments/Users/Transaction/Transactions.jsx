@@ -55,10 +55,10 @@ const TransactionsMe = () => {
           setTransactions(response.data);
           setFilteredTransactions(response.data);
         } else {
-          setError('Failed to fetch transactions');
+          setError('Gagal mengambil data transaksi');
         }
       } catch (error) {
-        console.error('Error fetching transactions:', error);
+        console.error('Error mengambil data transaksi:', error);
       } finally {
         setLoading(false);
       }
@@ -127,7 +127,7 @@ const TransactionsMe = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-14">
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-8">
-        Transactions
+        Transaksi
       </h1>
 
       {/* Filter Header */}
@@ -210,11 +210,11 @@ const TransactionsMe = () => {
       ) : filteredTransactions.length === 0 ? (
         <div className="text-center">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">
-            No Transactions Available
+            Tidak Ada Transaksi Tersedia
           </h2>
           <p className="text-sm md:text-base text-gray-600">
-            There are no transactions to display at the moment. Please check
-            back later.
+            Saat ini tidak ada transaksi yang dapat ditampilkan. Silakan periksa
+            kembali nanti.
           </p>
         </div>
       ) : (
@@ -225,13 +225,13 @@ const TransactionsMe = () => {
           >
             <div className="flex-1 mb-4 md:mb-0">
               <h2 className="text-base md:text-lg font-semibold">
-                Transaction ID: {transaction.transactionId}
+                ID Transaksi: {transaction.transactionId}
               </h2>
               <p className="text-sm md:text-base text-gray-700">
-                <strong>Customer Name:</strong> {transaction.users.username}
+                <strong>Nama Pelanggan:</strong> {transaction.users.username}
               </p>
               <p className="text-sm md:text-base text-gray-700">
-                <strong>Date:</strong>{' '}
+                <strong>Tanggal:</strong>{' '}
                 {transaction.createdAt
                   ? new Date(transaction.createdAt).toLocaleString('id-ID', {
                       dateStyle: 'medium',
@@ -241,10 +241,10 @@ const TransactionsMe = () => {
               </p>
 
               <p className="text-sm md:text-base text-gray-700">
-                <strong>Amount:</strong> {formatRupiah(transaction.total)}
+                <strong>Jumlah:</strong> {formatRupiah(transaction.total)}
               </p>
               <p className="text-sm md:text-base text-gray-700">
-                <strong>Status Payment:</strong>
+                <strong>Status Pembayaran:</strong>
                 <span
                   className={`text-white py-1 px-2 rounded-full text-xs md:text-sm ${statusColors[transaction.status_payment] || 'bg-gray-500'}`}
                 >
@@ -252,7 +252,7 @@ const TransactionsMe = () => {
                 </span>
               </p>
               <p className="text-sm md:text-base text-gray-700 mb-4">
-                <strong>Shipping Status:</strong>
+                <strong>Status Pengiriman:</strong>
                 <span
                   className={`text-white py-1 px-2 rounded-full text-xs md:text-sm ${shippingStatusColors[transaction.shippingStatus] || 'bg-gray-500'}`}
                 >
@@ -263,7 +263,7 @@ const TransactionsMe = () => {
             <div className="flex space-x-2">
               <Link to={`/transaction-me/${transaction.transactionId}`}>
                 <button className="bg-blue-500 text-white py-2 px-4 rounded-lg text-sm md:text-base">
-                  View
+                  Lihat
                 </button>
               </Link>
             </div>

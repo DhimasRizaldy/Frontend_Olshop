@@ -53,36 +53,42 @@ const DataProduct = () => {
   }, []);
 
   // Handle delete
+  // Handle delete
   const handleDelete = async (productId, productName) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete the product "${productName}". You won't be able to revert this!`,
+      title: 'Apakah Anda yakin?',
+      text: `Anda akan menghapus produk "${productName}". Tindakan ini tidak dapat dibatalkan!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await deleteProduct(productId);
           if (response.success) {
             Swal.fire(
-              'Deleted!',
-              `Product "${productName}" has been deleted.`,
+              'Terhapus!',
+              `Produk "${productName}" telah dihapus.`,
               'success',
             );
             setProduct(
               products.filter((product) => product.productId !== productId),
             );
           } else {
-            Swal.fire('Error!', response.message, 'error');
+            Swal.fire('Gagal!', response.message, 'error');
           }
         } catch (error) {
-          Swal.fire('Error!', error.message, 'error');
+          Swal.fire('Gagal!', error.message, 'error');
         }
       }
     });
+  };
+
+  const formatNumber = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
 
   const columns = [
@@ -93,12 +99,12 @@ const DataProduct = () => {
       width: '80px',
     },
     {
-      name: 'ProductId',
+      name: 'ID Produk',
       selector: (row) => row.productId,
       sortable: true,
     },
     {
-      name: 'Image',
+      name: 'Foto Produk',
       selector: (row) => row.image,
       cell: (row) =>
         row.image ? (
@@ -112,47 +118,47 @@ const DataProduct = () => {
         ),
     },
     {
-      name: 'Name',
+      name: 'Nama Produk',
       selector: (row) => row.name,
       sortable: true,
     },
     {
-      name: 'CategoryId',
+      name: 'ID Kategori',
       selector: (row) => row.category.name,
       sortable: true,
     },
     {
-      name: 'Price',
+      name: 'Harga',
       selector: (row) => formatRupiah(row.price),
       sortable: true,
     },
     {
-      name: 'Promo',
+      name: 'Harga Promo',
       selector: (row) => formatRupiah(row.promoPrice),
       sortable: true,
     },
     {
-      name: 'Weight',
-      selector: (row) => `${row.weight} Gr`,
+      name: 'Berat',
+      selector: (row) => `${formatNumber(row.weight)} Gr`,
       sortable: true,
     },
     {
-      name: 'Stock',
-      selector: (row) => row.stock,
+      name: 'Stok',
+      selector: (row) => formatNumber(row.stock),
       sortable: true,
     },
     {
       name: 'Total Terjual',
-      selector: (row) => row.totalSold,
+      selector: (row) => formatNumber(row.totalSold),
       sortable: true,
     },
     {
       name: 'Total Review',
-      selector: (row) => row.totalReview,
+      selector: (row) => formatNumber(row.totalReview),
       sortable: true,
     },
     {
-      name: 'Description',
+      name: 'Dekskripsi',
       selector: (row) =>
         row.description.length > 15
           ? `${row.description.slice(0, 15)}...`
@@ -160,7 +166,7 @@ const DataProduct = () => {
       sortable: true,
     },
     {
-      name: 'Action',
+      name: 'Aksi',
       cell: (row) => (
         <div className="flex items-center space-x-3.5">
           <Link to={`/detail-product/${row.productId}`}>
@@ -216,7 +222,7 @@ const DataProduct = () => {
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          Data Product
+          Data Produk
         </h4>
       </div>
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -228,7 +234,7 @@ const DataProduct = () => {
                 htmlFor="stockFilter"
                 className="mr-2 text-black dark:text-white"
               >
-                Filter by Stock:
+                Filter By Stok:
               </label>
               <select
                 id="stockFilter"
@@ -236,9 +242,9 @@ const DataProduct = () => {
                 onChange={(e) => setFilterStock(e.target.value)}
                 className="border border-gray-300 rounded-md p-2"
               >
-                <option value="ALL">All</option>
-                <option value="ABOVE_10">Stock Diatas 10</option>
-                <option value="BELOW_3">Stock Dibawah 3</option>
+                <option value="ALL">Semua</option>
+                <option value="ABOVE_10">Stok Diatas 10</option>
+                <option value="BELOW_3">Stok Dibawah 3</option>
               </select>
             </div>
 
@@ -248,7 +254,7 @@ const DataProduct = () => {
                 htmlFor="totalSoldFilter"
                 className="mr-2 text-black dark:text-white"
               >
-                Filter by Total Sold:
+                Filter by Total Terjual:
               </label>
               <select
                 id="totalSoldFilter"
@@ -256,7 +262,7 @@ const DataProduct = () => {
                 onChange={(e) => setFilterTotalSold(e.target.value)}
                 className="border border-gray-300 rounded-md p-2"
               >
-                <option value="ALL">All</option>
+                <option value="ALL">Semua</option>
                 <option value="HIGH_SOLD">Tejual Terbanyak</option>
                 <option value="LOW_SOLD">Terjual Sedikit</option>
               </select>
@@ -267,7 +273,7 @@ const DataProduct = () => {
           <div>
             <input
               type="text"
-              placeholder="Search by name"
+              placeholder="Cari Nama Produk..."
               className="px-4 py-2 border rounded-md"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -282,7 +288,7 @@ const DataProduct = () => {
           pointerOnHover
           responsive
           striped
-          noDataComponent="No products available."
+          noDataComponent="Tidak ada data yang sesuai."
         />
       </div>
     </div>

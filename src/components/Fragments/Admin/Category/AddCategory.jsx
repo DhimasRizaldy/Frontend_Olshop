@@ -29,7 +29,7 @@ const AddCategory = () => {
       // Optionally clear the input field after success
       setName('');
     } catch (error) {
-      toast.error('Failed to add category');
+      toast.error('Gagal menambahkan kategori. Silakan coba lagi');
       // console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -57,7 +57,7 @@ const AddCategory = () => {
             className="mb-3 block font-medium text-black dark:text-white"
             htmlFor="name"
           >
-            Name
+            Nama Kategori
           </label>
           <div className="relative">
             <input
@@ -65,7 +65,7 @@ const AddCategory = () => {
               type="text"
               name="name"
               id="name"
-              placeholder="Category Name"
+              placeholder="Masukkan Nama Kategori"
               value={name}
               onChange={handleNameChange}
             />
@@ -79,7 +79,7 @@ const AddCategory = () => {
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="button"
           >
-            Cancel
+            Batal
           </button>
         </Link>
         <button
@@ -87,7 +87,7 @@ const AddCategory = () => {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? 'Loading...' : 'Save'}
+          {isLoading ? 'Menyimpan...' : 'Simpan'}
         </button>
       </div>
     </form>

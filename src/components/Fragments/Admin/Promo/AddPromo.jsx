@@ -15,33 +15,50 @@ const AddPromo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate the inputs
+    // Validasi input kosong
     if (!codePromo || !discount || !activeAt || !expiresAt) {
       toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
 
-    // Create promo data
+    // Validasi diskon
+    if (parseInt(discount, 10) > 100) {
+      toast.error('Diskon tidak boleh lebih dari 100%');
+      return;
+    }
+
+    // Validasi tanggal aktif dan kadaluarsa
+    const activeDate = new Date(activeAt);
+    const expireDate = new Date(expiresAt);
+
+    if (activeDate > expireDate) {
+      toast.error(
+        'Tanggal aktif tidak boleh lebih besar dari tanggal kadaluarsa',
+      );
+      return;
+    }
+
+    // Buat data promo
     const promoData = {
       codePromo,
       discount: parseInt(discount, 10),
-      activeAt: new Date(activeAt).toISOString(), // Ensure the date is in ISO string format
-      expiresAt: new Date(expiresAt).toISOString(), // Ensure the date is in ISO string format
+      activeAt: activeDate.toISOString(),
+      expiresAt: expireDate.toISOString(),
     };
 
     setIsLoading(true);
 
     try {
-      // Send data to backend
+      // Kirim data ke backend
       await addPromos(promoData, setIsLoading);
-      toast.success('Promo added successfully!');
-      // Optionally clear the input fields after success
+      toast.success('Promo berhasil ditambahkan!');
+      // Kosongkan form setelah berhasil
       setCodePromo('');
       setDiscount('');
       setActiveAt(null);
       setExpiresAt(null);
     } catch (error) {
-      toast.error('Failed to add promo');
+      toast.error('Gagal menambahkan promo');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -50,7 +67,7 @@ const AddPromo = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Toast Container for notifications */}
+      {/* Toast Container untuk notifikasi */}
       <ToastContainer />
 
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -59,7 +76,7 @@ const AddPromo = () => {
             className="mb-3 block text-sm font-medium text-black dark:text-white"
             htmlFor="codePromo"
           >
-            Code Promo
+            Kode Promo
           </label>
           <div className="relative">
             <input
@@ -67,7 +84,7 @@ const AddPromo = () => {
               type="text"
               name="codePromo"
               id="codePromo"
-              placeholder="Code Promo"
+              placeholder="Kode Promo"
               value={codePromo}
               onChange={(e) => setCodePromo(e.target.value)}
             />
@@ -78,7 +95,7 @@ const AddPromo = () => {
             className="mb-3 block text-sm font-medium text-black dark:text-white"
             htmlFor="discount"
           >
-            Discount
+            Diskon
           </label>
           <div className="relative">
             <input
@@ -86,7 +103,7 @@ const AddPromo = () => {
               type="number"
               name="discount"
               id="discount"
-              placeholder="Discount %"
+              placeholder="Diskon %"
               value={discount}
               onChange={(e) => setDiscount(e.target.value)}
             />
@@ -99,7 +116,7 @@ const AddPromo = () => {
             className="mb-3 block text-sm font-medium text-black dark:text-white"
             htmlFor="activeAt"
           >
-            Tanggal Active
+            Tanggal Aktif
           </label>
           <div className="relative">
             <input
@@ -107,7 +124,7 @@ const AddPromo = () => {
               type="date"
               name="activeAt"
               id="activeAt"
-              placeholder="Date Active"
+              placeholder="Tanggal Aktif"
               value={activeAt}
               onChange={(e) => setActiveAt(e.target.value)}
             />
@@ -118,7 +135,7 @@ const AddPromo = () => {
             className="mb-3 block text-sm font-medium text-black dark:text-white"
             htmlFor="expiresAt"
           >
-            Tanggal Expires
+            Tanggal Kadaluarsa
           </label>
           <div className="relative">
             <input
@@ -126,7 +143,7 @@ const AddPromo = () => {
               type="date"
               name="expiresAt"
               id="expiresAt"
-              placeholder="Date Expires"
+              placeholder="Tanggal Kadaluarsa"
               value={expiresAt}
               onChange={(e) => setExpiresAt(e.target.value)}
             />
@@ -139,7 +156,7 @@ const AddPromo = () => {
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
             type="button"
           >
-            Cancel
+            Batal
           </button>
         </Link>
         <button
@@ -147,7 +164,7 @@ const AddPromo = () => {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? 'Loading...' : 'Save'}
+          {isLoading ? 'Memuat...' : 'Simpan'}
         </button>
       </div>
     </form>

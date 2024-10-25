@@ -2,34 +2,45 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Select from 'react-select';
 import {
   editAddress,
   getAddressById,
 } from '../../../../services/admin/address/services-address';
 import { getWHOAMI } from '../../../../services/auth/admin/getDataUser';
+import {
+  fetchCities,
+  fetchProvinces,
+} from '../../../../services/users/rajaongkir/rajaongkir-services';
 
 const EditAddress = () => {
   const { addressId } = useParams();
   const navigate = useNavigate();
-  const [nameAddress, setnameAddress] = useState('');
+  const [nameAddress, setNameAddress] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
+  const [cityName, setCityName] = useState('');
+  const [province, setProvince] = useState('');
+  const [provinceName, setProvinceName] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userRole, setUserRole] = useState('');
+  const [cities, setCities] = useState([]);
+  const [provinces, setProvinces] = useState([]);
 
   useEffect(() => {
     const fetchAddressData = async () => {
       try {
         const response = await getAddressById(addressId);
-        setnameAddress(response.data.nameAddress);
+        setNameAddress(response.data.nameAddress);
         setAddress(response.data.address);
         setCity(response.data.city);
-        setCountry(response.data.country);
+        setCityName(response.data.city);
+        setProvince(response.data.country);
+        setProvinceName(response.data.country);
         setPostalCode(response.data.postalCode);
       } catch (error) {
-        toast.error('Failed to fetch address data');
+        toast.error('Gagal mengambil data alamat');
         console.error('Error:', error);
       }
     };
@@ -39,7 +50,7 @@ const EditAddress = () => {
         const response = await getWHOAMI();
         setUserRole(response.data.user.role);
       } catch (error) {
-        toast.error('Failed to fetch user role');
+        toast.error('Gagal mengambil peran pengguna');
         console.error('Error:', error);
       }
     };
@@ -48,10 +59,46 @@ const EditAddress = () => {
     fetchUserRole();
   }, [addressId]);
 
+  // Fetch provinces from Raja Ongkir
+  useEffect(() => {
+    const fetchProvinceData = async () => {
+      try {
+        const results = await fetchProvinces();
+        const provinceOptions = results.map((province) => ({
+          value: province.province_id,
+          label: province.province,
+        }));
+        setProvinces(provinceOptions);
+      } catch (error) {
+        console.error('Gagal mengambil data provinsi:', error);
+      }
+    };
+    fetchProvinceData();
+  }, []);
+
+  // Fetch cities from Raja Ongkir based on selected province
+  useEffect(() => {
+    const fetchCityData = async () => {
+      if (province) {
+        try {
+          const results = await fetchCities(province);
+          const cityOptions = results.map((city) => ({
+            value: city.city_id,
+            label: city.city_name,
+          }));
+          setCities(cityOptions);
+        } catch (error) {
+          console.error('Gagal mengambil data kota:', error);
+        }
+      }
+    };
+    fetchCityData();
+  }, [province]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!nameAddress || !address || !city || !country || !postalCode) {
+    if (!nameAddress || !address || !city || !province || !postalCode) {
       toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
@@ -59,8 +106,8 @@ const EditAddress = () => {
     const addressData = {
       nameAddress,
       address,
-      city,
-      country,
+      city: cityName, // Mengirimkan nama kota
+      country: provinceName, // Mengirimkan nama provinsi
       postalCode,
     };
 
@@ -68,9 +115,10 @@ const EditAddress = () => {
 
     try {
       await editAddress(addressId, addressData);
-      toast.success('Address successfully updated!');
+      toast.success('Alamat berhasil diperbarui!');
+      navigate(userRole === 'USER' ? '/users/profile' : '/admin/profile'); // Redirect based on role
     } catch (error) {
-      toast.error('Failed to update address. Please try again.');
+      toast.error('Gagal memperbarui alamat. Silakan coba lagi.');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -92,7 +140,7 @@ const EditAddress = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Name Address
+              Nama Alamat
             </label>
             <div className="relative">
               <input
@@ -101,14 +149,14 @@ const EditAddress = () => {
                 name="nameAddress"
                 id="nameAddress"
                 value={nameAddress}
-                onChange={(e) => setnameAddress(e.target.value)}
+                onChange={(e) => setNameAddress(e.target.value)}
                 disabled={isLoading}
               />
             </div>
           </div>
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Address
+              Alamat Lengkap
             </label>
             <div className="relative">
               <input
@@ -126,33 +174,37 @@ const EditAddress = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              City
+              Provinsi
             </label>
             <div className="relative">
-              <input
-                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                type="text"
-                name="city"
-                id="city"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                disabled={isLoading}
+              <Select
+                options={provinces}
+                value={provinces.find((option) => option.value === province)}
+                onChange={(option) => {
+                  setProvince(option.value);
+                  setProvinceName(option.label);
+                }}
+                isSearchable
+                placeholder="Pilih Provinsi"
+                isDisabled={isLoading}
               />
             </div>
           </div>
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Country
+              Kota
             </label>
             <div className="relative">
-              <input
-                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                type="text"
-                name="country"
-                id="country"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                disabled={isLoading}
+              <Select
+                options={cities}
+                value={cities.find((option) => option.value === city)}
+                onChange={(option) => {
+                  setCity(option.value);
+                  setCityName(option.label);
+                }}
+                isSearchable
+                placeholder="Pilih Kota"
+                isDisabled={!province || isLoading} // Disable if province is not selected or loading
               />
             </div>
           </div>
@@ -160,7 +212,7 @@ const EditAddress = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Postal Code
+              Kode Pos
             </label>
             <div className="relative">
               <input
@@ -184,14 +236,14 @@ const EditAddress = () => {
             onClick={handleCancel}
             disabled={isLoading}
           >
-            Cancel
+            Batal
           </button>
           <button
             className={`flex justify-center rounded py-2 px-6 font-medium ${isLoading ? 'bg-gray-400 text-gray-200' : 'bg-primary text-gray hover:bg-opacity-90'}`}
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? 'Updating...' : 'Update'}
+            {isLoading ? 'Memperbarui...' : 'Perbarui'}
           </button>
         </div>
       </form>

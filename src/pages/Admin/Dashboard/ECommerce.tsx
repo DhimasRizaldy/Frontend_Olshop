@@ -35,7 +35,7 @@ const ECommerce: React.FC = () => {
         const response = await getWHOAMI();
         setRole(response.data.user.role);
       } catch (error) {
-        console.error('Fetch user role failed:', error.message);
+        console.error('Gagal mengambil peran pengguna:', error.message);
         setError(error.message);
       }
     };
@@ -49,7 +49,7 @@ const ECommerce: React.FC = () => {
         const response = await getUser();
         setUsers(response.data || []); // Simpan data user dalam state
       } catch (error) {
-        console.error('Fetch user failed:', error.message);
+        console.error('Gagal mengambil data pengguna:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -67,7 +67,7 @@ const ECommerce: React.FC = () => {
         const response = await getProduct();
         setProducts(response.data || []); // Simpan data produk dalam state
       } catch (error) {
-        console.error('Fetch product failed:', error.message);
+        console.error('Gagal mengambil data produk:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -88,7 +88,7 @@ const ECommerce: React.FC = () => {
         }
         setTransactions(response.data || []); // Simpan data transaksi dalam state
       } catch (error) {
-        console.error('Fetch transaction failed:', error.message);
+        console.error('Gagal mengambil data transaksi:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -135,22 +135,22 @@ const ECommerce: React.FC = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         {role === 'ADMIN' && (
           <>
-            <CardDataStats title="Total Users" total={totalUsers}>
+            <CardDataStats title="Total Pengguna" total={totalUsers}>
               <FontAwesomeIcon icon={faUsers} />
             </CardDataStats>
             <CardDataStats title="Total Admin" total={totalAdmins}>
               <FontAwesomeIcon icon={faUser} />
             </CardDataStats>
-            <CardDataStats title="Total Product" total={totalProducts}>
+            <CardDataStats title="Total Produk" total={totalProducts}>
               <FontAwesomeIcon icon={faBoxesStacked} />
             </CardDataStats>
           </>
         )}
-        <CardDataStats title="Total Transaction" total={totalTransactions}>
+        <CardDataStats title="Total Transaksi" total={totalTransactions}>
           <FontAwesomeIcon icon={faCartShopping} />
         </CardDataStats>
         <CardDataStats
-          title="Total Credit Payment"
+          title="Total Pembayaran"
           total={`Rp ${totalPayment.toLocaleString()}`}
         >
           <FontAwesomeIcon icon={faMoneyBill1} />

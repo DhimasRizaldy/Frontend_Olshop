@@ -9,8 +9,8 @@ import {
 
 const EditTransaction = () => {
   const { transactionId } = useParams();
-  const [statusPayment, setStatusPayment] = useState(''); 
-  const [shippingStatus, setShippingStatus] = useState(''); 
+  const [statusPayment, setStatusPayment] = useState('');
+  const [shippingStatus, setShippingStatus] = useState('');
   const [receiptDelivery, setReceiptDelivery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,7 +22,7 @@ const EditTransaction = () => {
         setShippingStatus(response.data.shippingStatus);
         setReceiptDelivery(response.data.receiptDelivery);
       } catch (error) {
-        toast.error('Failed to fetch transaction data');
+        toast.error('Gagal mengambil data transaksi');
         console.error('Error:', error);
       }
     };
@@ -48,9 +48,9 @@ const EditTransaction = () => {
 
     try {
       await editTransaction(transactionId, transactionData);
-      toast.success('Transaction successfully updated!');
+      toast.success('Transaksi berhasil diperbarui!');
     } catch (error) {
-      toast.error('Failed to update transaction. Please try again.');
+      toast.error('Gagal memperbarui transaksi. Silakan coba lagi.');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -64,7 +64,7 @@ const EditTransaction = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Status Payment
+              Status Pembayaran
             </label>
             <div className="relative">
               <select
@@ -73,15 +73,15 @@ const EditTransaction = () => {
                 onChange={(e) => setStatusPayment(e.target.value)}
                 disabled={isLoading}
               >
-                <option value="Success">Success</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Pending">Pending</option>
+                <option value="Success">Sudah Bayar</option>
+                <option value="Cancelled">Dibatalkan</option>
+                <option value="Pending">Belum Bayar</option>
               </select>
             </div>
           </div>
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Shipping Status
+              Status Pengiriman
             </label>
             <div className="relative">
               <select
@@ -101,7 +101,7 @@ const EditTransaction = () => {
         </div>
         <div className="mb-5.5">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Receipt Delivery
+            Resi Pengiriman
           </label>
           <div className="relative">
             <input
@@ -123,7 +123,7 @@ const EditTransaction = () => {
               type="button"
               disabled={isLoading}
             >
-              Cancel
+              Batal
             </button>
           </Link>
           <button
@@ -131,7 +131,7 @@ const EditTransaction = () => {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? 'Updating...' : 'Update'}
+            {isLoading ? 'Memperbarui...' : 'Perbarui'}
           </button>
         </div>
       </form>

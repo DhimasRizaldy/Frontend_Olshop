@@ -25,7 +25,7 @@ const Header = () => {
         const response = await getWHOAMI();
         setUserData(response.data);
       } catch (error) {
-        // console.error('Failed to fetch user data', error);
+        // console.error('Gagal mengambil data pengguna', error);
       } finally {
         setLoading(false);
       }
@@ -43,7 +43,7 @@ const Header = () => {
         ).length;
         setUnreadNotificationsCount(unreadCount);
       } catch (error) {
-        console.error('Failed to fetch notifications', error);
+        console.error('Gagal mengambil notifikasi', error);
       }
     };
 
@@ -59,7 +59,7 @@ const Header = () => {
         ).length;
         setCartItemsCount(uncheckoutItemsCount);
       } catch (error) {
-        console.error('Failed to fetch cart items', error);
+        console.error('Gagal mengambil item keranjang', error);
       }
     };
 
@@ -80,7 +80,7 @@ const Header = () => {
         );
         setSearchResults(response.data.data);
       } catch (error) {
-        // console.error('Error fetching search results:', error);
+        // console.error('Error mengambil hasil pencarian:', error);
       }
     };
 
@@ -114,7 +114,7 @@ const Header = () => {
         <div className="relative flex-1 mx-4">
           <input
             type="text"
-            placeholder="Search Product"
+            placeholder="Cari Produk"
             className="w-full sm:w-64 md:w-full px-4 py-2 rounded-full border border-gray-300"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -158,7 +158,7 @@ const Header = () => {
               activeMenu === '/' ? 'border-b-2 border-blue-500' : ''
             }`}
           >
-            Home
+            Beranda
           </Link>
           <Link
             to={'/products'}
@@ -166,7 +166,7 @@ const Header = () => {
               activeMenu === '/products' ? 'border-b-2 border-blue-500' : ''
             }`}
           >
-            Product
+            Produk
           </Link>
           <Link
             to={'/promo-voucher'}
@@ -220,7 +220,7 @@ const Header = () => {
           ) : (
             <Link to={'/login'}>
               <Button classname="p-2 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90">
-                Login
+                Masuk
               </Button>
             </Link>
           )}
@@ -248,7 +248,7 @@ const Header = () => {
           ) : (
             <Link to={'/login'}>
               <Button classname="p-2 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90">
-                Login
+                Masuk
               </Button>
             </Link>
           )}

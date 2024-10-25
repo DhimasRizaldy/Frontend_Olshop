@@ -36,7 +36,6 @@ const fetchProducts = async (filters) => {
   const response = await axios.get(url.toString());
   const productsData = response.data.data;
 
-  // Filter produk yang memiliki promoPrice lebih besar dari 0 jika discount diaktifkan
   const filteredProducts = discount
     ? productsData.filter((product) => product.promoPrice > 0)
     : productsData;
@@ -45,6 +44,10 @@ const fetchProducts = async (filters) => {
     products: filteredProducts,
     total: response.data.total,
   };
+};
+
+const formatNumber = (number) => {
+  return number.toLocaleString('id-ID');
 };
 
 const ProductCard = ({ product }) => {
@@ -87,12 +90,16 @@ const ProductCard = ({ product }) => {
             {formatRupiah(product.price)}
           </p>
         )}
-        <p className="text-sm text-gray-600 mt-1">Stok: {product.stock}</p>
+        <p className="text-sm text-gray-600 mt-1">
+          Stok: {formatNumber(product.stock)}
+        </p>
         <div className="flex mt-1">
-          <p className="text-sm text-gray-600">Terjual : {product.totalSold}</p>{' '}
+          <p className="text-sm text-gray-600">
+            Terjual: {formatNumber(product.totalSold)}
+          </p>{' '}
           &nbsp;
           <p className="text-sm text-gray-600">
-            Ulasan : {product.totalReview}
+            Ulasan: {formatNumber(product.totalReview)}
           </p>
         </div>
         <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">
@@ -150,7 +157,7 @@ const ProductFilter = () => {
         setHasMoreProducts(productsData.length > 0);
         setNoData(productsData.length === 0);
       } catch (error) {
-        console.error('Failed to fetch data', error);
+        console.error('Gagal mengambil data', error);
       } finally {
         setLoading(false);
       }
@@ -236,10 +243,10 @@ const ProductFilter = () => {
             onClick={() => handleCategoryChange('all')}
             className="w-full mb-4 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600"
           >
-            All Products
+            Semua Produk
           </button>
           <div className="mb-4">
-            <h3 className="text-lg font-medium mb-2">Category</h3>
+            <h3 className="text-lg font-medium mb-2">Kategori</h3>
             <div className="space-y-2">
               {categories.map((category) => (
                 <label key={category.categoryId} className="flex items-center">
@@ -266,14 +273,14 @@ const ProductFilter = () => {
                     className="form-checkbox h-4 w-4 text-yellow-500"
                   />
                   <span className="ml-2 text-gray-700">
-                    {rating} Star{rating > 1 ? 's' : ''}
+                    {rating} Bintang{rating > 1 ? '' : ''}
                   </span>
                 </label>
               ))}
             </div>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-medium mb-2">Discount</h3>
+            <h3 className="text-lg font-medium mb-2">Diskon</h3>
             <label className="flex items-center">
               <input
                 type="checkbox"
@@ -281,7 +288,7 @@ const ProductFilter = () => {
                 onChange={handleDiscountChange}
                 className="form-checkbox h-4 w-4 text-red-500"
               />
-              <span className="ml-2 text-gray-700">Product Discount</span>
+              <span className="ml-2 text-gray-700">Produk Diskon</span>
             </label>
           </div>
         </div>
@@ -294,7 +301,9 @@ const ProductFilter = () => {
               ))}
             </div>
           ) : noData ? (
-            <p className="text-center text-gray-500">No products found</p>
+            <p className="text-center text-gray-500">
+              Tidak ada produk ditemukan
+            </p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map((product) => (
@@ -308,15 +317,15 @@ const ProductFilter = () => {
               disabled={page <= 1}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2 disabled:opacity-50"
             >
-              Previous
+              Sebelumnya
             </button>
-            <span className="px-4 py-2">Page {page}</span>
+            <span className="px-4 py-2">Halaman {page}</span>
             <button
               onClick={() => handlePageChange(page + 1)}
               disabled={page >= totalPages || !hasMoreProducts}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg"
             >
-              Next
+              Selanjutnya
             </button>
           </div>
         </div>

@@ -11,6 +11,7 @@ import DataTable from 'react-data-table-component';
 import {
   getSupplier,
   deleteSupplier,
+  getSupplierById
 } from '../../../../services/admin/supplier/services-supplier';
 
 const DataSupplier = () => {
@@ -19,14 +20,13 @@ const DataSupplier = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // get supplier
+  // Mengambil data supplier
   useEffect(() => {
     const fetchSupplier = async () => {
       try {
         const response = await getSupplier();
-        setSupplier(response.data || []); // Simpan data kategori dalam state
+        setSupplier(response.data || []);
       } catch (error) {
-        // console.error('Fetch supplier failed:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -35,27 +35,26 @@ const DataSupplier = () => {
     fetchSupplier();
   }, []);
 
-  // handle delete
+  // Menghapus supplier
   const handleDelete = async (supplierId, supplierName) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete the supplier "${supplierName}". You won't be able to revert this!`,
+      title: 'Apakah Anda yakin?',
+      text: `Anda akan menghapus supplier "${supplierName}". Ini tidak dapat dibatalkan!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Ya, hapus!',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await deleteSupplier(supplierId);
           if (response.success) {
             Swal.fire(
-              'Deleted!',
-              `Supplier "${supplierName}" has been deleted.`,
+              'Dihapus!',
+              `Supplier "${supplierName}" telah dihapus.`,
               'success',
             );
-            // Update state to remove the deleted supplier
             setSupplier(
               suppliers.filter(
                 (supplier) => supplier.supplierId !== supplierId,
@@ -63,8 +62,8 @@ const DataSupplier = () => {
             );
           }
         } catch (error) {
-          console.error('Error deleting supplier:', error.message);
-          Swal.fire('Error!', error.message, 'error');
+          console.error('Kesalahan saat menghapus supplier:', error.message);
+          Swal.fire('Kesalahan!', error.message, 'error');
         }
       }
     });
@@ -78,12 +77,12 @@ const DataSupplier = () => {
       width: '80px',
     },
     {
-      name: 'SupplierId',
+      name: 'Supplier ID',
       selector: (row) => row.supplierId,
       sortable: true,
     },
     {
-      name: 'Name',
+      name: 'Nama',
       selector: (row) => row.name,
       sortable: true,
     },
@@ -93,17 +92,17 @@ const DataSupplier = () => {
       sortable: true,
     },
     {
-      name: 'Address',
+      name: 'Alamat',
       selector: (row) => row.address,
       sortable: true,
     },
     {
-      name: 'PhoneNumber',
+      name: 'Nomor Telepon',
       selector: (row) => row.phoneNumber,
       sortable: true,
     },
     {
-      name: 'Action',
+      name: 'Aksi',
       cell: (row) => (
         <div className="flex items-center space-x-3.5">
           <Link to={`/detail-supplier/${row.supplierId}`}>
@@ -127,7 +126,7 @@ const DataSupplier = () => {
     },
   ];
 
-  // Filter suppliers based on search term
+  // Filter supplier berdasarkan pencarian
   const filteredSuppliers = suppliers.filter(
     (supplier) =>
       supplier.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -141,11 +140,11 @@ const DataSupplier = () => {
   );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Memuat...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Kesalahan: {error}</div>;
   }
 
   return (
@@ -159,7 +158,7 @@ const DataSupplier = () => {
         <div className="flex justify-end pb-4">
           <input
             type="text"
-            placeholder="Search by name, email, address or phone number"
+            placeholder="Cari berdasarkan nama, email, alamat, atau nomor telepon"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -173,7 +172,7 @@ const DataSupplier = () => {
           pointerOnHover
           responsive
           striped
-          noDataComponent="No supplier available."
+          noDataComponent="Tidak ada supplier yang tersedia."
         />
       </div>
     </div>

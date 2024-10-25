@@ -14,10 +14,10 @@ const DetailNotifications = () => {
         if (response.status === true) {
           setNotification(response.data);
         } else {
-          console.error('Failed to retrieve notification:', response.message);
+          console.error('Gagal mengambil notifikasi:', response.message);
         }
       } catch (error) {
-        console.error('Error fetching notification:', error);
+        console.error('Error mengambil notifikasi:', error);
       } finally {
         setLoading(false);
       }
@@ -47,7 +47,7 @@ const DetailNotifications = () => {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
         <div className="bg-white shadow-md rounded-lg p-6">
-          <p className="text-gray-700">Notification not found.</p>
+          <p className="text-gray-700">Notifikasi tidak ditemukan.</p>
         </div>
       </div>
     );
@@ -59,15 +59,19 @@ const DetailNotifications = () => {
         <p className="text-gray-700 mb-2">{notification.body}</p>
         <p className="text-gray-500 mb-4">{notification.description}</p>
         <div className="text-sm text-gray-400">
-          <p>Created At: {new Date(notification.createdAt).toLocaleString()}</p>
-          <p>Updated At: {new Date(notification.updatedAt).toLocaleString()}</p>
+          <p>
+            Dibuat Pada: {new Date(notification.createdAt).toLocaleString()}
+          </p>
+          <p>
+            Diperbarui Pada: {new Date(notification.updatedAt).toLocaleString()}
+          </p>
         </div>
         <Link
           to={`/detail-transaction/${notification.transactionId}`}
           className="mt-4 inline-block bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
           rel="noopener noreferrer"
         >
-          View Transaction
+          Lihat Transaksi
         </Link>
       </div>
     </div>

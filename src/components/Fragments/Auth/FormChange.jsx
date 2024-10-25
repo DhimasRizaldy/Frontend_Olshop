@@ -28,7 +28,7 @@ const FormChange = () => {
         const response = await getWHOAMI();
         setUserRole(response.data.user.role);
       } catch (error) {
-        toast.error('Failed to fetch user role');
+        toast.error('Gagal mengambil peran pengguna');
         console.error('Error:', error);
       }
     };
@@ -40,7 +40,7 @@ const FormChange = () => {
     e.preventDefault();
 
     if (new_password !== confirm_password) {
-      toast.error('Password does not match');
+      toast.error('Kata sandi tidak cocok');
       return;
     }
 
@@ -56,8 +56,8 @@ const FormChange = () => {
 
       Swal.fire({
         icon: 'success',
-        title: 'Success',
-        text: 'Password changed successfully',
+        title: 'Berhasil',
+        text: 'Kata sandi berhasil diubah',
         showConfirmButton: false,
         timer: 2000,
       });
@@ -69,7 +69,7 @@ const FormChange = () => {
         navigate('/users/profile');
       }
     } catch (error) {
-      toast.error('Failed to change password. Please try again.');
+      toast.error('Gagal mengubah kata sandi. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -90,15 +90,15 @@ const FormChange = () => {
   return (
     <form onSubmit={handleChangePassword}>
       <ToastContainer />
-      {/* Old Password */}
+      {/* Kata Sandi Lama */}
       <div className="mb-4">
         <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-          Old Password
+          Kata Sandi Lama
         </Label>
         <div className="relative">
           <Input
             type={showOldPassword ? 'text' : 'password'}
-            placeholder="Enter your old password"
+            placeholder="Masukkan kata sandi lama Anda"
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={old_password}
             onChange={(e) => setOldPassword(e.target.value)}
@@ -112,15 +112,15 @@ const FormChange = () => {
           </span>
         </div>
       </div>
-      {/* New Password */}
+      {/* Kata Sandi Baru */}
       <div className="mb-4">
         <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-          New Password
+          Kata Sandi Baru
         </Label>
         <div className="relative">
           <Input
             type={showNewPassword ? 'text' : 'password'}
-            placeholder="Enter your new password"
+            placeholder="Masukkan kata sandi baru Anda"
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={new_password}
             onChange={(e) => setNewPassword(e.target.value)}
@@ -134,15 +134,15 @@ const FormChange = () => {
           </span>
         </div>
       </div>
-      {/* Confirm Password */}
+      {/* Konfirmasi Kata Sandi */}
       <div className="mb-4">
         <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-          Confirm Password
+          Konfirmasi Kata Sandi
         </Label>
         <div className="relative">
           <Input
             type={showConfirmPassword ? 'text' : 'password'}
-            placeholder="Confirm your new password"
+            placeholder="Konfirmasi kata sandi baru Anda"
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={confirm_password}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -156,14 +156,14 @@ const FormChange = () => {
           </span>
         </div>
       </div>
-      {/* Change Password Button */}
+      {/* Tombol Ubah Kata Sandi */}
       <div className="mb-5">
         <Button
           type="submit"
           classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
           disabled={isLoading}
         >
-          {isLoading ? 'Changing...' : 'Change Password'}
+          {isLoading ? 'Mengubah...' : 'Ubah Kata Sandi'}
         </Button>
       </div>
     </form>

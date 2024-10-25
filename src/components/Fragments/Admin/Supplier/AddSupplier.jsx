@@ -1,27 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { addSupplier } from '../../../../services/admin/supplier/services-supplier';
+import {
+  addSupplier,
+  getSupplierById,
+} from '../../../../services/admin/supplier/services-supplier';
 
 const AddSupplier = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [existingSuppliers, setExistingSuppliers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const suppliers = await getSupplierById();
+        setExistingSuppliers(suppliers.data); // Ganti dengan struktur data yang sesuai
+      } catch (error) {
+        console.error('Error fetching suppliers:', error);
+      }
+    };
+
+    fetchSuppliers();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate the inputs
+    // Validasi input
     if (!name || !email || !address || !phoneNumber) {
       toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
 
-    // Create supplier data
+    // Cek duplikasi email dan nomor telepon
+    const isEmailExists = existingSuppliers.some(
+      (supplier) => supplier.email === email,
+    );
+    const isPhoneExists = existingSuppliers.some(
+      (supplier) => supplier.phoneNumber === phoneNumber,
+    );
+
+    if (isEmailExists) {
+      toast.error('Email sudah terdaftar');
+      return;
+    }
+
+    if (isPhoneExists) {
+      toast.error('Nomor Telepon sudah terdaftar');
+      return;
+    }
+
+    // Buat data supplier
     const supplierData = {
       name,
       email,
@@ -32,16 +67,16 @@ const AddSupplier = () => {
     setIsLoading(true);
 
     try {
-      // Send data to backend
+      // Kirim data ke backend
       await addSupplier(supplierData, setIsLoading);
-      toast.success('Supplier added successfully!');
-      // Optionally clear the input fields after success
+      toast.success('Supplier berhasil ditambahkan!');
+      // Bersihkan input setelah berhasil
       setName('');
       setEmail('');
       setAddress('');
       setPhoneNumber('');
     } catch (error) {
-      toast.error('Failed to add supplier');
+      toast.error('Gagal menambahkan supplier');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -55,9 +90,9 @@ const AddSupplier = () => {
         <div className="w-full sm:w-1/2">
           <label
             className="mb-3 block text-sm font-medium text-black dark:text-white"
-            htmlFor="codePromo"
+            htmlFor="name"
           >
-            Name Toko
+            Nama Toko
           </label>
           <div className="relative">
             <input
@@ -65,7 +100,7 @@ const AddSupplier = () => {
               type="text"
               name="name"
               id="name"
-              placeholder="Name Toko"
+              placeholder="Nama Toko"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -91,7 +126,7 @@ const AddSupplier = () => {
       <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Address
+            Alamat
           </label>
           <div className="relative">
             <input
@@ -99,7 +134,7 @@ const AddSupplier = () => {
               type="text"
               name="address"
               id="address"
-              placeholder="jln.address"
+              placeholder="jln.alamat"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
             />
@@ -107,7 +142,7 @@ const AddSupplier = () => {
         </div>
         <div className="w-full sm:w-1/2">
           <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-            Phone Number
+            Nomor Telepon
           </label>
           <div className="relative">
             <input
@@ -126,9 +161,9 @@ const AddSupplier = () => {
         <Link to="/supplier">
           <button
             className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-            type="submit"
+            type="button"
           >
-            Cancel
+            Batal
           </button>
         </Link>
         <button
@@ -136,7 +171,7 @@ const AddSupplier = () => {
           type="submit"
           disabled={isLoading}
         >
-          {isLoading ? 'Loading...' : 'Save'}
+          {isLoading ? 'Memuat...' : 'Simpan'}
         </button>
       </div>
     </form>

@@ -26,7 +26,7 @@ const DataAddress = () => {
         const response = await getAddress();
         setAddress(response.data || []);
       } catch (error) {
-        console.error('Fetch address failed:', error.message);
+        console.error('Gagal mengambil data alamat:', error.message);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -43,7 +43,7 @@ const DataAddress = () => {
         const user = response.data.user;
         setUserRole(user.role);
       } catch (error) {
-        console.error('Error fetching user data:', error.message);
+        console.error('Gagal mengambil data pengguna:', error.message);
       }
     };
 
@@ -53,21 +53,21 @@ const DataAddress = () => {
   // Handle delete
   const handleDelete = async (addressId, addressName) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete the address "${addressName}". You won't be able to revert this!`,
+      title: 'Apakah Anda yakin?',
+      text: `Anda akan menghapus alamat "${addressName}". Tindakan ini tidak dapat dibatalkan!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Ya, hapus!',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await deleteAddress(addressId);
           if (response.success) {
             Swal.fire(
-              'Deleted!',
-              `Address "${addressName}" has been deleted.`,
+              'Dihapus!',
+              `Alamat "${addressName}" telah dihapus.`,
               'success',
             );
             setAddress(
@@ -75,20 +75,20 @@ const DataAddress = () => {
             );
           }
         } catch (error) {
-          console.error('Error deleting address:', error.message);
+          console.error('Gagal menghapus alamat:', error.message);
           Swal.fire('Error!', error.message, 'error');
         }
       }
     });
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div>Memuat...</div>;
+  if (error) return <div>Kesalahan: {error}</div>;
 
   return (
     <div className="p-4">
       <h4 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">
-        Data Address
+        Data Alamat
       </h4>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {address.length > 0 ? (
@@ -102,19 +102,19 @@ const DataAddress = () => {
                   {address.nameAddress}
                 </h5>
                 <p className="text-gray-600 dark:text-gray-400 mb-1">
-                  <strong>Address:</strong>{' '}
+                  <strong>Alamat:</strong>{' '}
                   {address.address.length > 40
                     ? `${address.address.slice(0, 40)}...`
                     : address.address}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mb-1">
-                  <strong>City:</strong> {address.city}
+                  <strong>Provinsi:</strong> {address.country}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mb-1">
-                  <strong>Country:</strong> {address.country}
+                  <strong>Kota:</strong> {address.city}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mb-1">
-                  <strong>Postal Code:</strong> {address.postalCode}
+                  <strong>Kode Pos:</strong> {address.postalCode}
                 </p>
               </div>
               <div className="flex justify-end p-4 space-x-2 bg-gray-100 dark:bg-gray-700">
@@ -143,7 +143,7 @@ const DataAddress = () => {
           ))
         ) : (
           <div className="col-span-full text-center text-gray-500 dark:text-gray-400 py-6">
-            No address available.
+            Tidak ada data alamat.
           </div>
         )}
       </div>

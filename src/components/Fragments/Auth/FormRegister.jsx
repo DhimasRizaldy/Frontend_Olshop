@@ -99,12 +99,12 @@ const FormRegister = () => {
         <ToastContainer />
         <div className="mb-4">
           <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-            Username
+            Nama Pengguna
           </Label>
           <div className="relative">
             <Input
               type="text"
-              placeholder="Enter your username"
+              placeholder="Masukkan nama pengguna Anda"
               classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -137,7 +137,7 @@ const FormRegister = () => {
           <div className="relative">
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Masukkan email Anda"
               classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -165,12 +165,12 @@ const FormRegister = () => {
         {/* password */}
         <div className="mb-4">
           <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-            Password
+            Kata Sandi
           </Label>
           <div className="relative">
             <Input
               type={showPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
+              placeholder="Masukkan kata sandi Anda"
               classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -187,12 +187,12 @@ const FormRegister = () => {
         {/* confirmationpassword */}
         <div className="mb-4">
           <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-            Confirm Password
+            Konfirmasi Kata Sandi
           </Label>
           <div className="relative">
             <Input
               type={showConfirmPassword ? 'text' : 'password'}
-              placeholder="Confirm your password"
+              placeholder="Konfirmasi kata sandi Anda"
               classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -215,14 +215,14 @@ const FormRegister = () => {
             classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
             disabled={isLoading}
           >
-            {isLoading ? 'Registering...' : 'Register'}
+            {isLoading ? 'Mendaftar...' : 'Daftar'}
           </Button>
         </div>
         <div className="mt-6 text-center">
           <p className="font-medium">
-            Already have an account?{' '}
+            Sudah punya akun?{' '}
             <Link to="/login" className="text-primary">
-              Login
+              Masuk
             </Link>
           </p>
         </div>
@@ -232,7 +232,7 @@ const FormRegister = () => {
         <Button classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90">
           <Link to={'/'}>
             <FontAwesomeIcon icon={faHome} className="mr-2" />
-            <span>Home</span>
+            <span>Beranda</span>
           </Link>
         </Button>
       </div>

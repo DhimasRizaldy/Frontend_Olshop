@@ -11,7 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 
 const FormForgot = () => {
-  //
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -30,15 +29,15 @@ const FormForgot = () => {
 
       Swal.fire({
         icon: 'success',
-        title: 'Success',
-        text: 'Please check your email for further instructions.',
+        title: 'Berhasil',
+        text: 'Silakan periksa email Anda untuk instruksi lebih lanjut.',
         showConfirmButton: false,
         timer: 2000,
       });
 
       navigate('/login'); // contoh redirect setelah sukses, sesuaikan dengan kebutuhan Anda
     } catch (error) {
-      toast.error('Failed to send email. Please try again.');
+      toast.error('Gagal mengirim email. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -56,7 +55,7 @@ const FormForgot = () => {
           <div className="relative">
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Masukkan email Anda"
               classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -88,7 +87,7 @@ const FormForgot = () => {
             classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
             disabled={isLoading}
           >
-            {isLoading ? 'Sending...' : 'Send Reset Password Link'}
+            {isLoading ? 'Mengirim...' : 'Konfirmasi Reset Kata Sandi'}
           </Button>
         </div>
       </form>
@@ -97,7 +96,7 @@ const FormForgot = () => {
         <Button classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90">
           <Link to={'/'}>
             <FontAwesomeIcon icon={faHome} className="mr-2" />
-            <span>Home</span>
+            <span>Beranda</span>
           </Link>
         </Button>
       </div>

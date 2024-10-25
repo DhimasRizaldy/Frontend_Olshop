@@ -72,7 +72,7 @@ const DataTransactionDash = () => {
 
   // Fungsi untuk mengubah filter shipping status
   const handleFilterChange = (status) => {
-    setFilter(status);
+    setStatusShippingFilter(status);
     if (status === 'All') {
       setFilteredTransactions(transactions);
     } else {
@@ -86,7 +86,7 @@ const DataTransactionDash = () => {
 
   // Fungsi untuk mengubah filter payment status
   const handleFilterChangePay = (status) => {
-    setFilter(status);
+    setStatusPaymentFilter(status);
     if (status === 'All') {
       setFilteredTransactions(transactions);
     } else {
@@ -137,27 +137,27 @@ const DataTransactionDash = () => {
   const columns = [
     { name: 'No', selector: (row, index) => index + 1, sortable: true },
     {
-      name: 'TransactionId',
+      name: 'ID Transaksi',
       selector: (row) => row.transactionId,
       sortable: true,
     },
     {
-      name: 'Username',
+      name: 'Nama Pengguna',
       selector: (row) => row.users?.username || 'N/A',
       sortable: true,
     },
     {
-      name: 'PromoCode',
+      name: 'Kode Promo',
       selector: (row) => row.promo?.codePromo || 'N/A',
       sortable: true,
     },
     {
-      name: 'Address',
+      name: 'Alamat',
       selector: (row) => row.address?.nameAddress || 'N/A',
       sortable: true,
     },
     {
-      name: 'Discount',
+      name: 'Diskon',
       selector: (row) => formatRupiah(row.discount),
       sortable: true,
     },
@@ -167,18 +167,18 @@ const DataTransactionDash = () => {
       sortable: true,
     },
     {
-      name: 'PaymentType',
+      name: 'Tipe Pembayaran',
       selector: (row) => row.payment_type,
       sortable: true,
     },
-    { name: 'Courier', selector: (row) => row.courier, sortable: true },
+    { name: 'Kurir', selector: (row) => row.courier, sortable: true },
     {
-      name: 'ReceiptDelivery',
+      name: 'Resi Pengiriman',
       selector: (row) => row.receiptDelivery,
       sortable: true,
     },
     {
-      name: 'StatusPay',
+      name: 'Status Pembayaran',
       selector: (row) => {
         const getColor = (status) => {
           switch (status) {
@@ -203,7 +203,7 @@ const DataTransactionDash = () => {
       sortable: true,
     },
     {
-      name: 'StatusShip',
+      name: 'Status Pengiriman',
       selector: (row) => {
         const getColor = (status) => {
           switch (status) {
@@ -230,7 +230,7 @@ const DataTransactionDash = () => {
       sortable: true,
     },
     {
-      name: 'Action',
+      name: 'Aksi',
       selector: (row) => (
         <div className="flex items-center space-x-3.5">
           <Link to={`/detail-transaction/${row.transactionId}`}>
@@ -253,7 +253,7 @@ const DataTransactionDash = () => {
   ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Memuat...</div>;
   }
 
   if (error) {
@@ -264,7 +264,7 @@ const DataTransactionDash = () => {
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          {role === 'USER' ? 'My Transactions' : 'All Transactions'}
+          {role === 'USER' ? 'Transaksi Saya' : 'Semua Transaksi'}
         </h4>
       </div>
 
@@ -274,7 +274,7 @@ const DataTransactionDash = () => {
           <div className="flex justify-around mb-6 flex-wrap">
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              // onClick={() => handleFilterChangePay('Pending')}
+              onClick={() => handleFilterChangePay('Pending')}
             >
               <AiOutlineClockCircle className="text-yellow-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Belum Bayar</p>
@@ -284,7 +284,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              // onClick={() => handleFilterChangePay('Success')}
+              onClick={() => handleFilterChangePay('Success')}
             >
               <AiOutlineClockCircle className="text-green-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Sudah Bayar</p>
@@ -294,7 +294,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              // onClick={() => handleFilterChange('On Process')}
+              onClick={() => handleFilterChange('On Process')}
             >
               <AiOutlineClockCircle className="text-yellow-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dikemas</p>
@@ -304,7 +304,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              // onClick={() => handleFilterChange('Delivered')}
+              onClick={() => handleFilterChange('Delivered')}
             >
               <AiOutlineCar className="text-green-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dikirim</p>
@@ -314,7 +314,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              // onClick={() => handleFilterChange('Accepted')}
+              onClick={() => handleFilterChange('Accepted')}
             >
               <AiOutlineCheckCircle className="text-blue-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Diterima</p>
@@ -324,7 +324,7 @@ const DataTransactionDash = () => {
             </div>
             <div
               className="text-center cursor-pointer w-1/6 sm:w-1/6 mb-4"
-              // onClick={() => handleFilterChange('Cancel')}
+              onClick={() => handleFilterChange('Cancel')}
             >
               <AiOutlineCloseCircle className="text-red-500 text-xl sm:text-2xl mx-auto" />
               <p className="text-xs sm:text-base">Dibatalkan</p>

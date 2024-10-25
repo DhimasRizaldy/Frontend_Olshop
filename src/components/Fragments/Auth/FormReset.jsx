@@ -33,11 +33,8 @@ const FormReset = () => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
-    console.log('password:', password);
-    console.log('confirmPassword:', confirmPassword);
-
     if (password !== confirmPassword) {
-      toast.error('Password does not match');
+      toast.error('Kata sandi tidak cocok');
       return;
     }
 
@@ -52,15 +49,15 @@ const FormReset = () => {
 
       Swal.fire({
         icon: 'success',
-        title: 'Success',
-        text: 'Password reset successfully',
+        title: 'Berhasil',
+        text: 'Kata sandi berhasil direset',
         showConfirmButton: false,
         timer: 2000,
       });
 
       navigate('/login'); // Redirect after success
     } catch (error) {
-      toast.error('Failed to reset password. Please try again.');
+      toast.error('Gagal mereset kata sandi. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -77,15 +74,15 @@ const FormReset = () => {
   return (
     <form onSubmit={handleResetPassword}>
       <ToastContainer />
-      {/* Password */}
+      {/* Kata Sandi */}
       <div className="mb-4">
         <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-          Password
+          Kata Sandi
         </Label>
         <div className="relative">
           <Input
             type={showPassword ? 'text' : 'password'}
-            placeholder="Enter your new password"
+            placeholder="Masukkan kata sandi baru Anda"
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={password}
             onChange={(e) => setNewPassword(e.target.value)}
@@ -99,15 +96,15 @@ const FormReset = () => {
           </span>
         </div>
       </div>
-      {/* Confirm Password */}
+      {/* Konfirmasi Kata Sandi */}
       <div className="mb-4">
         <Label classname="mb-2.5 block font-medium text-black dark:text-white">
-          Confirm Password
+          Konfirmasi Kata Sandi
         </Label>
         <div className="relative">
           <Input
             type={showConfirmPassword ? 'text' : 'password'}
-            placeholder="Enter your confirm password"
+            placeholder="Masukkan konfirmasi kata sandi Anda"
             classname="w-full py-4 pl-6 pr-10 bg-transparent border rounded-lg outline-none border-stroke focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -121,14 +118,14 @@ const FormReset = () => {
           </span>
         </div>
       </div>
-      {/* Change Password Button */}
+      {/* Tombol Reset Kata Sandi */}
       <div className="mb-5">
         <Button
           type="submit"
           classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
           disabled={isLoading}
         >
-          {isLoading ? 'Resetting...' : 'Reset Password'}
+          {isLoading ? 'Mereset...' : 'Reset Kata Sandi'}
         </Button>
       </div>
     </form>

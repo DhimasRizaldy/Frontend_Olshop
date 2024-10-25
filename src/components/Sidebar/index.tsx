@@ -7,7 +7,6 @@ import {
   faGauge,
   faTag,
   faCartShopping,
-  faComment,
   faUser,
   faBoxesStacked,
   faTruckField,
@@ -35,7 +34,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           setUserRole(response.data.user.role);
         }
       } catch (error) {
-        console.error('Failed to fetch user data', error);
+        console.error('Gagal mengambil data pengguna', error);
       }
     };
     fetchUserData();
@@ -81,15 +80,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     { to: '/dashboard', icon: faGauge, label: 'Dashboard' },
     ...(userRole === 'ADMIN'
       ? [
-          { to: '/users', icon: faUser, label: 'Users' },
-          { to: '/supplier', icon: faTruckField, label: 'Supplier' },
-          { to: '/management', icon: faBox, label: 'Management Product' },
-          { to: '/category', icon: faList, label: 'Category Product' },
+          { to: '/users', icon: faUser, label: 'Pengguna' },
+          { to: '/supplier', icon: faTruckField, label: 'Suplier' },
+          { to: '/management', icon: faBox, label: 'Manajemen Produk' },
+          { to: '/category', icon: faList, label: 'Kategori Produk' },
         ]
       : []),
-    { to: '/product', icon: faBoxesStacked, label: 'Product' },
+    { to: '/product', icon: faBoxesStacked, label: 'Produk' },
     { to: '/promo', icon: faTag, label: 'Promo' },
-    { to: '/transaction', icon: faCartShopping, label: 'Transaction' },
+    { to: '/transaction', icon: faCartShopping, label: 'Transaksi' },
   ];
 
   return (

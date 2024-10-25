@@ -20,14 +20,13 @@ const ProductDetails = () => {
         const response = await getProductById(productId);
         setProduct(response.data);
 
-        // Check if the user has purchased the product
-        const userId = localStorage.getItem('userId'); // Mengambil userId dari localStorage
+        const userId = localStorage.getItem('userId');
         const purchased = response.data.carts.some(
           (cart) => cart.userId === userId && cart.isCheckout,
         );
         setHasPurchased(purchased);
       } catch (error) {
-        console.error('Failed to fetch product:', error);
+        console.error('Gagal mengambil data produk:', error);
       } finally {
         setLoading(false);
       }
@@ -95,7 +94,7 @@ const ProductDetails = () => {
   };
 
   const handleReviewAdded = () => {
-    console.log('Review added successfully');
+    console.log('Review berhasil ditambahkan');
   };
 
   const renderStars = (rating) => {
@@ -117,12 +116,16 @@ const ProductDetails = () => {
     );
   };
 
+  const formatNumber = (number) => {
+    return number.toLocaleString('id-ID');
+  };
+
   if (loading) {
     return <SkeletonProductDetails />;
   }
 
   if (!product) {
-    return <div>Product not found</div>;
+    return <div>Produk tidak ditemukan</div>;
   }
 
   const roundedAverageRating = Math.round(product.averageRating);
@@ -162,20 +165,20 @@ const ProductDetails = () => {
           </div>
           <div className="mb-4">
             <p className="text-gray-700">
-              <strong>Stock:</strong> {product.stock}
+              <strong>Stok:</strong> {formatNumber(product.stock)}
             </p>
             <p className="text-gray-700">
-              <strong>Weight:</strong> {product.weight} grams
+              <strong>Berat:</strong> {formatNumber(product.weight)} gram
             </p>
             <p className="text-gray-700">
-              <strong>Category:</strong>{' '}
-              {product.category?.name || 'Unknown Category'}
+              <strong>Kategori:</strong>{' '}
+              {product.category?.name || 'Kategori Tidak Diketahui'}
             </p>
             <p className="text-gray-700">
-              <strong>Terjual:</strong> {product.totalSold}
+              <strong>Terjual:</strong> {formatNumber(product.totalSold)}
             </p>
             <p className="text-gray-700">
-              <strong>Ulasan:</strong> {product.totalReview}
+              <strong>Ulasan:</strong> {formatNumber(product.totalReview)}
             </p>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
@@ -197,27 +200,6 @@ const ProductDetails = () => {
             >
               Berikan Ulasan
             </button>
-          </div>
-
-          <div className="border-t mt-6">
-            <ul className="flex border-b">
-              <li className="mr-6">
-                <a
-                  href="#product-details"
-                  className="py-2 px-4 text-blue-600 hover:text-blue-800 border-b-2 border-transparent hover:border-blue-600"
-                >
-                  Detail Produk
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#product-reviews"
-                  className="py-2 px-4 text-gray-600 hover:text-gray-800 border-b-2 border-transparent hover:border-gray-600"
-                >
-                  Ulasan
-                </a>
-              </li>
-            </ul>
           </div>
         </div>
       </div>
@@ -241,7 +223,7 @@ const ProductDetails = () => {
                   <div className="flex-1">
                     <div className="mb-2">
                       <p className="text-gray-700 font-bold">
-                        {review.products?.name || 'Unknown Product'}
+                        {review.products?.name || 'Produk Tidak Diketahui'}
                       </p>
                     </div>
                     <div className="flex items-center mb-2">
@@ -249,7 +231,7 @@ const ProductDetails = () => {
                     </div>
                     <p className="text-gray-700">
                       <strong>
-                        {review.users?.username || 'Unknown User'}:
+                        {review.users?.username || 'Pengguna Tidak Diketahui'}:
                       </strong>{' '}
                       {review.review}
                     </p>

@@ -17,6 +17,7 @@ const EditSupplier = () => {
 
   useEffect(() => {
     const fetchSupplierData = async () => {
+      setIsLoading(true);
       try {
         const response = await getSupplierById(supplierId);
         setName(response.data.name);
@@ -24,8 +25,10 @@ const EditSupplier = () => {
         setAddress(response.data.address);
         setPhoneNumber(response.data.phoneNumber);
       } catch (error) {
-        toast.error('Failed to fetch supplier data');
+        toast.error('Gagal mengambil data supplier');
         console.error('Error:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -51,9 +54,9 @@ const EditSupplier = () => {
 
     try {
       await editSupplier(supplierId, supplierData);
-      toast.success('Supplier successfully updated!');
+      toast.success('Supplier berhasil diperbarui!');
     } catch (error) {
-      toast.error('Failed to update supplier. Please try again.');
+      toast.error('Gagal memperbarui supplier. Silakan coba lagi.');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -68,9 +71,9 @@ const EditSupplier = () => {
           <div className="w-full sm:w-1/2">
             <label
               className="mb-3 block text-sm font-medium text-black dark:text-white"
-              htmlFor="codePromo"
+              htmlFor="name"
             >
-              Name Toko
+              Nama Toko
             </label>
             <div className="relative">
               <input
@@ -104,7 +107,7 @@ const EditSupplier = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Address
+              Alamat
             </label>
             <div className="relative">
               <input
@@ -120,7 +123,7 @@ const EditSupplier = () => {
           </div>
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Phone Number
+              Nomor Telepon
             </label>
             <div className="relative">
               <input
@@ -140,10 +143,9 @@ const EditSupplier = () => {
           <Link to="/supplier">
             <button
               className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-              type="submit"
-              disabled={isLoading}
+              type="button"
             >
-              Cancel
+              Kembali
             </button>
           </Link>
           <button
@@ -151,7 +153,7 @@ const EditSupplier = () => {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? 'Updating...' : 'Update'}
+            {isLoading ? 'Mengupdate...' : 'Perbarui'}
           </button>
         </div>
       </form>

@@ -24,11 +24,12 @@ const FormVerifyOtp = () => {
   }, [location.search]);
 
   const handleOTP = async () => {
+    setIsLoading(true);
     const success = await userOTP(otp, token);
     Swal.fire({
       icon: success ? 'success' : 'error',
-      title: success ? 'Success' : 'Failed',
-      text: success ? 'OTP has been verified' : 'Failed to verify OTP',
+      title: success ? 'Berhasil' : 'Gagal',
+      text: success ? 'OTP berhasil diverifikasi' : 'Gagal memverifikasi OTP',
     });
 
     setIsLoading(false);
@@ -46,8 +47,9 @@ const FormVerifyOtp = () => {
           <Button
             onClick={handleOTP}
             classname="w-full p-4 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
+            disabled={isLoading}
           >
-            Verify Accounts
+            {isLoading ? 'Memverifikasi...' : 'Verifikasi Akun'}
           </Button>
         </div>
       </form>

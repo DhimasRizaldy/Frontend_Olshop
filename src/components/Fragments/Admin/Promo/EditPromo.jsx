@@ -22,10 +22,10 @@ const EditPromo = () => {
         const response = await getPromoById(promoId);
         setCodePromo(response.data.codePromo);
         setDiscount(response.data.discount);
-        setActiveAt(formatDate(response.data.activeAt)); // Format date
-        setExpiresAt(formatDate(response.data.expiresAt)); // Format date
+        setActiveAt(formatDate(response.data.activeAt)); // Format tanggal
+        setExpiresAt(formatDate(response.data.expiresAt)); // Format tanggal
       } catch (error) {
-        toast.error('Failed to fetch promo data');
+        toast.error('Gagal mengambil data promo');
         console.error('Error:', error);
       }
     };
@@ -41,20 +41,35 @@ const EditPromo = () => {
       return;
     }
 
+    if (parseInt(discount, 10) > 100) {
+      toast.error('Diskon tidak boleh lebih dari 100%');
+      return;
+    }
+
+    const activeDate = new Date(activeAt);
+    const expireDate = new Date(expiresAt);
+
+    if (expireDate < activeDate) {
+      toast.error(
+        'Tanggal kadaluarsa tidak boleh lebih awal dari tanggal aktif',
+      );
+      return;
+    }
+
     const promoData = {
       codePromo,
       discount: parseInt(discount, 10),
-      activeAt: new Date(activeAt).toISOString(), // Konversi kembali ke ISO
-      expiresAt: new Date(expiresAt).toISOString(), // Konversi kembali ke ISO
+      activeAt: activeDate.toISOString(), // Konversi kembali ke ISO
+      expiresAt: expireDate.toISOString(), // Konversi kembali ke ISO
     };
 
     setIsLoading(true);
 
     try {
       await editPromo(promoId, promoData);
-      toast.success('Promo successfully updated!');
+      toast.success('Promo berhasil diperbarui!');
     } catch (error) {
-      toast.error('Failed to update promo. Please try again.');
+      toast.error('Gagal memperbarui promo. Silakan coba lagi.');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -68,7 +83,7 @@ const EditPromo = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Code Promo
+              Kode Promo
             </label>
             <div className="relative">
               <input
@@ -84,12 +99,12 @@ const EditPromo = () => {
           </div>
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Discount
+              Diskon (%)
             </label>
             <div className="relative">
               <input
                 className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                type="text"
+                type="number"
                 name="discount"
                 id="discount"
                 value={discount}
@@ -102,7 +117,7 @@ const EditPromo = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Tanggal Active
+              Tanggal Aktif
             </label>
             <div className="relative">
               <input
@@ -118,7 +133,7 @@ const EditPromo = () => {
           </div>
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-              Tanggal Expires
+              Tanggal Kadaluarsa
             </label>
             <div className="relative">
               <input
@@ -138,10 +153,10 @@ const EditPromo = () => {
           <Link to="/promo">
             <button
               className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-              type="submit"
+              type="button"
               disabled={isLoading}
             >
-              Cancel
+              Batal
             </button>
           </Link>
           <button
@@ -149,7 +164,7 @@ const EditPromo = () => {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? 'Updating...' : 'Update'}
+            {isLoading ? 'Memperbarui...' : 'Perbarui'}
           </button>
         </div>
       </form>

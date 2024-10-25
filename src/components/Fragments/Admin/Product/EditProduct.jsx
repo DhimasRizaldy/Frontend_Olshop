@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Select from 'react-select';
 import {
   editProduct,
   getProductById,
 } from '../../../../services/admin/product/services-product';
 import { getCategories } from '../../../../services/admin/category/services-category';
+
+// Fungsi untuk format angka dengan pemisah ribuan
+const formatRupiah = (number) => {
+  if (number == null) return '';
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
 
 const EditProduct = () => {
   const { productId } = useParams();
@@ -34,7 +41,7 @@ const EditProduct = () => {
         setDescription(response.data.description);
         setImage(response.data.image);
       } catch (error) {
-        toast.error('Failed to fetch product data');
+        toast.error('Gagal mengambil data produk');
         console.error('Error fetching product data:', error.message);
       }
     };
@@ -62,20 +69,16 @@ const EditProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('name:', name);
-    console.log('categoryId:', categoryId);
-    console.log('price:', price);
-    console.log('promoPrice:', promoPrice);
-    console.log('weight:', weight);
-    console.log('stock:', stock);
-    console.log('description:', description);
-    console.log('image:', image);
+    if (parseFloat(price) < parseFloat(promoPrice)) {
+      toast.error('Harga promo tidak boleh lebih besar dari harga asli');
+      return;
+    }
 
     if (
       !name ||
       !categoryId ||
       !price ||
-      !promoPrice ||
+      promoPrice === null ||
       !weight ||
       !stock ||
       !description
@@ -83,6 +86,7 @@ const EditProduct = () => {
       toast.error('Harap isi semua kolom dengan lengkap');
       return;
     }
+
     const productData = {
       name,
       categoryId,
@@ -98,11 +102,11 @@ const EditProduct = () => {
 
     try {
       await editProduct(productId, productData);
-      toast.success('Product updated successfully');
+      toast.success('Produk berhasil diperbarui');
       setIsLoading(false);
     } catch (error) {
       console.error('Error updating product:', error);
-      toast.error(error.response?.data?.message || 'Error updating product');
+      toast.error(error.response?.data?.message || 'Gagal memperbarui produk');
     } finally {
       setIsLoading(false);
     }
@@ -115,7 +119,7 @@ const EditProduct = () => {
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              Name
+              Nama Produk
             </label>
             <div className="relative">
               <input
@@ -129,101 +133,105 @@ const EditProduct = () => {
               />
             </div>
           </div>
+
+          {/* ComboBox dengan pencarian */}
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              Category
+              Kategori
             </label>
             <div className="relative">
-              <select
-                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                disabled={isLoading}
-              >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {categoryOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+              <Select
+                options={categoryOptions}
+                value={categoryOptions.find(
+                  (option) => option.value === categoryId,
+                )}
+                onChange={(option) => setCategoryId(option.value)}
+                isDisabled={isLoading}
+                placeholder="Pilih kategori"
+                isSearchable
+              />
             </div>
           </div>
         </div>
+
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              Price
+              Harga
             </label>
             <div className="relative">
               <input
                 className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                type="number"
+                type="text"
                 name="price"
                 id="price"
-                value={price || ''}
-                onChange={(e) => setPrice(e.target.value)}
+                value={formatRupiah(price) || ''}
+                onChange={(e) => setPrice(e.target.value.replace(/\./g, ''))}
                 disabled={isLoading}
               />
             </div>
           </div>
+
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              Promo Price
+              Harga Promo
             </label>
             <div className="relative">
               <input
                 className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                type="number"
+                type="text"
                 name="promoPrice"
                 id="promoPrice"
-                value={promoPrice || ''}
-                onChange={(e) => setPromoPrice(e.target.value)}
+                value={formatRupiah(promoPrice) || ''}
+                onChange={(e) =>
+                  setPromoPrice(e.target.value.replace(/\./g, '') || 0)
+                }
                 disabled={isLoading}
               />
             </div>
           </div>
         </div>
+
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              Weight
+              Berat
             </label>
             <div className="relative">
               <input
                 className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                type="number"
-                name="Weight"
-                id="Weight"
-                value={weight || ''}
-                onChange={(e) => setWeight(e.target.value)}
+                type="text"
+                name="weight"
+                id="weight"
+                value={formatRupiah(weight) || ''}
+                onChange={(e) => setWeight(e.target.value.replace(/\./g, ''))}
                 disabled={isLoading}
               />
             </div>
           </div>
+
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              Stock
+              Stok
             </label>
             <div className="relative">
               <input
                 className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                type="number"
+                type="text"
                 name="stock"
                 id="stock"
-                value={stock || ''}
-                onChange={(e) => setStock(e.target.value)}
+                value={formatRupiah(stock) || ''}
+                onChange={(e) => setStock(e.target.value.replace(/\./g, ''))}
                 placeholder="0"
               />
             </div>
           </div>
         </div>
+
         <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              description
+              Deskripsi
             </label>
             <div className="relative">
               <textarea
@@ -240,9 +248,9 @@ const EditProduct = () => {
           </div>
           <div className="w-full sm:w-1/2">
             <label className="mb-3 block font-medium text-black dark:text-white">
-              Image
+              Foto Produk
             </label>
-            <td className="relative">
+            <div className="relative">
               {image ? (
                 <img
                   src={
@@ -254,9 +262,9 @@ const EditProduct = () => {
                   className="h-10 w-10 rounded-full object-cover"
                 />
               ) : (
-                <p className="text-black dark:text-white">No image</p>
+                <p className="text-black dark:text-white">Tidak ada gambar</p>
               )}
-            </td>
+            </div>
             <div className="relative">
               <input
                 type="file"
@@ -275,15 +283,15 @@ const EditProduct = () => {
               type="button"
               disabled={isLoading}
             >
-              Cancel
+              Batal
             </button>
           </Link>
           <button
-            className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
+            className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? 'Updating...' : 'Update'}
+            {isLoading ? 'Loading...' : 'Simpan'}
           </button>
         </div>
       </form>
