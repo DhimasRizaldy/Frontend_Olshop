@@ -74,9 +74,11 @@ const DetailTransactionMe = () => {
     if (transactionDetail?.token) {
       window.snap.pay(transactionDetail.token, {
         onSuccess: function (result) {
-          Swal.fire('Berhasil!', 'Pembayaran berhasil!', 'success').then(() => {
-            window.location.href = '/payment-success';
-          });
+          localStorage.setItem(
+            'transactionId',
+            result.order_id || result.transaction_id,
+          );
+          window.location.href = '/payment-success';
         },
         onPending: function (result) {
           Swal.fire('Tertunda!', 'Pembayaran tertunda.', 'info');
@@ -116,16 +118,12 @@ const DetailTransactionMe = () => {
         });
 
         if (response.success) {
-          Swal.fire('Berhasil!', 'Pesanan telah dibatalkan.', 'success').then(
-            () => {
-              setTransactionDetail((prevState) => ({
-                ...prevState,
-                status_payment: 'Cancelled',
-                shippingStatus: 'Cancel',
-              }));
-              navigate('/payment-cancel');
-            },
-          );
+          setTransactionDetail((prevState) => ({
+            ...prevState,
+            status_payment: 'Cancelled',
+            shippingStatus: 'Cancel',
+          }));
+          navigate('/payment-cancel');
         } else {
           Swal.fire(
             'Gagal!',

@@ -7,11 +7,15 @@ const HandleCancelPay = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    handleCancelPayment();
+  }, []);
+
   const handleCancelPayment = async () => {
     const transactionId = localStorage.getItem('transactionId');
 
     if (!transactionId) {
-      Swal.fire('Error!', 'Transaction ID not found.', 'error');
+      Swal.fire('Error!', 'ID Transaksi tidak ditemukan.', 'error');
       return;
     }
 
@@ -27,8 +31,8 @@ const HandleCancelPay = () => {
 
       // Tampilkan pesan sukses dan navigasi ke halaman /transaction-me
       Swal.fire(
-        'Success!',
-        'Payment status updated successfully.',
+        'Sukses!',
+        'Status pembayaran berhasil diperbarui.',
         'success',
       ).then(() => {
         // Hapus transactionId dari localStorage
@@ -40,8 +44,8 @@ const HandleCancelPay = () => {
       console.error('Error updating payment status:', error);
       // Tampilkan pesan sukses dan navigasi ke halaman /transaction-me meskipun terjadi error
       Swal.fire(
-        'Success!',
-        'Payment status updated successfully.',
+        'Sukses!',
+        'Status pembayaran berhasil diperbarui.',
         'success',
       ).then(() => {
         // Hapus transactionId dari localStorage
@@ -58,11 +62,11 @@ const HandleCancelPay = () => {
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
       <div className="bg-white shadow-md rounded-lg p-6 text-center">
         <h1 className="text-2xl font-bold text-red-600 mb-4">
-          Payment Cancelled
+          Pembayaran Dibatalkan
         </h1>
         <p className="text-gray-700 mb-6">
-          Your payment has been cancelled. If this is a mistake, please try
-          again.
+          Pembayaran Anda telah dibatalkan. Jika ini adalah kesalahan, silakan
+          coba lagi.
         </p>
         <button
           onClick={handleCancelPayment}
@@ -71,7 +75,7 @@ const HandleCancelPay = () => {
             loading ? 'cursor-not-allowed' : ''
           }`}
         >
-          {loading ? 'Loading...' : 'Confirm Payment Cancellation'}
+          {loading ? 'Memuat...' : 'Konfirmasi Pembatalan Pembayaran'}
         </button>
       </div>
     </div>

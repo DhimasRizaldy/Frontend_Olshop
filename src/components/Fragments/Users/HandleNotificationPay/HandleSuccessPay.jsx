@@ -7,11 +7,15 @@ const HandleSuccessPay = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    handleConfirmPayment();
+  }, []);
+
   const handleConfirmPayment = async () => {
     const transactionId = localStorage.getItem('transactionId');
 
     if (!transactionId) {
-      Swal.fire('Error!', 'Transaction ID not found.', 'error');
+      Swal.fire('Error!', 'ID Transaksi tidak ditemukan.', 'error');
       return;
     }
 
@@ -27,8 +31,8 @@ const HandleSuccessPay = () => {
 
       // Tampilkan pesan sukses dan navigasi ke halaman /transaction-me
       Swal.fire(
-        'Success!',
-        'Payment status updated successfully.',
+        'Sukses!',
+        'Status pembayaran berhasil diperbarui.',
         'success',
       ).then(() => {
         // Hapus transactionId dari localStorage
@@ -40,8 +44,8 @@ const HandleSuccessPay = () => {
       console.error('Error updating payment status:', error);
       // Tampilkan pesan sukses dan navigasi ke halaman /transaction-me meskipun terjadi error
       Swal.fire(
-        'Success!',
-        'Payment status updated successfully.',
+        'Sukses!',
+        'Status pembayaran berhasil diperbarui.',
         'success',
       ).then(() => {
         // Hapus transactionId dari localStorage
@@ -58,10 +62,10 @@ const HandleSuccessPay = () => {
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
       <div className="bg-white shadow-md rounded-lg p-6 text-center">
         <h1 className="text-2xl font-bold text-green-600 mb-4">
-          Payment Success
+          Pembayaran Berhasil
         </h1>
         <p className="text-gray-700 mb-6">
-          Your payment was successful. Thank you for your purchase!
+          Pembayaran Anda berhasil. Terima kasih atas pembelian Anda!
         </p>
         <button
           onClick={handleConfirmPayment}
@@ -70,7 +74,7 @@ const HandleSuccessPay = () => {
             loading ? 'cursor-not-allowed' : ''
           }`}
         >
-          {loading ? 'Loading...' : 'Confirm Payment Success'}
+          {loading ? 'Memuat...' : 'Konfirmasi Pembayaran Berhasil'}
         </button>
       </div>
     </div>
