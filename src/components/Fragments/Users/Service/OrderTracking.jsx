@@ -5,63 +5,72 @@ import { fetchWaybillInfo } from '../../../../services/users/rajaongkir/rajaongk
 
 const OrderTrackings = () => {
   const [trackingNumber, setTrackingNumber] = useState('');
-  const [selectedCourier, setSelectedCourier] = useState('jne'); // Default courier
   const [trackingDetails, setTrackingDetails] = useState(null);
-  const [couriers, setCouriers] = useState([
+
+  const couriers = [
     { id: 'jne', name: 'JNE' },
     { id: 'pos', name: 'POS' },
     { id: 'tiki', name: 'TIKI' },
     { id: 'jnt', name: 'J&T' },
     { id: 'sicepat', name: 'SiCepat' },
-  ]); // Example couriers, update this list as needed
+  ]; // Example couriers, update this list as needed
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      // Fetch tracking details from API
-      const data = await fetchWaybillInfo(trackingNumber, selectedCourier);
-      const { result } = data;
+    let found = false;
 
-      // Check if the tracking number is empty
-      if (!result || !result.summary || !result.summary.waybill_number) {
-        toast.error(
-          'Data resi tidak ditemukan. Pastikan nomor resi dan kurir sudah benar.',
+    for (const courier of couriers) {
+      try {
+        // Fetch tracking details from API
+        const data = await fetchWaybillInfo(trackingNumber, courier.id);
+        const { result } = data;
+
+        // Check if the tracking number is empty
+        if (result && result.summary && result.summary.waybill_number) {
+          const trackingDetails = {
+            trackingNumber: result.summary.waybill_number,
+            status: result.summary.status,
+            courier: result.summary.courier_name,
+            estimatedDelivery: result.summary.waybill_date, // Update sesuai dengan data yang relevan
+            statusUpdates: result.manifest.map((entry) => ({
+              status: entry.manifest_description,
+              timestamp: `${entry.manifest_date} ${entry.manifest_time}`,
+            })),
+            deliveryAddress: {
+              street: result.details.receiver_address1,
+              city: result.details.receiver_city,
+              state: '', // Update jika ada informasi provinsi
+              postalCode: '', // Update jika ada informasi kode pos
+              country: '', // Update jika ada informasi negara
+            },
+          };
+
+          setTrackingDetails(trackingDetails);
+          toast.success('Data resi berhasil ditemukan!');
+          found = true;
+          break;
+        }
+      } catch (error) {
+        console.error(
+          `Terjadi kesalahan saat mengambil data resi untuk kurir ${courier.name}:`,
+          error,
         );
-        setTrackingDetails(null);
-        return;
       }
+    }
 
-      const trackingDetails = {
-        trackingNumber: result.summary.waybill_number,
-        status: result.summary.status,
-        courier: result.summary.courier_name,
-        estimatedDelivery: result.summary.waybill_date, // Update sesuai dengan data yang relevan
-        statusUpdates: result.manifest.map((entry) => ({
-          status: entry.manifest_description,
-          timestamp: `${entry.manifest_date} ${entry.manifest_time}`,
-        })),
-        deliveryAddress: {
-          street: result.details.receiver_address1,
-          city: result.details.receiver_city,
-          state: '', // Update jika ada informasi provinsi
-          postalCode: '', // Update jika ada informasi kode pos
-          country: '', // Update jika ada informasi negara
-        },
-      };
-
-      setTrackingDetails(trackingDetails);
-      toast.success('Data resi berhasil ditemukan!');
-    } catch (error) {
-      console.error('Error fetching tracking details:', error);
-      toast.error('Terjadi kesalahan saat mengambil data resi.');
+    if (!found) {
+      toast.error(
+        'Data resi tidak ditemukan. Pastikan nomor resi dan kurir sudah benar.',
+      );
+      setTrackingDetails(null);
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 mt-10">
       <div className="bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-center mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-8">
           Lacak Pengiriman Anda
         </h1>
 
@@ -76,22 +85,11 @@ const OrderTrackings = () => {
               placeholder="Masukkan Nomor Resi"
               value={trackingNumber}
               onChange={(e) => setTrackingNumber(e.target.value)}
-              className="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full sm:flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <select
-              value={selectedCourier}
-              onChange={(e) => setSelectedCourier(e.target.value)}
-              className="mt-4 sm:mt-0 sm:ml-4 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {couriers.map((courier) => (
-                <option key={courier.id} value={courier.id}>
-                  {courier.name}
-                </option>
-              ))}
-            </select>
             <button
               type="submit"
-              className="mt-4 sm:mt-0 sm:ml-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full sm:w-auto mt-4 sm:mt-0 sm:ml-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Lacak
             </button>
