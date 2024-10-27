@@ -8,8 +8,8 @@ const DetailAddress = () => {
   const { addressId } = useParams();
   const [nameAddress, setNameAddress] = useState('');
   const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
+  const [cityName, setCityName] = useState('');
+  const [provinceName, setProvinceName] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [role, setRole] = useState('USER'); // Default role
   const navigate = useNavigate();
@@ -18,11 +18,13 @@ const DetailAddress = () => {
     const fetchAddressData = async () => {
       try {
         const response = await getAddressById(addressId);
-        setNameAddress(response.data.nameAddress);
-        setAddress(response.data.address);
-        setCity(response.data.city);
-        setCountry(response.data.country);
-        setPostalCode(response.data.postalCode);
+        console.log('Address Data:', response); // Tambahkan log untuk memeriksa data yang diterima
+        const addressData = response.data;
+        setNameAddress(addressData.nameAddress || '');
+        setAddress(addressData.address || '');
+        setCityName(addressData.cityName || '');
+        setProvinceName(addressData.provinceName || '');
+        setPostalCode(addressData.postalCode || '');
       } catch (error) {
         console.error('Gagal mengambil data alamat:', error);
       }
@@ -95,10 +97,10 @@ const DetailAddress = () => {
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
               type="text"
-              name="country"
-              id="country"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
+              name="provinceName"
+              id="provinceName"
+              value={provinceName}
+              onChange={(e) => setProvinceName(e.target.value)}
               disabled
             />
           </div>
@@ -111,10 +113,10 @@ const DetailAddress = () => {
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
               type="text"
-              name="city"
-              id="city"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              name="cityName"
+              id="cityName"
+              value={cityName}
+              onChange={(e) => setCityName(e.target.value)}
               disabled
             />
           </div>

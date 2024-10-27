@@ -2,10 +2,10 @@ import http from '../../../utils/constants/http';
 import { API_ENDPOINT } from '../../../utils/constants/endpoint';
 import { toast } from 'react-toastify';
 
+// Get all addresses
 export const getAddress = async () => {
   try {
     const response = await http.get(API_ENDPOINT.GET_ADDRESS);
-    // console.log('API Get Address Response:', response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -16,14 +16,15 @@ export const getAddress = async () => {
   }
 };
 
-// add address
+// Add a new address
 export const addAddress = async (addressData) => {
-  // Check if addressData fields are valid
   if (
     !addressData.nameAddress ||
     !addressData.address ||
-    !addressData.city ||
-    !addressData.country ||
+    !addressData.cityId ||
+    !addressData.provinceId ||
+    !addressData.cityName ||
+    !addressData.provinceName ||
     !addressData.postalCode
   ) {
     toast.error('Please fill in all fields');
@@ -32,8 +33,6 @@ export const addAddress = async (addressData) => {
 
   try {
     const response = await http.post(API_ENDPOINT.POST_ADDRESS, addressData);
-    // console.log('API Add Address Response:', response.data);
-    // toast.success('Address added successfully!');
     return response.data;
   } catch (error) {
     console.error(
@@ -44,29 +43,27 @@ export const addAddress = async (addressData) => {
   }
 };
 
-// update address
+// Update an existing address
 export const editAddress = async (addressId, addressData) => {
   try {
     const response = await http.put(
       API_ENDPOINT.UPDATE_ADDRESS(addressId),
       addressData,
     );
-    // console.log('API Update Address Response:', response.data);
     return response.data;
   } catch (error) {
     console.error(
       'Error updating Address:',
       error.response?.data || error.message,
     );
-    throw error; // Propagate the error to be handled by the caller
+    throw error;
   }
 };
 
-// get address by id
+// Get address by ID
 export const getAddressById = async (addressId) => {
   try {
     const response = await http.get(API_ENDPOINT.GET_ADDRESS_BY_ID(addressId));
-    // console.log('API Get Address Response:', response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -77,12 +74,10 @@ export const getAddressById = async (addressId) => {
   }
 };
 
-// delete address
+// Delete an address
 export const deleteAddress = async (addressId) => {
   try {
     const response = await http.delete(API_ENDPOINT.DELETE_ADDRESS(addressId));
-
-    // Check if the API response indicates success
     if (response.data.success) {
       return response.data;
     } else {

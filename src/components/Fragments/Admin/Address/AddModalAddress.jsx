@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
@@ -10,7 +9,7 @@ import {
   fetchProvinces,
 } from '../../../../services/users/rajaongkir/rajaongkir-services';
 
-const AddAddress = () => {
+const AddModalAddress = ({ onClose }) => {
   const [nameAddress, setNameAddress] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
@@ -24,7 +23,6 @@ const AddAddress = () => {
   const [role, setRole] = useState('USER'); // Default role
   const [cities, setCities] = useState([]);
   const [provinces, setProvinces] = useState([]);
-  const navigate = useNavigate();
 
   // Fetch user role
   useEffect(() => {
@@ -108,7 +106,8 @@ const AddAddress = () => {
       setPostalCode('');
       setCityId('');
       setProvinceId('');
-      navigate(role === 'USER' ? '/users/profile' : '/admin/profile'); // Redirect based on role
+      onClose(); // Close the modal after successful submission
+      window.location.reload(); // Refresh the page
     } catch (error) {
       toast.error('Gagal menambahkan alamat');
       console.error('Error:', error);
@@ -214,14 +213,6 @@ const AddAddress = () => {
       </div>
 
       <div className="flex justify-end gap-4.5">
-        <Link to={role === 'USER' ? '/users/profile' : '/admin/profile'}>
-          <button
-            className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-            type="button" // Change type to button to avoid form submission
-          >
-            Batal
-          </button>
-        </Link>
         <button
           className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
           type="submit"
@@ -234,4 +225,4 @@ const AddAddress = () => {
   );
 };
 
-export default AddAddress;
+export default AddModalAddress;

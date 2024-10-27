@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { checkoutPayment } from '../../../../services/users/payment/servives-payment';
-import { getAddress } from '../../../../services/admin/address/services-address';
+import {
+  getAddress,
+  addAddress,
+} from '../../../../services/admin/address/services-address';
 import { getPromo } from '../../../../services/admin/promo/services-promo';
 import { formatRupiah } from '../../../../utils/constants/function';
 import {
@@ -10,6 +13,8 @@ import {
 } from '../../../../services/users/rajaongkir/rajaongkir-services';
 import Swal from 'sweetalert2';
 import { useLocation } from 'react-router-dom';
+import Select from 'react-select';
+import ModalAddAddress from './ModalAddAddress';
 
 const PaymentsMe = () => {
   const location = useLocation();
@@ -34,28 +39,36 @@ const PaymentsMe = () => {
   const [shippingOptions, setShippingOptions] = useState([]);
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState('');
+  const [showAddAddressPopup, setShowAddAddressPopup] = useState(false);
 
+  // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch Address Data
-        const addressResponse = await getAddress();
+        const [addressResponse, promoResponse, provincesData] =
+          await Promise.all([getAddress(), getPromo(), fetchProvinces()]);
+
         if (addressResponse.success) {
           setAddresses(addressResponse.data || []);
         } else {
           console.error('Failed to fetch addresses');
         }
 
-        // Fetch Promo Data
-        const promoResponse = await getPromo();
         if (promoResponse.success) {
           const now = new Date();
-          const validPromos = promoResponse.data.filter(
-            (promo) => new Date(promo.expiresAt) > now,
+          setPromos(
+            promoResponse.data.filter(
+              (promo) => new Date(promo.expiresAt) > now,
+            ),
           );
-          setPromos(validPromos);
         } else {
           console.error('Failed to fetch promotions');
+        }
+
+        if (Array.isArray(provincesData)) {
+          setProvinces(provincesData);
+        } else {
+          console.error('Expected an array of provinces');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -63,32 +76,15 @@ const PaymentsMe = () => {
     };
 
     fetchData();
-  }, []); // Empty dependency array to run only on mount
+  }, []);
 
   useEffect(() => {
-    const getProvinces = async () => {
-      try {
-        const data = await fetchProvinces(); // Fetch provinces data
-        if (Array.isArray(data)) {
-          setProvinces(data); // Set state with fetched data
-        } else {
-          console.error('Expected an array of provinces');
-        }
-      } catch (error) {
-        console.error('Error fetching provinces:', error);
-      }
-    };
-
-    getProvinces(); // Call function to fetch provinces
-  }, []); // Fetch provinces on component mount
-
-  useEffect(() => {
-    const getCities = async () => {
+    const fetchCitiesByProvince = async () => {
       if (provId) {
         try {
-          const data = await fetchCities(provId); // Fetch cities data
-          if (Array.isArray(data)) {
-            setCities(data); // Set state with fetched data
+          const citiesData = await fetchCities(provId);
+          if (Array.isArray(citiesData)) {
+            setCities(citiesData);
           } else {
             console.error('Expected an array of cities');
           }
@@ -98,17 +94,15 @@ const PaymentsMe = () => {
       }
     };
 
-    getCities(); // Call function to fetch cities
-  }, [provId]); // Fetch cities when provId changes
+    fetchCitiesByProvince();
+  }, [provId]);
 
   useEffect(() => {
-    const calculateShippingCost = async () => {
+    const calculateShipping = async () => {
       if (provId && cityId && shippingOption) {
         try {
-          const weight = 1000; // Example weight in grams
+          const weight = 1000;
           const courier = shippingOption;
-
-          // Fetch shipping options
           await fetchShippingCost(
             provId,
             cityId,
@@ -122,50 +116,29 @@ const PaymentsMe = () => {
       }
     };
 
-    calculateShippingCost();
+    calculateShipping();
   }, [provId, cityId, shippingOption]);
 
   useEffect(() => {
-    if (shippingOptions.length > 0 && shippingOption) {
-      const selectedOption = shippingOptions.find(
-        (option) => option.service === shippingOption,
-      );
-      if (selectedOption && selectedOption.costs.length > 0) {
-        setShippingCost(selectedOption.costs[0].value);
-      } else {
-        // Handle case where costs is empty or selectedOption is not found
-        setShippingCost(null); // Or set a default value or handle it differently
-      }
-    }
-  }, [shippingOptions, shippingOption]);
-
-  useEffect(() => {
-    // Recalculate total whenever subtotal, discount, or shippingCost changes
     setTotal(subtotal - discount + shippingCost);
   }, [subtotal, discount, shippingCost]);
 
   useEffect(() => {
-    // Calculate subtotal whenever cartItems change
-    const calculatedSubtotal = cartItems.reduce((sum, item) => {
-      const finalPrice = item.products.promoPrice || item.products.price;
-      return sum + finalPrice * item.qty;
-    }, 0);
-    setSubtotal(calculatedSubtotal);
+    setSubtotal(
+      cartItems.reduce((sum, item) => {
+        const finalPrice = item.products.promoPrice || item.products.price;
+        return sum + finalPrice * item.qty;
+      }, 0),
+    );
   }, [cartItems]);
 
   const handleApplyDiscount = () => {
     const promo = promos.find((p) => p.promoId === selectedPromo);
-    if (promo) {
-      setDiscount(subtotal * (promo.discount / 100));
-    } else {
-      setDiscount(0);
-    }
+    setDiscount(promo ? subtotal * (promo.discount / 100) : 0);
   };
 
-  // handle checkout
   const handleCheckout = async () => {
     try {
-      // Tampilkan konfirmasi sebelum membuat transaksi
       const confirmation = await Swal.fire({
         title: 'Konfirmasi Transaksi',
         text: 'Apakah Anda ingin melanjutkan pembayaran?',
@@ -177,14 +150,12 @@ const PaymentsMe = () => {
       });
 
       if (confirmation.isConfirmed) {
-        // Ambil data yang diperlukan dari state atau props
-        const cartIds = cartItems.map((item) => item.cartId); // Pastikan cartItems sudah didefinisikan di state atau props
-        const ongkirValue = shippingCost; // Pastikan shippingCost sudah didefinisikan di state atau props
-        const courier = shippingOption; // Pastikan shippingOption sudah didefinisikan di state atau props
-        const promoId = selectedPromo || null; // Pastikan selectedPromo sudah didefinisikan di state atau props
-        const addressId = selectedAddress; // Pastikan selectedAddress sudah didefinisikan di state atau props
+        const cartIds = cartItems.map((item) => item.cartId);
+        const ongkirValue = shippingCost;
+        const courier = shippingOption;
+        const promoId = selectedPromo || null;
+        const addressId = selectedAddress;
 
-        // Panggil fungsi checkoutPayment untuk membuat transaksi
         const response = await checkoutPayment({
           cartIds,
           promoId,
@@ -193,121 +164,11 @@ const PaymentsMe = () => {
           courier,
         });
 
-        // Periksa apakah transaksi berhasil
-        if (response && response.success && response.data.token) {
-          // Menyimpan URL pembayaran dan token di state
-          setPaymentUrl(response.data.paymentUrl);
-          setShowPaymentPopup(true);
-
-          // Menampilkan Midtrans Snap menggunakan token yang diterima dari backend
-          window.snap.pay(response.data.token, {
-            onSuccess: function (result) {
-              Swal.fire(
-                'Pembayaran Sukses',
-                'Transaksi Anda berhasil.',
-                'success',
-              ).then(() => {
-                // Simpan order_id atau transaction_id ke localStorage
-                localStorage.setItem(
-                  'transactionId',
-                  result.order_id || result.transaction_id,
-                );
-                // Arahkan ke halaman transaction-me
-                window.location.href = '/payment-success';
-              });
-              console.log('Pembayaran Sukses:', result);
-            },
-            onPending: function (result) {
-              Swal.fire(
-                'Pembayaran Tertunda',
-                'Pembayaran Anda sedang diproses, silakan selesaikan nanti.',
-                'info',
-              ).then(() => {
-                // Arahkan ke halaman transaction-me
-                window.location.href = '/transaction-me';
-              });
-              console.log('Pembayaran Tertunda:', result);
-            },
-            onError: function (result) {
-              Swal.fire(
-                'Kesalahan Pembayaran',
-                'Terjadi kesalahan dalam transaksi Anda.',
-                'error',
-              ).then(() => {
-                // Arahkan ke halaman transaction-me
-                window.location.href = '/transaction-me';
-              });
-              console.log('Kesalahan Pembayaran:', result);
-            },
-            onClose: function () {
-              Swal.fire(
-                'Pembayaran Ditutup',
-                'Popup pembayaran ditutup.',
-                'info',
-              ).then(() => {
-                // Arahkan ke halaman transaction-me
-                window.location.href = '/transaction-me';
-              });
-              console.log('Popup pembayaran ditutup');
-            },
-          });
+        if (response?.success && response.data.token) {
+          handlePaymentProcess(response.data.token);
         } else {
-          // Jika respons tidak sesuai, tampilkan pesan sukses dan tetap menampilkan popup
-          console.log('Checkout berhasil:', response.message);
-          Swal.fire('Sukses', 'Transaksi berhasil dibuat', 'success').then(
-            () => {
-              window.snap.pay(response.data.token, {
-                onSuccess: function (result) {
-                  Swal.fire(
-                    'Pembayaran Sukses',
-                    'Transaksi Anda berhasil.',
-                    'success',
-                  ).then(() => {
-                    // Simpan order_id atau transaction_id ke localStorage
-                    localStorage.setItem(
-                      'transactionId',
-                      result.order_id || result.transaction_id,
-                    );
-                    // Arahkan ke halaman transaction-me
-                    window.location.href = '/payment-success';
-                  });
-                  console.log('Pembayaran Sukses:', result);
-                },
-                onPending: function (result) {
-                  Swal.fire(
-                    'Pembayaran Tertunda',
-                    'Pembayaran Anda sedang diproses, silakan selesaikan nanti.',
-                    'info',
-                  ).then(() => {
-                    // Arahkan ke halaman transaction-me
-                    window.location.href = '/transaction-me';
-                  });
-                  console.log('Pembayaran Tertunda:', result);
-                },
-                onError: function (result) {
-                  Swal.fire(
-                    'Kesalahan Pembayaran',
-                    'Terjadi kesalahan dalam transaksi Anda.',
-                    'error',
-                  ).then(() => {
-                    // Arahkan ke halaman transaction-me
-                    window.location.href = '/transaction-me';
-                  });
-                  console.log('Kesalahan Pembayaran:', result);
-                },
-                onClose: function () {
-                  Swal.fire(
-                    'Pembayaran Ditutup',
-                    'Popup pembayaran ditutup.',
-                    'info',
-                  ).then(() => {
-                    // Arahkan ke halaman transaction-me
-                    window.location.href = '/transaction-me';
-                  });
-                  console.log('Popup pembayaran ditutup');
-                },
-              });
-            },
+          Swal.fire('Sukses', 'Transaksi berhasil dibuat', 'success').then(() =>
+            handlePaymentProcess(response.data.token),
           );
         }
       }
@@ -317,58 +178,104 @@ const PaymentsMe = () => {
     }
   };
 
+  const handlePaymentProcess = (token) => {
+    window.snap.pay(token, {
+      onSuccess: handleSuccess,
+      onPending: handlePending,
+      onError: handleError,
+      onClose: handleClose,
+    });
+  };
+
+  const handleSuccess = (result) => {
+    Swal.fire('Pembayaran Sukses', 'Transaksi Anda berhasil.', 'success').then(
+      () => {
+        localStorage.setItem(
+          'transactionId',
+          result.order_id || result.transaction_id,
+        );
+        window.location.href = '/payment-success';
+      },
+    );
+  };
+
+  const handlePending = () => {
+    Swal.fire(
+      'Pembayaran Tertunda',
+      'Pembayaran sedang diproses.',
+      'info',
+    ).then(() => {
+      window.location.href = '/transaction-me';
+    });
+  };
+
+  const handleError = () => {
+    Swal.fire('Kesalahan Pembayaran', 'Terjadi kesalahan.', 'error').then(
+      () => {
+        window.location.href = '/transaction-me';
+      },
+    );
+  };
+
+  const handleClose = () => {
+    Swal.fire('Pembayaran Ditutup', 'Popup pembayaran ditutup.', 'info').then(
+      () => {
+        window.location.href = '/transaction-me';
+      },
+    );
+  };
+
+  const handleAddressChange = async (e) => {
+    const selectedAddr = addresses.find(
+      (addr) => addr.addressId === e.target.value,
+    );
+    if (selectedAddr) {
+      setSelectedAddress(e.target.value);
+      setCityId(selectedAddr.cityId);
+      setProvId(selectedAddr.provinceId);
+
+      fetchShippingCost(
+        selectedAddr.provinceId,
+        selectedAddr.cityId,
+        1000,
+        shippingOption,
+        setShippingOptions,
+      );
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
       <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+      {/* Alamat Pengiriman */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
+        <h2 className="text-xl font-semibold mb-4">Alamat Pengiriman</h2>
 
-        {/* Dropdown for Address */}
+        {/* Dropdown untuk Alamat */}
         <select
           className="w-full border border-gray-300 rounded-md p-2 mb-2"
           value={selectedAddress}
-          onChange={(e) => setSelectedAddress(e.target.value)}
+          onChange={handleAddressChange}
         >
-          <option value="">Select Address</option>
+          <option value="">Pilih Alamat</option>
           {addresses.map((addr) => (
             <option key={addr.addressId} value={addr.addressId}>
-              {addr.nameAddress} - {addr.address}, {addr.city}, {addr.country},{' '}
-              {addr.postalCode}
+              {addr.nameAddress} - {addr.address}, {addr.cityName},{' '}
+              {addr.provinceName}, {addr.postalCode}
             </option>
           ))}
         </select>
-
-        {/* Dropdown for Province */}
-        <select
-          className="w-full border border-gray-300 rounded-md p-2 mb-2"
-          onChange={(e) => setProvId(e.target.value)}
+        <button
+          onClick={() => setShowAddAddressPopup(true)}
+          className="bg-primary text-white rounded-md p-2 mt-2"
         >
-          <option value="">Select Province</option>
-          {provinces.map((province) => (
-            <option key={province.province_id} value={province.province_id}>
-              {province.province}
-            </option>
-          ))}
-        </select>
-
-        {/* Dropdown for City */}
-        <select
-          className="w-full border border-gray-300 rounded-md p-2 mb-2"
-          value={cityId}
-          onChange={(e) => setCityId(e.target.value)}
-        >
-          <option value="">Select City</option>
-          {cities.map((city) => (
-            <option key={city.city_id} value={city.city_id}>
-              {city.city_name}
-            </option>
-          ))}
-        </select>
+          Tambah Alamat
+        </button>
       </div>
 
-      {/* Shipping Address Section */}
+      {/* Bagian Alamat Pengiriman */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Shipping Options</h2>
+        <h2 className="text-xl font-semibold mb-4">Opsi Pengiriman</h2>
         <select
           className="w-full border border-gray-300 rounded-md p-2"
           value={shippingOption}
@@ -383,7 +290,7 @@ const PaymentsMe = () => {
             );
           }}
         >
-          <option value="">Select a Courier</option>
+          <option value="">Pilih Kurir</option>
           <option value="jne">JNE</option>
           <option value="pos">Pos Indonesia</option>
           <option value="jnt">JNT</option>
@@ -394,21 +301,21 @@ const PaymentsMe = () => {
             className="w-full border border-gray-300 rounded-md p-2 mt-4"
             onChange={(e) => setShippingCost(Number(e.target.value))}
           >
-            <option value="">Select Shipping Service</option>
+            <option value="">Pilih Layanan Pengiriman</option>
             {shippingOptions.map((option, index) => (
               <option key={index} value={option.cost[0].value}>
-                {option.service} - {option.description} - ( Estimasi{' '}
+                {option.service} - {option.description} - (Estimasi{' '}
                 {option.cost[0].etd} Hari) - (
-                {formatRupiah(option.cost[0].value)} )
+                {formatRupiah(option.cost[0].value)})
               </option>
             ))}
           </select>
         )}
       </div>
 
-      {/* Cart Items and Order Summary Section */}
+      {/* Bagian Ringkasan Pesanan */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+        <h2 className="text-xl font-semibold mb-4">Ringkasan Pesanan</h2>
         {cartItems.length > 0 ? (
           cartItems.map((item) => {
             const finalPrice = item.products.promoPrice || item.products.price;
@@ -431,19 +338,19 @@ const PaymentsMe = () => {
             );
           })
         ) : (
-          <p>No items in the cart.</p>
+          <p>Tidak ada barang di keranjang.</p>
         )}
       </div>
 
-      {/* Discount Code Section */}
+      {/* Bagian Kode Diskon */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Discount Code</h2>
+        <h2 className="text-xl font-semibold mb-4">Kode Diskon</h2>
         <select
           className="w-full border border-gray-300 rounded-md p-2 mb-2"
           value={selectedPromo}
           onChange={(e) => setSelectedPromo(e.target.value)}
         >
-          <option value="">Select Promo</option>
+          <option value="">Pilih Promo</option>
           {promos.map((promo) => (
             <option key={promo.promoId} value={promo.promoId}>
               {promo.codePromo} - {promo.discount}%
@@ -454,12 +361,12 @@ const PaymentsMe = () => {
           onClick={handleApplyDiscount}
           className="bg-primary text-white rounded-md p-2 mt-2"
         >
-          Apply Discount
+          Terapkan Diskon
         </button>
-        {discount > 0 && <p>Discount Applied: {formatRupiah(discount)}</p>}
+        {discount > 0 && <p>Diskon Diterapkan: {formatRupiah(discount)}</p>}
       </div>
 
-      {/* Checkout Button */}
+      {/* Tombol Checkout */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <div className="bg-white rounded-lg p-6 mb-6">
           <div className="space-y-4">
@@ -470,13 +377,13 @@ const PaymentsMe = () => {
               </span>
             </h3>
             <h3 className="text-base md:text-lg font-semibold text-gray-700">
-              Discount:{' '}
+              Diskon:{' '}
               <span className="font-medium text-gray-900">
                 {formatRupiah(discount)}
               </span>
             </h3>
             <h3 className="text-base md:text-lg font-semibold text-gray-700">
-              Shipping Cost:{' '}
+              Biaya Pengiriman:{' '}
               <span className="font-medium text-gray-900">
                 {formatRupiah(shippingCost)}
               </span>
@@ -494,29 +401,35 @@ const PaymentsMe = () => {
         </div>
       </div>
 
-      {/* Payment Modal */}
+      {/* Modal Pembayaran */}
       {showPaymentPopup && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded shadow-lg">
-            <h2 className="text-lg font-bold mb-4">Proceed to Payment</h2>
+            <h2 className="text-lg font-bold mb-4">Lanjutkan ke Pembayaran</h2>
             <a
               href={paymentUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
             >
-              Go to Payment
+              Pergi ke Pembayaran
             </a>
             <button
               onClick={() => setShowPaymentPopup(false)}
               className="mt-4 bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400 transition duration-300"
             >
-              Close
+              Tutup
             </button>
           </div>
           <div className="fixed inset-0 bg-black opacity-50"></div>
         </div>
       )}
+
+      {/* Modal Tambah Alamat */}
+      <ModalAddAddress
+        show={showAddAddressPopup}
+        onClose={() => setShowAddAddressPopup(false)}
+      />
     </div>
   );
 };

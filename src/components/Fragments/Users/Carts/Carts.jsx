@@ -142,6 +142,15 @@ const CartsMe = () => {
   };
 
   const handleCheckout = () => {
+    if (selectedItems.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Tidak ada produk yang dipilih',
+        text: 'Silakan pilih produk terlebih dahulu sebelum melanjutkan ke pembayaran.',
+      });
+      return;
+    }
+
     Swal.fire({
       title: 'Lanjutkan ke Pembayaran?',
       text: 'Apakah Anda ingin melanjutkan ke halaman pembayaran?',

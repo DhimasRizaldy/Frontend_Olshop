@@ -108,10 +108,10 @@ const DataAddress = () => {
                     : address.address}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mb-1">
-                  <strong>Provinsi:</strong> {address.country}
+                  <strong>Provinsi:</strong> {address.provinceName}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mb-1">
-                  <strong>Kota:</strong> {address.city}
+                  <strong>Kota:</strong> {address.cityName}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 mb-1">
                   <strong>Kode Pos:</strong> {address.postalCode}

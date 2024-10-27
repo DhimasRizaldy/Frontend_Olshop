@@ -23,6 +23,8 @@ const EditAddress = () => {
   const [province, setProvince] = useState('');
   const [provinceName, setProvinceName] = useState('');
   const [postalCode, setPostalCode] = useState('');
+  const [cityId, setCityId] = useState('');
+  const [provinceId, setProvinceId] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [cities, setCities] = useState([]);
@@ -32,13 +34,17 @@ const EditAddress = () => {
     const fetchAddressData = async () => {
       try {
         const response = await getAddressById(addressId);
-        setNameAddress(response.data.nameAddress);
-        setAddress(response.data.address);
-        setCity(response.data.city);
-        setCityName(response.data.city);
-        setProvince(response.data.country);
-        setProvinceName(response.data.country);
-        setPostalCode(response.data.postalCode);
+        console.log('Address Data:', response); // Tambahkan log untuk memeriksa data yang diterima
+        const addressData = response.data;
+        setNameAddress(addressData.nameAddress || '');
+        setAddress(addressData.address || '');
+        setCity(addressData.cityId || '');
+        setCityName(addressData.cityName || '');
+        setProvince(addressData.provinceId || '');
+        setProvinceName(addressData.provinceName || '');
+        setPostalCode(addressData.postalCode || '');
+        setCityId(addressData.cityId || ''); // Set cityId
+        setProvinceId(addressData.provinceId || ''); // Set provinceId
       } catch (error) {
         toast.error('Gagal mengambil data alamat');
         console.error('Error:', error);
@@ -106,8 +112,10 @@ const EditAddress = () => {
     const addressData = {
       nameAddress,
       address,
-      city: cityName, // Mengirimkan nama kota
-      country: provinceName, // Mengirimkan nama provinsi
+      cityId,
+      provinceId,
+      cityName,
+      provinceName,
       postalCode,
     };
 
@@ -179,10 +187,16 @@ const EditAddress = () => {
             <div className="relative">
               <Select
                 options={provinces}
-                value={provinces.find((option) => option.value === province)}
+                value={
+                  provinces.find((option) => option.value === province) || {
+                    value: province,
+                    label: provinceName,
+                  }
+                }
                 onChange={(option) => {
                   setProvince(option.value);
                   setProvinceName(option.label);
+                  setProvinceId(option.value); // Set provinceId
                 }}
                 isSearchable
                 placeholder="Pilih Provinsi"
@@ -197,10 +211,16 @@ const EditAddress = () => {
             <div className="relative">
               <Select
                 options={cities}
-                value={cities.find((option) => option.value === city)}
+                value={
+                  cities.find((option) => option.value === city) || {
+                    value: city,
+                    label: cityName,
+                  }
+                }
                 onChange={(option) => {
                   setCity(option.value);
                   setCityName(option.label);
+                  setCityId(option.value); // Set cityId
                 }}
                 isSearchable
                 placeholder="Pilih Kota"
