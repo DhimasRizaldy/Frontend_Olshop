@@ -188,15 +188,11 @@ const PaymentsMe = () => {
   };
 
   const handleSuccess = (result) => {
-    Swal.fire('Pembayaran Sukses', 'Transaksi Anda berhasil.', 'success').then(
-      () => {
-        localStorage.setItem(
-          'transactionId',
-          result.order_id || result.transaction_id,
-        );
-        window.location.href = '/payment-success';
-      },
+    localStorage.setItem(
+      'transactionId',
+      result.order_id || result.transaction_id,
     );
+    window.location.href = '/payment-success';
   };
 
   const handlePending = () => {
