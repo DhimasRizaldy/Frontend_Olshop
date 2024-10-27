@@ -38,6 +38,13 @@ const AddSupplier = () => {
       return;
     }
 
+    // Validasi nomor telepon
+    const phoneNumberPattern = /^[0-9]+$/;
+    if (!phoneNumberPattern.test(phoneNumber)) {
+      toast.error('Nomor telepon hanya boleh berisi angka');
+      return;
+    }
+
     // Cek duplikasi email dan nomor telepon
     const isEmailExists = existingSuppliers.some(
       (supplier) => supplier.email === email,
@@ -76,7 +83,12 @@ const AddSupplier = () => {
       setAddress('');
       setPhoneNumber('');
     } catch (error) {
-      toast.error('Gagal menambahkan supplier');
+      if (error.response && error.response.data) {
+        const { message } = error.response.data;
+        toast.error(message);
+      } else {
+        toast.error('Gagal menambahkan supplier');
+      }
       console.error('Error:', error);
     } finally {
       setIsLoading(false);

@@ -43,6 +43,13 @@ const EditSupplier = () => {
       return;
     }
 
+    // Validasi nomor telepon
+    const phoneNumberPattern = /^[0-9]+$/;
+    if (!phoneNumberPattern.test(phoneNumber)) {
+      toast.error('Nomor telepon hanya boleh berisi angka');
+      return;
+    }
+
     const supplierData = {
       name,
       email,
@@ -77,7 +84,7 @@ const EditSupplier = () => {
             </label>
             <div className="relative">
               <input
-                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                className="w-full rounded border border-strokedark py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 type="text"
                 name="name"
                 id="name"
@@ -93,7 +100,7 @@ const EditSupplier = () => {
             </label>
             <div className="relative">
               <input
-                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                className="w-full rounded border border-strokedark py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 type="email"
                 name="email"
                 id="email"
@@ -111,7 +118,7 @@ const EditSupplier = () => {
             </label>
             <div className="relative">
               <input
-                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                className="w-full rounded border border-strokedark py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 type="text"
                 name="address"
                 id="address"
@@ -127,7 +134,7 @@ const EditSupplier = () => {
             </label>
             <div className="relative">
               <input
-                className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                className="w-full rounded border border-strokedark py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                 type="text"
                 name="phoneNumber"
                 id="phoneNumber"
@@ -142,7 +149,7 @@ const EditSupplier = () => {
         <div className="flex justify-end gap-4.5">
           <Link to="/supplier">
             <button
-              className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+              className="flex justify-center rounded border border-strokedark py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
               type="button"
             >
               Kembali
