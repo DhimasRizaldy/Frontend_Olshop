@@ -22,19 +22,64 @@ export const handleLogin = async (email, password, navigate, setIsLoading) => {
     const token = response.data.data.token;
     CookieStorage.set(CookieKeys.AuthToken, token);
 
-    toast.success('Login berhasil!');
-
     // Panggil getWHOAMI setelah token tersimpan untuk mendapatkan data pengguna
     const userResponse = await getWHOAMI();
-    // console.log('User Response:', userResponse);
-
     const userRole = userResponse.data.user.role; // Pastikan path ini sesuai dengan struktur respons WHOAMI
 
     // Arahkan pengguna berdasarkan peran mereka
     if (userRole === 'ADMIN') {
+      toast.error('Login Gagal!');
+      CookieStorage.remove(CookieKeys.AuthToken); // Hapus token jika pengguna adalah ADMIN
+    } else if (userRole === 'USER') {
+      toast.success('Login berhasil!');
+      navigate('/', { state: { fromLogin: true } });
+    } else {
+      console.error('Peran pengguna tidak dikenal:', userRole);
+      toast.error('Peran pengguna tidak dikenal');
+    }
+  } catch (error) {
+    console.error('Login gagal:', error.response?.data || error.message);
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // Delay 3 detik
+    toast.error('Email dan kata sandi tidak cocok');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+export const handleLoginAdmin = async (
+  email,
+  password,
+  navigate,
+  setIsLoading,
+) => {
+  if (!email || !password) {
+    toast.error('Harap isi semua kolom dengan lengkap');
+    return;
+  }
+
+  setIsLoading(true);
+  try {
+    const response = await http.post(API_ENDPOINT.USER_LOGIN, {
+      email,
+      password,
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // Delay 3 detik
+
+    const token = response.data.data.token;
+    CookieStorage.set(CookieKeys.AuthToken, token);
+
+    // Panggil getWHOAMI setelah token tersimpan untuk mendapatkan data pengguna
+    const userResponse = await getWHOAMI();
+    const userRole = userResponse.data.user.role; // Pastikan path ini sesuai dengan struktur respons WHOAMI
+
+    // Arahkan pengguna berdasarkan peran mereka
+    if (userRole === 'ADMIN') {
+      toast.success('Login berhasil!');
       navigate('/dashboard', { state: { fromLogin: true } });
     } else if (userRole === 'USER') {
-      navigate('/', { state: { fromLogin: true } });
+      toast.error('Login Gagal!');
+      CookieStorage.remove(CookieKeys.AuthToken); // Hapus token jika pengguna adalah USER
     } else {
       console.error('Peran pengguna tidak dikenal:', userRole);
       toast.error('Peran pengguna tidak dikenal');

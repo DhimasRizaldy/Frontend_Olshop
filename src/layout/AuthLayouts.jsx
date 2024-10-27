@@ -188,6 +188,8 @@ const TitleBar = ({ type }) => {
     displayText = 'Verifikasi Akun';
   } else if (type === 'reset-password') {
     displayText = 'Atur Ulang Kata Sandi';
+  } else if (type === 'login-admin') {
+    displayText = 'Masuk Admin';
   }
   
   return (

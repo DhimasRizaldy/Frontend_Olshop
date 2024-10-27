@@ -342,7 +342,7 @@ const DetailTransactionMe = () => {
               )}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Jalan:</strong>{' '}
+              <strong>Alamat Lengkap:</strong>{' '}
               {transactionDetail ? (
                 transactionDetail.address.address
               ) : (
@@ -352,7 +352,15 @@ const DetailTransactionMe = () => {
             <p className="text-gray-600 mb-2">
               <strong>Kota:</strong>{' '}
               {transactionDetail ? (
-                transactionDetail.address.city
+                transactionDetail.address.cityName
+              ) : (
+                <Skeleton width={150} />
+              )}
+            </p>
+            <p className="text-gray-600 mb-2">
+              <strong>Provinsi:</strong>{' '}
+              {transactionDetail ? (
+                transactionDetail.address.provinceName
               ) : (
                 <Skeleton width={150} />
               )}
@@ -363,14 +371,6 @@ const DetailTransactionMe = () => {
                 transactionDetail.address.postalCode
               ) : (
                 <Skeleton width={100} />
-              )}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Negara:</strong>{' '}
-              {transactionDetail ? (
-                transactionDetail.address.country
-              ) : (
-                <Skeleton width={150} />
               )}
             </p>
           </div>

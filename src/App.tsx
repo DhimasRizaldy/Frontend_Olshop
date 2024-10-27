@@ -6,6 +6,7 @@ import PageTitle from './components/PageTitle';
 
 // Auth
 import LoginPage from './pages/Authentication/login.jsx';
+import LoginPageAdmin from './pages/Authentication/login-admin.jsx';
 import RegisterPage from './pages/Authentication/register.jsx';
 import ActivateAccountPage from './pages/Authentication/activate-accounts.jsx';
 import ChangePage from './pages/Authentication/change-password.jsx';
@@ -18,7 +19,7 @@ import ResetPage from './pages/Authentication/reset-password.jsx';
 import ECommerce from './pages/Admin/Dashboard/ECommerce';
 import DataProfileAdmin from './components/Fragments/Admin/Profile/DataProfileAdmin.jsx';
 
-// CRUD Management Product 
+// CRUD Management Product
 import ManagementProduct from './pages/Admin/Management/ManagementProduct';
 import AddManagementProduct from './pages/Admin/Management/AddManagementProduct.jsx';
 import EditManagementProduct from './pages/Admin/Management/EditManagementProduct.jsx';
@@ -506,6 +507,15 @@ function App() {
             <>
               <PageTitle title="Login | Putra Komputer" />
               <LoginPage />
+            </>
+          }
+        />
+        <Route
+          path="/login-admin"
+          element={
+            <>
+              <PageTitle title="Login Admin | Putra Komputer" />
+              <LoginPageAdmin />
             </>
           }
         />
