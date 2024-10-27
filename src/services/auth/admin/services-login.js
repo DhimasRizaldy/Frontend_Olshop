@@ -22,7 +22,7 @@ export const handleLogin = async (email, password, navigate, setIsLoading) => {
     const token = response.data.data.token;
     CookieStorage.set(CookieKeys.AuthToken, token);
 
-    toast.success('Login successful!');
+    toast.success('Login berhasil!');
 
     // Panggil getWHOAMI setelah token tersimpan untuk mendapatkan data pengguna
     const userResponse = await getWHOAMI();
@@ -36,13 +36,13 @@ export const handleLogin = async (email, password, navigate, setIsLoading) => {
     } else if (userRole === 'USER') {
       navigate('/', { state: { fromLogin: true } });
     } else {
-      console.error('Unknown user role:', userRole);
-      toast.error('Unknown user role');
+      console.error('Peran pengguna tidak dikenal:', userRole);
+      toast.error('Peran pengguna tidak dikenal');
     }
   } catch (error) {
-    console.error('Login failed:', error.response?.data || error.message);
+    console.error('Login gagal:', error.response?.data || error.message);
     await new Promise((resolve) => setTimeout(resolve, 3000)); // Delay 3 detik
-    toast.error('Email and password do not match');
+    toast.error('Email dan kata sandi tidak cocok');
   } finally {
     setIsLoading(false);
   }
@@ -58,7 +58,7 @@ export const handleGoogleLogin = async (tokenId, navigate, setIsLoading) => {
     const token = response.data.data.token;
     CookieStorage.set(CookieKeys.AuthToken, token);
 
-    toast.success('Login successful!');
+    toast.success('Login berhasil!');
 
     // Panggil getWHOAMI setelah token tersimpan untuk mendapatkan data pengguna
     const userResponse = await getWHOAMI();
@@ -70,15 +70,12 @@ export const handleGoogleLogin = async (tokenId, navigate, setIsLoading) => {
     } else if (userRole === 'USER') {
       navigate('/', { state: { fromLogin: true } });
     } else {
-      console.error('Unknown user role:', userRole);
-      toast.error('Unknown user role');
+      console.error('Peran pengguna tidak dikenal:', userRole);
+      toast.error('Peran pengguna tidak dikenal');
     }
   } catch (error) {
-    console.error(
-      'Google login failed:',
-      error.response?.data || error.message,
-    );
-    toast.error('Google login failed');
+    console.error('Login Google gagal:', error.response?.data || error.message);
+    toast.error('Login Google gagal');
   } finally {
     setIsLoading(false);
   }

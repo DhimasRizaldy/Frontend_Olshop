@@ -13,7 +13,7 @@ export const userLogin = async (data) => {
 // service user Resend OTP
 export const userResendOTP = async (email, navigate) => {
   if (!email) {
-    toast.error('Email is required');
+    toast.error('Email diperlukan');
     return false;
   }
 
@@ -21,23 +21,23 @@ export const userResendOTP = async (email, navigate) => {
     const response = await http.post(API_ENDPOINT.USER_RESEND_OTP, { email });
     const { success } = response.data;
 
-    // Always show success alert regardless of actual success
+    // Selalu tampilkan alert sukses terlepas dari keberhasilan sebenarnya
     Swal.fire({
       icon: 'success',
-      title: 'Success',
-      text: 'OTP has been sent',
+      title: 'Berhasil',
+      text: 'OTP telah dikirim',
     });
 
     navigate('/login');
     return success;
   } catch (error) {
-    console.error('Failed to resend OTP:', error);
+    console.error('Gagal mengirim ulang OTP:', error);
 
-    // Show success alert even when there's an error
+    // Tampilkan alert sukses meskipun ada kesalahan
     Swal.fire({
       icon: 'success',
-      title: 'Success',
-      text: 'OTP has been sent',
+      title: 'Berhasil',
+      text: 'OTP telah dikirim',
     });
 
     navigate('/login');
@@ -74,7 +74,7 @@ export const userForgotPassword = async (forgotPassword) => {
     return response.data;
   } catch (error) {
     console.error(
-      'Failed to forgot password:',
+      'Gagal mengirim permintaan lupa kata sandi:',
       error.response?.data || error.message,
     );
     throw error;
@@ -91,7 +91,7 @@ export const userChangePassword = async (changePassword) => {
     return response.data;
   } catch (error) {
     console.error(
-      'Failed to change password:',
+      'Gagal mengubah kata sandi:',
       error.response?.data || error.message,
     );
     throw error;
@@ -108,7 +108,7 @@ export const userResetPassword = async (token, resetPasswordData) => {
     return response.data;
   } catch (error) {
     console.error(
-      'Failed to reset password:',
+      'Gagal mereset kata sandi:',
       error.response?.data || error.message,
     );
     throw error;

@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import http from '../../../utils/constants/http';
 import { API_ENDPOINT } from '../../../utils/constants/endpoint';
 import Swal from 'sweetalert2';
+
 // handle register
 export const register = async (userData, setIsLoading) => {
   if (
@@ -25,12 +26,13 @@ export const register = async (userData, setIsLoading) => {
     const response = await http.post(API_ENDPOINT.USER_REGISTER, userData);
     Swal.fire({
       icon: 'success',
-      title: 'Registration successful!',
-      text: 'Please check your email for the verification link.',
+      title: 'Registrasi berhasil!',
+      text: 'Silakan periksa email Anda untuk tautan verifikasi.',
     });
     return response.data;
   } catch (error) {
-    const errorMessage = error.response?.data?.err || 'Error adding User';
+    const errorMessage =
+      error.response?.data?.err || 'Gagal menambahkan pengguna';
     toast.error(errorMessage);
     throw new Error(errorMessage);
   } finally {
