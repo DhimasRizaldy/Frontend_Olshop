@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const DetailSuppliers = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Detail Supplier" />
+      <Breadcrumb pageName="Detail Suplier" />
       <ManageLayouts title="detailSupplier">
         <DetailSupplier />
       </ManageLayouts>

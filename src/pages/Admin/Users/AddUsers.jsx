@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const AddUsers = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Add Admin" />
+      <Breadcrumb pageName="Tambah Admin" />
       <ManageLayouts title="addUsers">
         <AddUser />
       </ManageLayouts>

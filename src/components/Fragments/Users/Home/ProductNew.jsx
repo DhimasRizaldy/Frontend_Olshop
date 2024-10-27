@@ -22,6 +22,10 @@ const ProductCardSkeleton = () => (
   </div>
 );
 
+const formatNumber = (number) => {
+  return new Intl.NumberFormat('id-ID').format(number);
+};
+
 const ProductCard = ({ product }) => {
   const roundedRating = Math.round(product.averageRating);
 
@@ -62,12 +66,16 @@ const ProductCard = ({ product }) => {
             {formatRupiah(product.price)}
           </p>
         )}
-        <p className="text-sm text-gray-600 mt-1">Stok: {product.stock}</p>
+        <p className="text-sm text-gray-600 mt-1">
+          Stok: {formatNumber(product.stock)}
+        </p>
         <div className="flex mt-1">
-          <p className="text-sm text-gray-600">Terjual : {product.totalSold}</p>{' '}
+          <p className="text-sm text-gray-600">
+            Terjual: {formatNumber(product.totalSold)}
+          </p>{' '}
           &nbsp;
           <p className="text-sm text-gray-600">
-            Ulasan : {product.totalReview}
+            Ulasan: {formatNumber(product.totalReview)}
           </p>
         </div>
 

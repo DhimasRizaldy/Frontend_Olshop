@@ -5,7 +5,7 @@ import DefaultLayout from '../../../layout/DefaultLayout';
 const DetailProducts = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Detail Product" />
+      <Breadcrumb pageName="Detail Produk" />
       <DetailProduct />
     </DefaultLayout>
   );

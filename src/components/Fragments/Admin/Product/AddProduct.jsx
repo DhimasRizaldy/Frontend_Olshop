@@ -57,10 +57,10 @@ const AddProduct = () => {
     const productData = {
       name,
       categoryId,
-      price: parseInt(price, 10),
-      promoPrice: parseInt(promoPrice, 10),
-      weight: parseInt(weight, 10),
-      stock: parseInt(stock, 10),
+      price: parseInt(price.toString().replace(/\./g, ''), 10),
+      promoPrice: parseInt(promoPrice.toString().replace(/\./g, ''), 10),
+      weight: parseInt(weight.toString().replace(/\./g, ''), 10),
+      stock: parseInt(stock.toString().replace(/\./g, ''), 10),
       description,
       image,
     };
@@ -72,12 +72,12 @@ const AddProduct = () => {
       toast.success('Produk berhasil ditambahkan!');
       setName('');
       setCategoryId('');
-      setPrice('');
-      setPromoPrice('');
-      setWeight('');
-      setStock('');
+      setPrice(0);
+      setPromoPrice(0);
+      setWeight(0);
+      setStock(0);
       setDescription('');
-      setImage('');
+      setImage(null);
     } catch (error) {
       console.error('Error menambahkan produk:', error);
       toast.error(
@@ -135,7 +135,7 @@ const AddProduct = () => {
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
+              type="text"
               name="price"
               id="price"
               placeholder="0.00"
@@ -151,7 +151,7 @@ const AddProduct = () => {
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
+              type="text"
               name="promoPrice"
               id="promoPrice"
               placeholder="0.00"
@@ -169,7 +169,7 @@ const AddProduct = () => {
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
+              type="text"
               name="weight"
               id="weight"
               placeholder="0.00"
@@ -185,7 +185,7 @@ const AddProduct = () => {
           <div className="relative">
             <input
               className="w-full rounded border border-stroke py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-              type="number"
+              type="text"
               name="stock"
               id="stock"
               placeholder="0"

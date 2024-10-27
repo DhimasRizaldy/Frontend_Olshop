@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const DetailTransactions = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Detail Transaction" />
+      <Breadcrumb pageName="Detail Transaksi" />
       <DetailTransaction />
     </DefaultLayout>
   );

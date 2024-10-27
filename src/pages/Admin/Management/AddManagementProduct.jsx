@@ -6,8 +6,8 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const AddManagementProduct = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Add Management Product" />
-      <ManageLayouts title="addProduct">
+      <Breadcrumb pageName="Tambah Data Manajemen" />
+      <ManageLayouts title="addManagement">
         <AddManagement />
       </ManageLayouts>
     </DefaultLayout>

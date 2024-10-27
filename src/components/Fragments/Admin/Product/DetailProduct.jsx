@@ -127,6 +127,10 @@ const DetailProducts = () => {
 
   const roundedAverageRating = Math.round(product.averageRating);
 
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat('id-ID').format(number);
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 mt-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -162,20 +166,20 @@ const DetailProducts = () => {
           </div>
           <div className="mb-4">
             <p className="text-gray-700">
-              <strong>Stok:</strong> {product.stock}
+              <strong>Stok:</strong> {formatNumber(product.stock)}
             </p>
             <p className="text-gray-700">
-              <strong>Berat:</strong> {product.weight} grams
+              <strong>Berat:</strong> {formatNumber(product.weight)} grams
             </p>
             <p className="text-gray-700">
               <strong>Kategori:</strong>{' '}
               {product.category?.name || 'Unknown Category'}
             </p>
             <p className="text-gray-700">
-              <strong>Terjual:</strong> {product.totalSold}
+              <strong>Terjual:</strong> {formatNumber(product.totalSold)}
             </p>
             <p className="text-gray-700">
-              <strong>Ulasan:</strong> {product.totalReview}
+              <strong>Ulasan:</strong> {formatNumber(product.totalReview)}
             </p>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
@@ -198,7 +202,6 @@ const DetailProducts = () => {
               Berikan Ulasan
             </button> */}
           </div>
-
         </div>
       </div>
       <div className="mt-6" id="product-reviews">

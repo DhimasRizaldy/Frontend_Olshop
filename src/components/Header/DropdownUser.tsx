@@ -32,7 +32,7 @@ const DropdownUser = () => {
         const response = await getProfile();
         setImageProfile(response.data.imageProfile || null);
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error('Gagal mengambil profil:', error);
       }
     };
     fetchProfile();
@@ -47,7 +47,7 @@ const DropdownUser = () => {
 
         setUserRole(user.role); // Setel state userRole berdasarkan peran pengguna
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Gagal mengambil data pengguna:', error);
         // Tambahkan handling error di sini jika diperlukan
       }
     };
@@ -96,9 +96,8 @@ const DropdownUser = () => {
     window.location.reload();
   };
 
-
   // Menampilkan konten berdasarkan status loading dan error
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>Memuat...</p>;
   if (error) return <p>{error.toString()}</p>;
 
   // Ambil username, email, dan role dari token
@@ -164,7 +163,7 @@ const DropdownUser = () => {
                 to="/users/profile"
                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               >
-                User Profile
+                Profil Pengguna
               </Link>
             </li>
           )}
@@ -174,7 +173,7 @@ const DropdownUser = () => {
                 to="/admin/profile"
                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               >
-                Admin Profile
+                Profil Admin
               </Link>
             </li>
           )}
@@ -184,7 +183,7 @@ const DropdownUser = () => {
           onClick={handleLogout}
           className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
         >
-          Log Out
+          Keluar
         </button>
       </div>
     </div>

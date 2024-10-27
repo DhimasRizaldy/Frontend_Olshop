@@ -175,21 +175,21 @@ const AuthLayouts = (props) => {
 const TitleBar = ({ type }) => {
   let displayText;
   if (type === 'login') {
-    displayText = 'Login';
+    displayText = 'Masuk';
   } else if (type === 'register') {
-    displayText = 'Register';
+    displayText = 'Daftar';
   } else if (type === 'forgot-password') {
-    displayText = 'Forgot Password';
+    displayText = 'Lupa Kata Sandi';
   } else if (type === 'change-password') {
-    displayText = 'Change Password';
+    displayText = 'Ubah Kata Sandi';
   } else if (type === 'verify-email') {
-    displayText = 'Verify Activate Email';
+    displayText = 'Verifikasi Email';
   } else if (type === 'verify-accounts') {
-    displayText = 'Verify Accounts';
-  } else if (type == 'reset-password') {
-    displayText = 'Reset Password';
+    displayText = 'Verifikasi Akun';
+  } else if (type === 'reset-password') {
+    displayText = 'Atur Ulang Kata Sandi';
   }
-
+  
   return (
     <h2 className="text-2xl font-bold text-black mb-9 dark:text-white sm:text-title-xl2">
       {displayText}

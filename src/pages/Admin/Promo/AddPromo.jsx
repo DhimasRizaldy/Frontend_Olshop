@@ -6,8 +6,8 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const AddPromos = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Add Promo" />
-      <ManageLayouts title="AddPromo">
+      <Breadcrumb pageName="Tambah Promo" />
+      <ManageLayouts title="addPromo">
         <AddPromo />
       </ManageLayouts>
     </DefaultLayout>

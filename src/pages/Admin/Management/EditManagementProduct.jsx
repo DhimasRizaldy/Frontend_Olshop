@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const EditManagementProduct = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Edit Management Product" />
+      <Breadcrumb pageName="Ubah Data Manajemen" />
       <ManageLayouts title="editProduct">
         <EditManagement />
       </ManageLayouts>

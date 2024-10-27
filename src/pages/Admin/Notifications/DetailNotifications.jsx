@@ -5,7 +5,7 @@ import DefaultLayout from '../../../layout/DefaultLayout';
 const DetailNotificationAdmin = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Detail Notification" />
+      <Breadcrumb pageName="Detail Notifikasi" />
       <DetailNotifications />
     </DefaultLayout>
   );

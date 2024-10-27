@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { getProduct } from '../../../../services/admin/product/services-product';
 import { formatRupiah } from '../../../../utils/constants/function';
 
+const formatNumber = (number) => {
+  return new Intl.NumberFormat('id-ID').format(number);
+};
+
 const ProductDiscount = () => {
   const [products, setProducts] = useState([]); // State untuk menyimpan produk
   const [loading, setLoading] = useState(true); // State untuk mengelola status loading
@@ -98,15 +102,15 @@ const ProductDiscount = () => {
                         </p>
                       )}
                       <p className="text-sm text-gray-600 mt-1">
-                        Stok: {product.stock}
+                        Stok: {formatNumber(product.stock)}
                       </p>
                       <div className="flex mt-1">
                         <p className="text-sm text-gray-600">
-                          Terjual : {product.totalSold}
+                          Terjual: {formatNumber(product.totalSold)}
                         </p>{' '}
                         &nbsp;
                         <p className="text-sm text-gray-600">
-                          Ulasan : {product.totalReview}
+                          Ulasan: {formatNumber(product.totalReview)}
                         </p>
                       </div>
                       <button className="mt-3 w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center hover:bg-blue-600 transition duration-200">

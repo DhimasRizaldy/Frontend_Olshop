@@ -5,7 +5,7 @@ import NotificationsMe from '../../../components/Fragments/Admin/Notification/No
 const NotificationAdmin = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Notifications" />
+      <Breadcrumb pageName="Notifikasi" />
       <div className="bg-white shadow-md rounded-lg p-6">
         <NotificationsMe />
       </div>

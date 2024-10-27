@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const Users = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Users" />
+      <Breadcrumb pageName="Pengguna" />
 
       <div className="mb-5">
         <Link to="/add-users">
@@ -15,7 +15,7 @@ const Users = () => {
             type="submit"
             classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
           >
-            Add Data
+            Tambah Data
           </Button>
         </Link>
       </div>

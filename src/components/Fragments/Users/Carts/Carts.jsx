@@ -209,16 +209,7 @@ const CartsMe = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">Kesalahan</h1>
-        <p className="text-gray-600 text-base">{error}</p>
-      </div>
-    );
-  }
-
-  if (cartItems.length === 0) {
+  if (error && cartItems.length === 0) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-6 mt-12 text-center">
         <h1 className="text-2xl md:text-3xl font-bold mb-6">

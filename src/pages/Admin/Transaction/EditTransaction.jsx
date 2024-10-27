@@ -6,8 +6,8 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const EditTransactions = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Edit Transaction" />
-      <ManageLayouts title="EditTransaction">
+      <Breadcrumb pageName="Ubah Transaksi" />
+      <ManageLayouts title="editTransaction">
         <EditTransaction />
       </ManageLayouts>
     </DefaultLayout>

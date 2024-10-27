@@ -15,7 +15,7 @@ const Promo = () => {
             type="submit"
             classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
           >
-            Add Data
+            Tambah Data
           </Button>
         </Link>
       </div>

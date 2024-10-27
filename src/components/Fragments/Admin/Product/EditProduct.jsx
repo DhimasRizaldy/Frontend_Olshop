@@ -182,7 +182,7 @@ const EditProduct = () => {
                 type="text"
                 name="promoPrice"
                 id="promoPrice"
-                value={formatRupiah(promoPrice) || ''}
+                value={promoPrice === 0 ? '0' : formatRupiah(promoPrice) || ''}
                 onChange={(e) =>
                   setPromoPrice(e.target.value.replace(/\./g, '') || 0)
                 }

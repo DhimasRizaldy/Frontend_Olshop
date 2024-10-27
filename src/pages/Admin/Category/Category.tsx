@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const Category = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Category" />
+      <Breadcrumb pageName="Kategori" />
 
       <div className="mb-5">
         <Link to="/add-category">
@@ -15,7 +15,7 @@ const Category = () => {
             type="submit"
             classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
           >
-            Add Data
+            Tambah Data
           </Button>
         </Link>
       </div>

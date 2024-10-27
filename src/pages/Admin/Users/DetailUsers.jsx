@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const DetailUsers = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Detail Users" />
+      <Breadcrumb pageName="Detail Pengguna" />
       <ManageLayouts title="detailUsers">
         <DetailUser />
       </ManageLayouts>

@@ -95,11 +95,7 @@ const NotificationsMe = () => {
           <NotificationSkeleton />
           <NotificationSkeleton />
         </>
-      ) : error ? (
-        <div className="text-center text-red-500">
-          <h2 className="text-xl md:text-2xl font-semibold mb-4">{error}</h2>
-        </div>
-      ) : notifications.length === 0 ? (
+      ) : error && notifications.length === 0 ? (
         <div className="text-center">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">
             Tidak Ada Notifikasi

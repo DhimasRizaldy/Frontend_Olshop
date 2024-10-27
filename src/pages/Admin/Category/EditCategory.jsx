@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const EditCategorys = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Edit Category" />
+      <Breadcrumb pageName="Ubah Kategori" />
       <ManageLayouts title="editCategory">
         <EditCategory />
       </ManageLayouts>

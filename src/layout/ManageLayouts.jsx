@@ -6,11 +6,9 @@ const ManageLayouts = (props) => {
     <div className="grid grid-cols-5 gap-8 mt-10 justify-center">
       <div className="col-span-5 xl:col-span-3">
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          {/* <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-            <h3 className="text-xl font-semibold text-black dark:text-white">
-              {TitleBar({ title })}
-            </h3>
-          </div> */}
+          <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+            <TitleBar title={title} />
+          </div>
           <div className="p-7">{children}</div>
         </div>
       </div>
@@ -22,54 +20,60 @@ const ManageLayouts = (props) => {
 const TitleBar = ({ title }) => {
   let displayText;
   if (title === 'addProduct') {
-    displayText = 'Add Data Product';
+    displayText = 'Tambah Data Produk';
   } else if (title === 'editProduct') {
-    displayText = 'Edit Data Product';
+    displayText = 'Edit Data Produk';
   } else if (title === 'detailProduct') {
-    displayText = 'Detail Data Product';
+    displayText = 'Detail Data Produk';
   } else if (title === 'addUsers') {
-    displayText = 'Add Data Users';
+    displayText = 'Tambah Data Pengguna';
   } else if (title === 'editUsers') {
-    displayText = 'Edit Data Users';
+    displayText = 'Edit Data Pengguna';
   } else if (title === 'detailUsers') {
-    displayText = 'Detail Data Users';
+    displayText = 'Detail Data Pengguna';
   } else if (title === 'addManagement') {
-    displayText = 'Add Data Management';
+    displayText = 'Tambah Data Manajemen';
   } else if (title === 'editManagement') {
-    displayText = 'Edit Data Management';
+    displayText = 'Edit Data Manajemen';
   } else if (title === 'detailManagement') {
-    displayText = 'Detail Data Management';
-  } else if (title === 'addSupplier') {
-    displayText = 'Add Data Supplier';
+    displayText = 'Detail Data Manajemen';
+  } else if (title === 'AddSupplier') {
+    displayText = 'Tambah Data Suplier';
   } else if (title === 'editSupplier') {
-    displayText = 'Edit Data Supplier';
+    displayText = 'Edit Data Suplier';
   } else if (title === 'detailSupplier') {
-    displayText = 'Detail Data Supplier';
+    displayText = 'Detail Data Suplier';
   } else if (title === 'addCategory') {
-    displayText = 'Add Data Category';
+    displayText = 'Tambah Data Kategori';
   } else if (title === 'editCategory') {
-    displayText = 'Edit Data Category';
+    displayText = 'Edit Data Kategori';
   } else if (title === 'detailCategory') {
-    displayText = 'Detail Data Category';
+    displayText = 'Detail Data Kategori';
   } else if (title === 'addPromo') {
-    displayText = 'Add Data Promo';
+    displayText = 'Tambah Data Promo';
   } else if (title === 'editPromo') {
     displayText = 'Edit Data Promo';
   } else if (title === 'detailPromo') {
     displayText = 'Detail Data Promo';
   } else if (title === 'addTransaction') {
-    displayText = 'Add Data Transaction';
+    displayText = 'Tambah Data Transaksi';
   } else if (title === 'editTransaction') {
-    displayText = 'Edit Data Transaction';
+    displayText = 'Edit Data Transaksi';
   } else if (title === 'detailTransaction') {
-    displayText = 'Detail Data Transaction';
+    displayText = 'Detail Data Transaksi';
   } else if (title === 'addRating') {
-    displayText = 'Add Data Rating';
+    displayText = 'Tambah Data Penilaian';
   } else if (title === 'editRating') {
-    displayText = 'Edit Data Rating';
+    displayText = 'Edit Data Penilaian';
   } else if (title === 'detailRating') {
-    displayText = 'Detail Data Rating';
+    displayText = 'Detail Data Penilaian';
   }
+
+  return (
+    <h3 className="text-xl font-semibold text-black dark:text-white">
+      {displayText}
+    </h3>
+  );
 };
 
 export default ManageLayouts;

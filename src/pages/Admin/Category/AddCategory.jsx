@@ -6,8 +6,8 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const AddCategorys = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Add Category" />
-      <ManageLayouts title="AddCategory">
+      <Breadcrumb pageName="Tambah Kategori" />
+      <ManageLayouts title="addCategory">
         <AddCategory />
       </ManageLayouts>
     </DefaultLayout>

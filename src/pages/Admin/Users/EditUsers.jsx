@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const EditUsers = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Edit Users" />
+      <Breadcrumb pageName="Ubah Admin" />
       <ManageLayouts title="editUsers">
         <EditUser />
       </ManageLayouts>

@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const AddSuppliers = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Add Supplier" />
+      <Breadcrumb pageName="Tambah Suplier" />
       <ManageLayouts title="AddSupplier">
         <AddSupplier />
       </ManageLayouts>

@@ -6,7 +6,7 @@ import ManageLayouts from '../../../layout/ManageLayouts.jsx';
 const DetailCategorys = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Detail Category" />
+      <Breadcrumb pageName="Detail Kategori" />
       <ManageLayouts title="detailCategory">
         <DetailCategory />
       </ManageLayouts>

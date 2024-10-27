@@ -21,7 +21,7 @@ const Header = (props: {
         const response = await getWHOAMI();
         setUserData(response.data); // Adjust based on your actual response structure
       } catch (error) {
-        console.error('Failed to fetch user data', error);
+        console.error('Gagal mengambil data pengguna', error);
       } finally {
         setLoading(false);
       }
@@ -39,7 +39,7 @@ const Header = (props: {
         ).length;
         setUnreadNotificationsCount(unreadCount);
       } catch (error) {
-        console.error('Failed to fetch notifications', error);
+        console.error('Gagal mengambil notifikasi', error);
       }
     };
 
@@ -52,7 +52,7 @@ const Header = (props: {
     <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
       <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
-          {/* <!-- Hamburger Toggle BTN --> */}
+          {/* <!-- Tombol Hamburger --> */}
           <button
             aria-controls="sidebar"
             onClick={(e) => {
@@ -93,7 +93,7 @@ const Header = (props: {
               </span>
             </span>
           </button>
-          {/* <!-- Hamburger Toggle BTN --> */}
+          {/* <!-- Tombol Hamburger --> */}
 
           <Link className="block flex-shrink-0 lg:hidden" to="/dashboard">
             <img src="/images/logo.png" alt="Logo" width={50} />
@@ -104,10 +104,10 @@ const Header = (props: {
 
         <div className="flex items-center gap-3 2xsm:gap-7">
           <ul className="flex items-center gap-2 2xsm:gap-4">
-            {/* <!-- Dark Mode Toggler --> */}
+            {/* <!-- Pengalih Mode Gelap --> */}
             <DarkModeSwitcher />
-            {/* <!-- Dark Mode Toggler --> */}
-            {/* <!-- Notification Menu Area --> */}
+            {/* <!-- Pengalih Mode Gelap --> */}
+            {/* <!-- Area Menu Notifikasi --> */}
             <Link
               to={'/notification-all'}
               className="relative text-black hover:text-blue-500"
@@ -119,7 +119,7 @@ const Header = (props: {
                 </span>
               )}
             </Link>
-            {/* <!-- Notification Menu Area --> */}
+            {/* <!-- Area Menu Notifikasi --> */}
           </ul>
 
           {!loading && !isUserLoggedIn && (
@@ -129,7 +129,7 @@ const Header = (props: {
                   type="button"
                   classname="px-4 py-2 font-medium text-white bg-primary border border-primary rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition"
                 >
-                  Login
+                  Masuk
                 </Button>
               </Link>
             </div>

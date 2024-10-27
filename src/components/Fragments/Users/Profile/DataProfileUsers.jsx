@@ -48,7 +48,7 @@ const DataProfileUsers = () => {
         setGender(response.data.gender || '');
         setImageProfile(response.data.imageProfile || null);
       } catch (error) {
-        console.error('Fetch profile failed:', error.message);
+        console.error('Gagal mengambil profil:', error.message);
         setError(error.message);
       } finally {
         setIsLoading(false);
@@ -58,16 +58,8 @@ const DataProfileUsers = () => {
   }, []);
 
   // handle update
-  // handle update
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log('username:', username);
-    console.log('email:', email);
-    console.log('fullName:', fullName);
-    console.log('phoneNumber:', phoneNumber);
-    console.log('gender:', gender);
-    console.log('imageProfile:', imageProfile);
 
     const profileData = {
       username,
@@ -83,12 +75,12 @@ const DataProfileUsers = () => {
     try {
       const response = await editProfile(profileData);
       setProfiles((prev) => ({ ...prev, ...profileData }));
-      toast.success('Profile updated successfully');
+      toast.success('Profil berhasil diperbarui');
       setTimeout(() => {
         window.location.reload();
       }, 2000); // Reload the page after 2 seconds
     } catch (error) {
-      toast.error('Failed to update profile');
+      toast.error('Gagal memperbarui profil');
     } finally {
       setIsLoading(false);
     }
@@ -161,7 +153,7 @@ const DataProfileUsers = () => {
               <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                   <h3 className="font-medium text-black dark:text-white">
-                    Personal Information
+                    Informasi Pribadi
                   </h3>
                 </div>
                 <div className="p-7">
@@ -196,7 +188,7 @@ const DataProfileUsers = () => {
                     <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                       <div className="w-full sm:w-1/2">
                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                          Username
+                          Nama Pengguna
                         </label>
                         <div className="relative">
                           <span className="absolute left-4.5 top-4">
@@ -207,7 +199,7 @@ const DataProfileUsers = () => {
                             type="text"
                             name="username"
                             id="username"
-                            placeholder="username"
+                            placeholder="Nama Pengguna"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             disabled={isLoading}
@@ -220,7 +212,7 @@ const DataProfileUsers = () => {
                           className="mb-3 block text-sm font-medium text-black dark:text-white"
                           htmlFor="emailAddress"
                         >
-                          Email Address
+                          Alamat Email
                         </label>
                         <div className="relative">
                           <span className="absolute left-4.5 top-4">
@@ -231,7 +223,7 @@ const DataProfileUsers = () => {
                             type="text"
                             name="email"
                             id="email"
-                            placeholder="Email Address"
+                            placeholder="Alamat Email"
                             value={email || profiles.users?.email || ''}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isLoading}
@@ -242,7 +234,7 @@ const DataProfileUsers = () => {
                     <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                       <div className="w-full sm:w-1/2">
                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                          Fullname
+                          Nama Lengkap
                         </label>
                         <div className="relative">
                           <span className="absolute left-4.5 top-4">
@@ -253,7 +245,7 @@ const DataProfileUsers = () => {
                             type="text"
                             name="fullName"
                             id="fullName"
-                            placeholder="Fullname"
+                            placeholder="Nama Lengkap"
                             value={fullName || profiles?.fullName || ''}
                             onChange={(e) => setFullName(e.target.value)}
                             disabled={isLoading}
@@ -263,7 +255,7 @@ const DataProfileUsers = () => {
 
                       <div className="w-full sm:w-1/2">
                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                          Phone Number
+                          Nomor Telepon
                         </label>
                         <div className="relative">
                           <span className="absolute left-4.5 top-4">
@@ -274,7 +266,7 @@ const DataProfileUsers = () => {
                             type="text"
                             name="phoneNumber"
                             id="phoneNumber"
-                            placeholder="Phone Number"
+                            placeholder="Nomor Telepon"
                             value={phoneNumber || profiles?.phoneNumber || ''}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                             disabled={isLoading}
@@ -286,7 +278,7 @@ const DataProfileUsers = () => {
                     <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                       <div className="w-full sm:w-1/2">
                         <label className="mb-3 block font-medium text-black dark:text-white">
-                          Gender
+                          Jenis Kelamin
                         </label>
                         <div className="relative">
                           <select
@@ -296,7 +288,7 @@ const DataProfileUsers = () => {
                             disabled={isLoading}
                           >
                             <option value="" disabled>
-                              Select Gender
+                              Pilih Jenis Kelamin
                             </option>
                             {genderOptions.map((option) => (
                               <option key={option.value} value={option.value}>
@@ -309,7 +301,7 @@ const DataProfileUsers = () => {
 
                       <div className="w-full sm:w-1/2">
                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                          Role
+                          Akses
                         </label>
                         <div className="relative">
                           <span className="absolute left-4.5 top-4">
@@ -333,7 +325,7 @@ const DataProfileUsers = () => {
                           className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                           type="submit"
                         >
-                          Cancel
+                          Batal
                         </button>
                       </Link>
                       <button
@@ -341,7 +333,7 @@ const DataProfileUsers = () => {
                         type="submit"
                         disabled={isLoading}
                       >
-                        {isLoading ? 'Updating...' : 'Update'}
+                        {isLoading ? 'Memperbarui...' : 'Perbarui'}
                       </button>
                     </div>
                   </form>
@@ -358,7 +350,7 @@ const DataProfileUsers = () => {
               type="submit"
               classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
             >
-              Add Data
+              Tambah Data
             </Button>
           </Link>
 
@@ -367,7 +359,7 @@ const DataProfileUsers = () => {
               type="submit"
               classname="p-3 font-medium text-white transition border rounded-lg cursor-pointer border-primary bg-primary hover:bg-opacity-90"
             >
-              Change Password
+              Ubah Kata Sandi
             </Button>
           </Link>
         </div>

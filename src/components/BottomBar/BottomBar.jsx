@@ -24,7 +24,7 @@ const BottomNavBar = () => {
         ).length;
         setUnreadNotificationsCount(unreadCount);
       } catch (error) {
-        console.error('Failed to fetch notifications', error);
+        console.error('Gagal mengambil notifikasi', error);
       }
     };
 
@@ -38,7 +38,7 @@ const BottomNavBar = () => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-boxdark shadow-md md:hidden z-50">
       <div className="flex justify-around items-center py-2">
-        {/* Home Icon */}
+        {/* Ikon Beranda */}
         <Link
           to={'/'}
           className={`text-white flex flex-col items-center ${
@@ -48,10 +48,10 @@ const BottomNavBar = () => {
           }`}
         >
           <FontAwesomeIcon icon={faHouse} />
-          <span className="text-xs">Home</span>
+          <span className="text-xs">Beranda</span>
         </Link>
 
-        {/* Product Icon */}
+        {/* Ikon Produk */}
         <Link
           to={'/products'}
           className={`text-white flex flex-col items-center ${
@@ -61,10 +61,10 @@ const BottomNavBar = () => {
           }`}
         >
           <FontAwesomeIcon icon={faBox} />
-          <span className="text-xs">Product</span>
+          <span className="text-xs">Produk</span>
         </Link>
 
-        {/* Promo Icon */}
+        {/* Ikon Promo */}
         <Link
           to={'/promo-voucher'}
           className={`text-white flex flex-col items-center ${
@@ -77,7 +77,7 @@ const BottomNavBar = () => {
           <span className="text-xs">Promo</span>
         </Link>
 
-        {/* Transaction Icon */}
+        {/* Ikon Transaksi */}
         <Link
           to={'/transaction-me'}
           className={`text-white flex flex-col items-center ${
@@ -87,10 +87,10 @@ const BottomNavBar = () => {
           }`}
         >
           <FontAwesomeIcon icon={faFileInvoice} />
-          <span className="text-xs">Transaction</span>
+          <span className="text-xs">Transaksi</span>
         </Link>
 
-        {/* Notification Icon */}
+        {/* Ikon Notifikasi */}
         <Link
           to={'/notification-me'}
           className={`text-white flex flex-col items-center relative ${
@@ -100,7 +100,7 @@ const BottomNavBar = () => {
           }`}
         >
           <FontAwesomeIcon icon={faBell} />
-          <span className="text-xs">Notifications</span>
+          <span className="text-xs">Notifikasi</span>
           {unreadNotificationsCount > 0 && (
             <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
               {unreadNotificationsCount}
