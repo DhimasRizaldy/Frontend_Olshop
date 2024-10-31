@@ -15,14 +15,23 @@ const formatRupiah = (number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
 
+// Fungsi untuk memvalidasi input angka
+const validateNumberInput = (value) => {
+  if (isNaN(value)) {
+    toast.error('Input harus berupa angka');
+    return false;
+  }
+  return true;
+};
+
 const EditProduct = () => {
   const { productId } = useParams();
   const [name, setName] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [price, setPrice] = useState(0);
-  const [promoPrice, setPromoPrice] = useState(0);
-  const [weight, setWeight] = useState(0);
-  const [stock, setStock] = useState(0);
+  const [price, setPrice] = useState('');
+  const [promoPrice, setPromoPrice] = useState('');
+  const [weight, setWeight] = useState('');
+  const [stock, setStock] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -166,7 +175,12 @@ const EditProduct = () => {
                 name="price"
                 id="price"
                 value={formatRupiah(price) || ''}
-                onChange={(e) => setPrice(e.target.value.replace(/\./g, ''))}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\./g, '');
+                  if (validateNumberInput(value)) {
+                    setPrice(value);
+                  }
+                }}
                 disabled={isLoading}
               />
             </div>
@@ -183,9 +197,12 @@ const EditProduct = () => {
                 name="promoPrice"
                 id="promoPrice"
                 value={promoPrice === 0 ? '0' : formatRupiah(promoPrice) || ''}
-                onChange={(e) =>
-                  setPromoPrice(e.target.value.replace(/\./g, '') || 0)
-                }
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\./g, '');
+                  if (validateNumberInput(value)) {
+                    setPromoPrice(value);
+                  }
+                }}
                 disabled={isLoading}
               />
             </div>
@@ -204,7 +221,12 @@ const EditProduct = () => {
                 name="weight"
                 id="weight"
                 value={formatRupiah(weight) || ''}
-                onChange={(e) => setWeight(e.target.value.replace(/\./g, ''))}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\./g, '');
+                  if (validateNumberInput(value)) {
+                    setWeight(value);
+                  }
+                }}
                 disabled={isLoading}
               />
             </div>
@@ -221,7 +243,12 @@ const EditProduct = () => {
                 name="stock"
                 id="stock"
                 value={formatRupiah(stock) || ''}
-                onChange={(e) => setStock(e.target.value.replace(/\./g, ''))}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\./g, '');
+                  if (validateNumberInput(value)) {
+                    setStock(value);
+                  }
+                }}
                 placeholder="0"
               />
             </div>

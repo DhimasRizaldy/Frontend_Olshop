@@ -13,7 +13,6 @@ import {
 } from '../../../../services/users/rajaongkir/rajaongkir-services';
 import Swal from 'sweetalert2';
 import { useLocation } from 'react-router-dom';
-import Select from 'react-select';
 import ModalAddAddress from './ModalAddAddress';
 
 const PaymentsMe = () => {
@@ -31,15 +30,15 @@ const PaymentsMe = () => {
   const [cityId, setCityId] = useState('');
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
-  const [shippingOption, setShippingOption] = useState('');
-  const [subtotal, setSubtotal] = useState(0);
-  const [discount, setDiscount] = useState(0);
   const [shippingCost, setShippingCost] = useState(0);
   const [total, setTotal] = useState(0);
   const [shippingOptions, setShippingOptions] = useState([]);
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState('');
   const [showAddAddressPopup, setShowAddAddressPopup] = useState(false);
+  const [subtotal, setSubtotal] = useState(0); // Tambahkan definisi subtotal
+  const [discount, setDiscount] = useState(0); // Tambahkan definisi discount
+  const [selectedCourier, setSelectedCourier] = useState(''); // Tambahkan definisi selectedCourier
 
   // Fetch data on component mount
   useEffect(() => {
@@ -99,17 +98,26 @@ const PaymentsMe = () => {
 
   useEffect(() => {
     const calculateShipping = async () => {
-      if (provId && cityId && shippingOption) {
+      if (provId && cityId) {
         try {
           const weight = 1000;
-          const courier = shippingOption;
-          await fetchShippingCost(
-            provId,
-            cityId,
-            weight,
-            courier,
-            setShippingOptions,
-          );
+          const couriers = ['jne', 'pos', 'jnt'];
+          const allShippingOptions = [];
+
+          for (const courier of couriers) {
+            await fetchShippingCost(
+              provId,
+              cityId,
+              weight,
+              courier,
+              (options) => {
+                allShippingOptions.push(...options);
+              },
+            );
+          }
+
+          console.log('Shipping options:', allShippingOptions); // Tambahkan log untuk memeriksa data
+          setShippingOptions(allShippingOptions);
         } catch (error) {
           console.error('Error fetching shipping cost:', error);
         }
@@ -117,7 +125,7 @@ const PaymentsMe = () => {
     };
 
     calculateShipping();
-  }, [provId, cityId, shippingOption]);
+  }, [provId, cityId]);
 
   useEffect(() => {
     setTotal(subtotal - discount + shippingCost);
@@ -152,9 +160,14 @@ const PaymentsMe = () => {
       if (confirmation.isConfirmed) {
         const cartIds = cartItems.map((item) => item.cartId);
         const ongkirValue = shippingCost;
-        const courier = shippingOption;
+        const courier = selectedCourier;
         const promoId = selectedPromo || null;
         const addressId = selectedAddress;
+
+        if (!courier) {
+          Swal.fire('Error', 'Kurir tidak valid atau tidak ada', 'error');
+          return;
+        }
 
         const response = await checkoutPayment({
           cartIds,
@@ -230,13 +243,24 @@ const PaymentsMe = () => {
       setCityId(selectedAddr.cityId);
       setProvId(selectedAddr.provinceId);
 
-      fetchShippingCost(
-        selectedAddr.provinceId,
-        selectedAddr.cityId,
-        1000,
-        shippingOption,
-        setShippingOptions,
-      );
+      const weight = 1000;
+      const couriers = ['jne', 'pos', 'jnt'];
+      const allShippingOptions = [];
+
+      for (const courier of couriers) {
+        await fetchShippingCost(
+          selectedAddr.provinceId,
+          selectedAddr.cityId,
+          weight,
+          courier,
+          (options) => {
+            allShippingOptions.push(...options);
+          },
+        );
+      }
+
+      console.log('Shipping options:', allShippingOptions); // Tambahkan log untuk memeriksa data
+      setShippingOptions(allShippingOptions);
     }
   };
 
@@ -272,40 +296,30 @@ const PaymentsMe = () => {
       {/* Bagian Alamat Pengiriman */}
       <div className="bg-white shadow-md rounded-lg p-4 mb-6">
         <h2 className="text-xl font-semibold mb-4">Opsi Pengiriman</h2>
-        <select
-          className="w-full border border-gray-300 rounded-md p-2"
-          value={shippingOption}
-          onChange={(e) => {
-            setShippingOption(e.target.value);
-            fetchShippingCost(
-              provId,
-              cityId,
-              1000,
-              e.target.value,
-              setShippingOptions,
-            );
-          }}
-        >
-          <option value="">Pilih Kurir</option>
-          <option value="jne">JNE</option>
-          <option value="pos">Pos Indonesia</option>
-          <option value="jnt">JNT</option>
-        </select>
-
-        {shippingOptions.length > 0 && (
-          <select
-            className="w-full border border-gray-300 rounded-md p-2 mt-4"
-            onChange={(e) => setShippingCost(Number(e.target.value))}
-          >
-            <option value="">Pilih Layanan Pengiriman</option>
+        {shippingOptions.length > 0 ? (
+          <div>
             {shippingOptions.map((option, index) => (
-              <option key={index} value={option.cost[0].value}>
-                {option.service} - {option.description} - (Estimasi{' '}
-                {option.cost[0].etd} Hari) - (
-                {formatRupiah(option.cost[0].value)})
-              </option>
+              <div key={index} className="mb-4">
+                <input
+                  type="radio"
+                  id={`shippingOption-${index}`}
+                  name="shippingOption"
+                  value={option.cost[0].value}
+                  onChange={(e) => {
+                    setShippingCost(Number(e.target.value));
+                    setSelectedCourier(option.service);
+                  }}
+                />
+                <label htmlFor={`shippingOption-${index}`} className="ml-2">
+                  {option.service} - {option.description} - (Estimasi{' '}
+                  {option.cost[0].etd} Hari) -{' '}
+                  {formatRupiah(option.cost[0].value)}
+                </label>
+              </div>
             ))}
-          </select>
+          </div>
+        ) : (
+          <p>Pilih alamat pengiriman untuk melihat opsi pengiriman.</p>
         )}
       </div>
 

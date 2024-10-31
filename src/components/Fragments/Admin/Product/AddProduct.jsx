@@ -11,13 +11,22 @@ const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
 
+// Fungsi untuk memvalidasi input angka
+const validateNumberInput = (value) => {
+  if (isNaN(value)) {
+    toast.error('Input harus berupa angka');
+    return false;
+  }
+  return true;
+};
+
 const AddProduct = () => {
   const [name, setName] = useState('');
   const [categoryId, setCategoryId] = useState('');
-  const [price, setPrice] = useState(0);
-  const [promoPrice, setPromoPrice] = useState(0);
-  const [weight, setWeight] = useState(0);
-  const [stock, setStock] = useState(0);
+  const [price, setPrice] = useState('');
+  const [promoPrice, setPromoPrice] = useState('');
+  const [weight, setWeight] = useState('');
+  const [stock, setStock] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,10 +81,10 @@ const AddProduct = () => {
       toast.success('Produk berhasil ditambahkan!');
       setName('');
       setCategoryId('');
-      setPrice(0);
-      setPromoPrice(0);
-      setWeight(0);
-      setStock(0);
+      setPrice('');
+      setPromoPrice('');
+      setWeight('');
+      setStock('');
       setDescription('');
       setImage(null);
     } catch (error) {
@@ -140,7 +149,12 @@ const AddProduct = () => {
               id="price"
               placeholder="0.00"
               value={formatNumber(price) || ''}
-              onChange={(e) => setPrice(e.target.value.replace(/\./g, ''))}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\./g, '');
+                if (validateNumberInput(value)) {
+                  setPrice(value);
+                }
+              }}
             />
           </div>
         </div>
@@ -156,7 +170,12 @@ const AddProduct = () => {
               id="promoPrice"
               placeholder="0.00"
               value={formatNumber(promoPrice) || ''}
-              onChange={(e) => setPromoPrice(e.target.value.replace(/\./g, ''))}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\./g, '');
+                if (validateNumberInput(value)) {
+                  setPromoPrice(value);
+                }
+              }}
             />
           </div>
         </div>
@@ -174,7 +193,12 @@ const AddProduct = () => {
               id="weight"
               placeholder="0.00"
               value={formatNumber(weight) || ''}
-              onChange={(e) => setWeight(e.target.value.replace(/\./g, ''))}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\./g, '');
+                if (validateNumberInput(value)) {
+                  setWeight(value);
+                }
+              }}
             />
           </div>
         </div>
@@ -190,7 +214,12 @@ const AddProduct = () => {
               id="stock"
               placeholder="0"
               value={formatNumber(stock) || ''}
-              onChange={(e) => setStock(e.target.value.replace(/\./g, ''))}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\./g, '');
+                if (validateNumberInput(value)) {
+                  setStock(value);
+                }
+              }}
             />
           </div>
         </div>
