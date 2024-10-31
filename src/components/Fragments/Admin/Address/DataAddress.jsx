@@ -24,7 +24,8 @@ const DataAddress = () => {
     const fetchAddress = async () => {
       try {
         const response = await getAddress();
-        setAddress(response.data || []);
+        const filteredAddress = response.data.filter((addr) => !addr.isDelete);
+        setAddress(filteredAddress || []);
       } catch (error) {
         console.error('Gagal mengambil data alamat:', error.message);
         setError(error.message);
