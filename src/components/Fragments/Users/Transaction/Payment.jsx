@@ -48,7 +48,10 @@ const PaymentsMe = () => {
           await Promise.all([getAddress(), getPromo(), fetchProvinces()]);
 
         if (addressResponse.success) {
-          setAddresses(addressResponse.data || []);
+          const filteredAddresses = addressResponse.data.filter(
+            (addr) => !addr.isDelete,
+          );
+          setAddresses(filteredAddresses || []);
         } else {
           console.error('Failed to fetch addresses');
         }
