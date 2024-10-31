@@ -8,6 +8,7 @@ import { getCarts } from '../../services/users/carts/services-carts';
 import Button from '../Elements/Button/Index.jsx';
 import { PiShoppingCartSimpleBold } from 'react-icons/pi';
 import { IoMdNotificationsOutline } from 'react-icons/io';
+import { formatRupiah } from '../../utils/constants/function.js';
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -120,7 +121,7 @@ const Header = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           {searchResults.length > 0 && (
-            <div className="absolute top-full left-0 w-full bg-white border border-gray-300 mt-2 rounded-lg shadow-lg z-50">
+            <div className="absolute top-full left-0 w-full md:w-auto bg-white border border-gray-300 mt-2 rounded-lg shadow-lg z-50">
               <div className="flex flex-col divide-y divide-gray-200">
                 {searchResults.map((product) => (
                   <Link
@@ -139,7 +140,7 @@ const Header = () => {
                       </h4>
                       <p className="text-xs text-gray-600">
                         {product.price
-                          ? `Rp ${product.price.toLocaleString('id-ID')}`
+                          ? formatRupiah(product.price)
                           : 'Harga tidak tersedia'}
                       </p>
                     </div>

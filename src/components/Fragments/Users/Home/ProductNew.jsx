@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css'; // Import CSS untuk skeleton loader
 import { getProduct } from '../../../../services/admin/product/services-product';
-import { formatRupiah } from '../../../../utils/constants/function';
 
 const ProductCardSkeleton = () => (
   <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -55,15 +54,15 @@ const ProductCard = ({ product }) => {
         {product.promoPrice > 0 ? (
           <>
             <p className="text-gray-500 line-through">
-              {formatRupiah(product.price)}
+              Rp {formatNumber(product.price)}
             </p>
             <p className="text-red-500 font-bold">
-              {formatRupiah(product.promoPrice)}
+              Rp {formatNumber(product.promoPrice)}
             </p>
           </>
         ) : (
           <p className="text-gray-500 font-bold">
-            {formatRupiah(product.price)}
+            Rp {formatNumber(product.price)}
           </p>
         )}
         <p className="text-sm text-gray-600 mt-1">

@@ -11,6 +11,46 @@
 @layer components {
 }
 
+/* styles.css */
+@media (max-width: 768px) {
+  .product-card img {
+    width: 100%;
+    height: auto;
+  }
+  .product-card h4 {
+    font-size: 0.875rem; /* 14px */
+  }
+  .product-card p {
+    font-size: 0.75rem; /* 12px */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .product-card img {
+    width: 100%;
+    height: auto;
+  }
+  .product-card h4 {
+    font-size: 1rem; /* 16px */
+  }
+  .product-card p {
+    font-size: 0.875rem; /* 14px */
+  }
+}
+
+@media (min-width: 1025px) {
+  .product-card img {
+    width: 100%;
+    height: auto;
+  }
+  .product-card h4 {
+    font-size: 1.125rem; /* 18px */
+  }
+  .product-card p {
+    font-size: 1rem; /* 16px */
+  }
+}
+
 @layer utilities {
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
